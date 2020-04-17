@@ -24,8 +24,6 @@ import { RoomComponent } from './rooms/room/room.component';
 import { PageComponent } from './page/page.component';
 import { HomeComponent } from './home/home.component';
 
-import { PageForbiddenComponent } from './shared/components/page-forbidden/page-forbidden.component';
-import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 // end Shared components
@@ -47,9 +45,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     PageComponent,
 
     HeaderComponent,
-    FooterComponent,
-    PageForbiddenComponent,
-    PageNotFoundComponent
+    FooterComponent
   ],
   imports: [
     BrowserModule,

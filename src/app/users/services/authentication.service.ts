@@ -27,6 +27,8 @@ export class AuthenticationService
     logoff(): void
     {
         // call svr.
+        this.userAuthenticationStatus = false;
+
         this.authenticationStatusChangeSubject.next(this.userAuthenticationStatus);
     }
 

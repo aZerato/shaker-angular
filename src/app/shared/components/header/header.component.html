@@ -14,37 +14,58 @@
           <span class="navbar-toggler-icon pointer-events-none"></span>
         </button>
         <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed">
+          
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li *ngIf="!isAuthenticated" 
+              class="nav-item">
               <a class="nav-link"
                 (click)="isMenuCollapsed = true"
                 [routerLink]="['/page', 'project']"
                 routerLinkActive="active">
-                Projet
+                  Projet
+              </a>
+            </li>
+            <li *ngIf="isAuthenticated" 
+              class="nav-item">
+              <a class="nav-link"
+                (click)="isMenuCollapsed = true"
+                [routerLink]="['/rooms']"
+                routerLinkActive="active">
+                  Rooms
               </a>
             </li>
           </ul>
+
           <ul class="navbar-nav">
-            <li *ngIf="!isAuthenticated; else logout" 
+            <li *ngIf="!isAuthenticated" 
                 class="nav-item">
                 <a class="nav-link"
                   (click)="isMenuCollapsed = true"
                   routerLink="/auth"
                   routerLinkActive="active">
-                  Login
+                    Login
                 </a>
             </li>
-            <ng-template #logout>
-                <li class="nav-item">
-                    <a class="nav-link"
-                        (click)="isMenuCollapsed = true"
-                        routerLink="/disc"
-                        routerLinkActive="active">
-                            Logout
-                    </a>
-                </li>
-            </ng-template>
+            <li *ngIf="isAuthenticated"
+              class="nav-item">
+                <a class="nav-link"
+                    (click)="isMenuCollapsed = true"
+                    routerLink="/users/account"
+                    routerLinkActive="active">
+                      Account
+                </a>
+            </li>
+            <li *ngIf="isAuthenticated"
+              class="nav-item">
+                <a class="nav-link"
+                    (click)="isMenuCollapsed = true"
+                    routerLink="/disc"
+                    routerLinkActive="active">
+                      Logout
+                </a>
+            </li>
           </ul>
+
         </div>
     </nav>
   

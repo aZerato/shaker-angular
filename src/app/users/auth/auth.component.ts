@@ -23,7 +23,7 @@ export class AuthComponent implements OnInit, OnDestroy
   ngOnInit(): void 
   {
     this.isAuthenticatedSub = 
-      this.authenticationService.userAuthenticationStatusChangeSubject
+      this.authenticationService.authenticationStatusChangeSubject
         .subscribe((authenticated: boolean) => {
           if (authenticated)
           {

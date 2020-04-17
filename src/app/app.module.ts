@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // start Users components
 import { UsersComponent } from './users/users.component';
@@ -21,6 +21,9 @@ import { AppRoutingModule } from './app.routing.module';
 // start shared components
 import { PageForbiddenComponent } from './shared/components/page-forbidden/page-forbidden.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import { HeaderComponent } from './shared/components/header/header.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
+import { PageComponent } from './page/page.component';
 // end shared components
 
 @NgModule({
@@ -34,6 +37,10 @@ import { PageNotFoundComponent } from './shared/components/page-not-found/page-n
 
     RoomsComponent,
 
+    PageComponent,
+
+    HeaderComponent,
+    FooterComponent,
     PageForbiddenComponent,
     PageNotFoundComponent
   ],

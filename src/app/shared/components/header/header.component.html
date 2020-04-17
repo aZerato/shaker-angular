@@ -1,0 +1,52 @@
+<header>
+    <nav class="navbar navbar-dark bg-dark fixed-top navbar-expand-lg scrolling-navbar">
+        <a class="navbar-brand"
+          (click)="isMenuCollapsed = true"
+          routerLink="/">
+          {{ title }}
+        </a>
+        <button class="navbar-toggler" 
+                type="button" 
+                (click)="isMenuCollapsed = !isMenuCollapsed" 
+                aria-controls="navbarText" 
+                aria-expanded="false" 
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon pointer-events-none"></span>
+        </button>
+        <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link"
+                (click)="isMenuCollapsed = true"
+                [routerLink]="['/page', 'project']"
+                routerLinkActive="active">
+                Projet
+              </a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li *ngIf="!isAuthenticated; else logout" 
+                class="nav-item">
+                <a class="nav-link"
+                  (click)="isMenuCollapsed = true"
+                  routerLink="/auth"
+                  routerLinkActive="active">
+                  Login
+                </a>
+            </li>
+            <ng-template #logout>
+                <li class="nav-item">
+                    <a class="nav-link"
+                        (click)="isMenuCollapsed = true"
+                        routerLink="/disc"
+                        routerLinkActive="active">
+                            Logout
+                    </a>
+                </li>
+            </ng-template>
+          </ul>
+        </div>
+    </nav>
+  
+  </header>
+

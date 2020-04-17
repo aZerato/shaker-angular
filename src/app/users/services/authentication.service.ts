@@ -10,7 +10,7 @@ import { AuthenticationModel } from '../models/authentication.model';
 })
 export class AuthenticationService
 {
-    userAuthenticationStatusChangeSubject: Subject<boolean> = new Subject<boolean>();
+    authenticationStatusChangeSubject: Subject<boolean> = new Subject<boolean>();
 
     private userAuthenticationStatus: boolean = false;
 
@@ -21,13 +21,13 @@ export class AuthenticationService
         // good path
         this.userAuthenticationStatus = true;
 
-        this.userAuthenticationStatusChangeSubject.next(this.userAuthenticationStatus);
+        this.authenticationStatusChangeSubject.next(this.userAuthenticationStatus);
     }
 
     logoff(): void
     {
         // call svr.
-        this.userAuthenticationStatusChangeSubject.next(this.userAuthenticationStatus);
+        this.authenticationStatusChangeSubject.next(this.userAuthenticationStatus);
     }
 
     isAuthenticated(): Observable<boolean>

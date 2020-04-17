@@ -1,15 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-page-forbidden',
-  templateUrl: './page-forbidden.component.html',
-  styleUrls: ['./page-forbidden.component.scss']
+  templateUrl: './page-forbidden.component.html'
 })
-export class PageForbiddenComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class PageForbiddenComponent {
 
 }

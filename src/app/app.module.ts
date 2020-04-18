@@ -15,10 +15,11 @@ import { ProfileComponent } from './users/profile/profile.component';
 import { AccountComponent } from './users/account/account.component';
 // end Users components
 
-// start Chat/Rooms components
+// start Rooms components
 import { RoomsComponent } from './rooms/rooms.component';
 import { RoomComponent } from './rooms/room/room.component';
-// end Chat/Rooms components
+import { MessageComponent } from './rooms/room/message/message.component';
+// end Rooms components
 
 // start Shared components
 import { PageComponent } from './page/page.component';
@@ -40,6 +41,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
 
     RoomsComponent,
     RoomComponent,
+    MessageComponent,
 
     HomeComponent,
     PageComponent,

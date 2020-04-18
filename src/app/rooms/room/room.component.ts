@@ -1,6 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import { RoomService } from '../services/room.service';
+import { Room } from '../models/room.model';
 
 @Component({
   selector: 'app-room',
@@ -9,23 +13,38 @@ import { Subscription } from 'rxjs';
 })
 export class RoomComponent implements OnInit, OnDestroy
 {
-  private paramsSubsc: Subscription;
-  roomId: string;
+  room: Room;
+  messageForm: FormGroup;
 
-  constructor(private route: ActivatedRoute) { }
+  private paramsSub: Subscription;
 
-  ngOnInit(): void
-  {
-    // todo use resolver
-    this.paramsSubsc = 
-      this.route.params.subscribe((params: Params) => 
-      {
-        this.roomId = params['id'];
+  constructor(
+    private route: ActivatedRoute,
+    private roomService: RoomService) { }
+
+  ngOnInit(): void {
+    this.paramsSub =
+      this.route.params.subscribe((params: Params) => {
+        this.room = this.roomService.getRoomByGuid(params['guid']);
       });
+
+    this.initMessageForm();
   }
 
-  ngOnDestroy(): void 
-  {
-    this.paramsSubsc.unsubscribe();
+  ngOnDestroy(): void {
+    this.paramsSub.unsubscribe();
+  }
+
+  initMessageForm(): void {
+    this.messageForm = new FormGroup({
+      content: new FormControl('', Validators.required)
+    });
+  }
+
+  onSubmitMessage(): void {
+    if (this.messageForm.valid) 
+    {
+      this.roomService.addMessage(this.room, this.messageForm.value.content);
+    }
   }
 }

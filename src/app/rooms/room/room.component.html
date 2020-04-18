@@ -1,1 +1,26 @@
-<p>room works! {{ roomId }} </p>
+<div class="row">
+    <div class="col-md-12">
+
+        <h2>Room {{ room.guid }}</h2>
+
+        <app-message 
+            *ngFor="let message of room.messages"
+            [message]="message">aze</app-message>
+
+        <form [formGroup]="messageForm"
+            (submit)="onSubmitMessage()"
+            class="row">
+            <div class="col-xs-10">
+                <textarea
+                    formControlName="content"
+                    name="content"></textarea>
+            </div>
+            <div class="col-xs-2">
+                <button class="btn btn-primary">
+                    Send
+                </button>
+            </div>
+        </form>
+            
+    </div>
+</div>

@@ -62,7 +62,7 @@ const appRoutes: Routes = [
         ],
     },
     {
-        path: 'rooms/:id', 
+        path: 'rooms/:guid', 
         component: RoomComponent,
         canActivate: [
             AuthenticationGuard

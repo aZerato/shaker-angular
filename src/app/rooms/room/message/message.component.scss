@@ -1,0 +1,24 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.message {
+    .message-content {
+        padding: 1rem;
+        border-radius: 9px;
+    }
+
+    &:after {
+        bottom: 100%;
+        left: 7%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-bottom-color: theme-color('primary');
+        border-width: 10px;
+        margin-left: -10px;
+      }
+}

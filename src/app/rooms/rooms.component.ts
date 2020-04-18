@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+
+import { RoomService } from './services/room.service';
+import { Room } from './models/room.model';
 
 @Component({
   selector: 'app-rooms',
@@ -6,11 +12,29 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./rooms.component.scss']
 })
 export class RoomsComponent implements OnInit {
-  rooms: string[] = ['guid1', 'guid2'];
+  rooms: Room[] = [];
 
-  constructor() { }
+  getAllRoomsSub: Subscription;
+
+  constructor(
+    private router: Router,
+    private roomService: RoomService) { }
 
   ngOnInit(): void {
+    this.getAllRoomsSub = 
+      this.roomService.getAllRooms()
+      .subscribe((rooms: Room[]) => {
+        this.rooms = rooms;
+      });
   }
 
+  ngOnDestroy(): void {
+    this.getAllRoomsSub.unsubscribe();
+  }
+
+  onCreateRoom(): void {
+    const guid = this.roomService.addRoom();
+
+    this.router.navigate(['/rooms', guid]);
+  }
 }

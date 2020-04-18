@@ -5,9 +5,14 @@
 
         <hr>
 
+        <button class="btn btn-primary"
+            (click)="onCreateRoom()">
+            Create
+        </button>
+
         <ul>
-           <li *ngFor="let guid of rooms" >
-               <a [routerLink]="['/rooms', guid]">room id : {{ guid }}</a>
+           <li *ngFor="let room of rooms" >
+               <a [routerLink]="['/rooms', room.guid]">room id : {{ room.guid }}</a>
            </li> 
         </ul>
 

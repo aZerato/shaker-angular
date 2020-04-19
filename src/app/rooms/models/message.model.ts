@@ -1,9 +1,11 @@
+import { formatDate } from '@angular/common';
+
 import { UserChat } from './user-chat.model';
 
 export class Message {
     guid: string;
     content: string;
-    date: number;
+    date: string;
     user: UserChat;
     isCurrentUser: boolean;
     status: string;
@@ -14,7 +16,7 @@ export class Message {
         this.content = content;
         this.user = user;
         this.isCurrentUser = isCurrentUser;
-        this.date = Date.now();
+        this.date = formatDate(Date.now(), 'short', "en");
         this.status = status;
     }
 }

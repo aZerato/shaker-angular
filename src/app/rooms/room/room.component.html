@@ -1,25 +1,39 @@
-<div class="row">
+<div class="row room">
     <div class="col-md-12">
 
-        <h2>Room {{ room.guid }}</h2>
+        <div class="room-header">
+            <h2 col="col-12">Room {{ room.guid }}</h2>
+        </div>
 
-        <app-message 
-            *ngFor="let message of room.messages"
-            [message]="message">aze</app-message>
-
+        <div class="room-content">
+            <div class="col-12">
+                <app-message 
+                    *ngFor="let message of room.messages"
+                    [message]="message"></app-message>
+            </div>
+        </div>
+    
         <form [formGroup]="messageForm"
             (submit)="onSubmitMessage()"
-            class="row">
-            <div class="col-xs-10">
-                <textarea
-                    formControlName="content"
-                    name="content"></textarea>
+            class="room-form">
+            
+            <div class="col-12">
+                <div class="form-group pt-2 px-2 mb-O">
+                    <textarea
+                        class="form-control"
+                        formControlName="content"
+                        name="content"
+                        placeholder ="Type your message" rows="3">
+                    </textarea>
+                </div>
             </div>
-            <div class="col-xs-2">
-                <button class="btn btn-primary">
+
+            <div class="col-2 offset-10">
+                <button class="btn btn-primary ">
                     Send
                 </button>
             </div>
+
         </form>
             
     </div>

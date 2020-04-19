@@ -1,21 +1,24 @@
-<div class="row">
-    <div class="col-md-10"
-        [ngClass]="{'offset-md-2': message.isCurrentUser}">
+<div class="row message mb-3">
+    <div class="col-10"
+        [ngClass]="{'message-user': message.isCurrentUser, 'offset-2': message.isCurrentUser}">
 
-        <div class="row message">
-            <div class="col-10 message-content bg-primary text-white">
+        <div class="row">
+            
+            <div class="col-12 mb-2 p-0"
+                [ngClass]="{'text-right': message.isCurrentUser}">
+                
+                <img src="{{message.user.imgPath}}" 
+                    class="message-user-img"
+                    alt="{{message.user.name}}">
+            
+                <span>{{message.user.name}}, <small>{{message.date}}</small></span>
+            
+            </div>
+
+            <div class="col-12 message-content">
                 {{message.content}}
             </div>
-            <div class="col-2">
-                <img src="{{message.user.imgPath}}" 
-                    class="rounded img-fluid"
-                    alt="{{message.user.name}}">
-            </div>
-            <div class="col-10">
-                <small class="float-right">
-                    {{message.date}}
-                </small>
-            </div>
+
         </div>
 
     </div>

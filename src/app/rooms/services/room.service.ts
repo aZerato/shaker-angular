@@ -31,11 +31,20 @@ export class RoomService
     addRoom(): string {
         const guid = Date.now().toString();
         
+const messageBot = new Message("Hello", 
+                        new UserChat("Bot", 
+                            "Bot", 
+                            "Bot", 
+                            "https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=Acir9Xn4", 
+                            "bot"),
+                            false,
+                            '');
+
         this.rooms.push(new Room(
             guid,
             'Conversation',
             [this.getCurrentUser()],
-            [], 
+            [messageBot], 
             ''
         ));
 

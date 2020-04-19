@@ -45,6 +45,7 @@ export class RoomComponent implements OnInit, OnDestroy
     if (this.messageForm.valid) 
     {
       this.roomService.addMessage(this.room, this.messageForm.value.content);
+      this.messageForm.reset();
     }
   }
 }

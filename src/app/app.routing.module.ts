@@ -15,28 +15,35 @@ import { RoomsComponent } from './rooms/rooms.component';
 import { RoomComponent } from './rooms/room/room.component';
 
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
+import { CheckUserConnectedGuard } from './shared/guards/check-user-connected.guard';
+import { ConnectedRedirectionGuard } from './shared/guards/connected-redirection.guard copy';
 
 const appRoutes: Routes = [
     { 
       path: '',
       pathMatch: 'full',
-      component: HomeComponent
+      component: HomeComponent,
+      canActivate: [CheckUserConnectedGuard]
     },
     { 
         path: 'page/:page-name', 
-        component: PageComponent
+        component: PageComponent,
+        canActivate: [CheckUserConnectedGuard]
     },
     { 
         path: 'new', 
-        component: NewComponent
+        component: NewComponent,
+        canActivate: [ConnectedRedirectionGuard]
     },
     { 
         path: 'auth', 
-        component: AuthComponent
+        component: AuthComponent,
+        canActivate: [ConnectedRedirectionGuard]
     },
     { 
-        path: 'disc', 
-        component: LogoutComponent
+        path: 'logout', 
+        component: LogoutComponent,
+        canActivate: [CheckUserConnectedGuard]
     },
     {
         path: 'users',
@@ -47,10 +54,6 @@ const appRoutes: Routes = [
         children: [
             { 
                 path: '', 
-                component: ProfileComponent
-            },
-            { 
-                path: 'profile', 
                 component: ProfileComponent
             },
             { 
@@ -75,11 +78,13 @@ const appRoutes: Routes = [
     },
     { 
         path: 'page/forbidden', 
-        component: PageComponent
+        component: PageComponent,
+        canActivate: [CheckUserConnectedGuard]
     },
     { 
         path: 'page/not-found',
-        component: PageComponent
+        component: PageComponent,
+        canActivate: [CheckUserConnectedGuard]
     }
     //,{ 
     //   path: '**', 

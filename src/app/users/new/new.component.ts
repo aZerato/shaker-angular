@@ -32,7 +32,7 @@ export class NewComponent implements OnInit, OnDestroy
         .subscribe((authenticated: boolean) => {
           if (authenticated)
           {
-            this.router.navigate(['/users/profile']);
+            this.router.navigate(['/users']);
           }
         });
     

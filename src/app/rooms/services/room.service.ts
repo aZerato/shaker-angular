@@ -17,7 +17,7 @@ export class RoomService
 
     private getCurrentUser(): UserChat {
         const user = this.authicationServication.getUserConnected();
-        return new UserChat(user.guid, user.name, user.fullname, user.imgPath, '');
+        return new UserChat(user.key, user.name, user.fullname, user.imgPath, '');
     }
 
     getAllRooms(): Observable<Room[]> {

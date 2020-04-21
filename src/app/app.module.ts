@@ -13,6 +13,7 @@ import { AuthComponent } from './users/auth/auth.component';
 import { LogoutComponent } from './users/logout/logout.component';
 import { ProfileComponent } from './users/profile/profile.component';
 import { AccountComponent } from './users/account/account.component';
+import { NewComponent } from './users/new/new.component';
 // end Users components
 
 // start Rooms components
@@ -38,6 +39,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     LogoutComponent,
     ProfileComponent,
     AccountComponent,
+    NewComponent,
 
     RoomsComponent,
     RoomComponent,

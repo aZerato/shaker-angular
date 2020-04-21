@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        
+        <div *ngIf="errorMessage" 
+            class="alert alert-danger" role="alert">
+            {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="creationFormGroup" 
+            (submit)="onSubmit()">
+
+            <div class="form-group">
+              
+                <input type="string" 
+                        class="form-control" 
+                        placeholder="Enter name"
+                        formControlName="name">
+
+              </div>
+
+
+            <div class="form-group">
+              
+                <input type="email" 
+                        class="form-control" 
+                        aria-describedby="emailHelp" 
+                        placeholder="Enter email"
+                        formControlName="email">
+                
+                <small id="emailHelp" class="form-text text-muted">
+                    We'll never share your email with anyone else.
+                </small>
+
+              </div>
+
+              <div class="form-group">
+
+                <input type="password" 
+                        class="form-control" 
+                        placeholder="Password"
+                        formControlName="password">
+
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                  Create
+              </button>
+
+        </form>
+
+    </div>
+</div>

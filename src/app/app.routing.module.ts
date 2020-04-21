@@ -9,6 +9,7 @@ import { AccountComponent } from './users/account/account.component';
 import { AuthComponent } from './users/auth/auth.component';
 import { LogoutComponent } from './users/logout/logout.component';
 import { UsersComponent } from './users/users.component';
+import { NewComponent } from './users/new/new.component';
 
 import { RoomsComponent } from './rooms/rooms.component';
 import { RoomComponent } from './rooms/room/room.component';
@@ -24,7 +25,11 @@ const appRoutes: Routes = [
     { 
         path: 'page/:page-name', 
         component: PageComponent
-      },
+    },
+    { 
+        path: 'new', 
+        component: NewComponent
+    },
     { 
         path: 'auth', 
         component: AuthComponent

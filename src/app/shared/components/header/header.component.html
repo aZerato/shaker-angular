@@ -43,7 +43,16 @@
                   (click)="isMenuCollapsed = true"
                   routerLink="/auth"
                   routerLinkActive="active">
-                    Login
+                    LogIn
+                </a>
+            </li>
+            <li *ngIf="!isAuthenticated" 
+                class="nav-item">
+                <a class="nav-link"
+                  (click)="isMenuCollapsed = true"
+                  routerLink="/new"
+                  routerLinkActive="active">
+                    SignIn
                 </a>
             </li>
             <li *ngIf="isAuthenticated"

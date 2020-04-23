@@ -177,7 +177,7 @@ export class ChannelService
         "Bot",
         "password",
         "Botty", 
-        "https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=Acir9Xn4")
+        "/assets/img/bot-avatar.png")
         .setGuid(this.botGuid);
 
     private userChatBot:UserChat = new UserChat(this.userBot);

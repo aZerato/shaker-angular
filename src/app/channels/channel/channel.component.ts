@@ -5,7 +5,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 
 import { ChannelService } from '../services/channel.service';
+
 import { Channel } from '../models/channel.model';
+import { MessageService } from '../services/message.service';
 
 @Component({
   selector: 'app-channel',
@@ -21,7 +23,8 @@ export class ChannelComponent implements OnInit, OnDestroy
 
   constructor(
     private route: ActivatedRoute,
-    private channelService: ChannelService) { }
+    private channelService: ChannelService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.paramsSub =
@@ -47,7 +50,7 @@ export class ChannelComponent implements OnInit, OnDestroy
   onSubmitMessage(channelGuid: string): void {
     if (this.messageForm.valid && channelGuid) 
     {
-      this.channelService.addMessage(channelGuid, this.messageForm.value.content);
+      this.messageService.addMessage(channelGuid, this.messageForm.value.content);
       this.messageForm.reset();
     }
   }

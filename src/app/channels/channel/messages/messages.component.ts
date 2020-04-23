@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Message } from '../../models/message.model';
-import { ChannelService } from '../../services/channel.service';
 import { Observable, merge } from 'rxjs';
+
+import { MessageService } from '../../services/message.service';
+
+import { Message } from '../../models/message.model';
 
 @Component({
   selector: 'app-messages',
@@ -14,11 +16,11 @@ export class MessagesComponent implements OnInit
   @Input()
   messages$: Observable<Message[]>;
 
-  constructor(private channelService: ChannelService) { }
+  constructor(private messageService: MessageService) { }
 
   ngOnInit(): void 
   {
     this.messages$ = merge(this.messages$,
-      this.channelService.messageAdded);
+      this.messageService.messageAdded);
   }
 }

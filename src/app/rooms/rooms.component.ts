@@ -15,6 +15,7 @@ export class RoomsComponent implements OnInit {
   rooms: Room[] = [];
 
   getAllRoomsSub: Subscription;
+  roomAddedSub: Subscription;
 
   constructor(
     private router: Router,
@@ -26,15 +27,19 @@ export class RoomsComponent implements OnInit {
       .subscribe((rooms: Room[]) => {
         this.rooms = rooms;
       });
+    
+    this.roomAddedSub = 
+      this.roomService.roomAdded.subscribe((room: Room) => {
+        this.router.navigate(['/rooms', room.guid]);
+      });
   }
 
   ngOnDestroy(): void {
     this.getAllRoomsSub.unsubscribe();
+    this.roomAddedSub.unsubscribe();
   }
 
   onCreateRoom(): void {
-    const guid = this.roomService.addRoom();
-
-    this.router.navigate(['/rooms', guid]);
+    this.roomService.addRoom();
   }
 }

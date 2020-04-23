@@ -19,7 +19,7 @@ import { NewComponent } from './users/new/new.component';
 // start Rooms components
 import { RoomsComponent } from './rooms/rooms.component';
 import { RoomComponent } from './rooms/room/room.component';
-import { MessageComponent } from './rooms/room/message/message.component';
+import { MessagesComponent } from './rooms/room/messages/messages.component';
 // end Rooms components
 
 // start Shared components
@@ -43,7 +43,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
 
     RoomsComponent,
     RoomComponent,
-    MessageComponent,
+    MessagesComponent,
 
     HomeComponent,
     PageComponent,

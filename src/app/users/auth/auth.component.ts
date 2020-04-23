@@ -4,6 +4,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthenticationModel } from '../models/authentication.model';
 import { Subscription } from 'rxjs';
+import { UserModel } from 'src/app/shared/models/user.model';
 
 @Component({
   selector: 'app-auth',
@@ -49,7 +50,8 @@ export class AuthComponent implements OnInit, OnDestroy
 
   private initForm(): void 
   {
-    this.authenticationModel = new AuthenticationModel('', '', false);
+    const user = new UserModel('', '', '');
+    this.authenticationModel = new AuthenticationModel(user, false);
 
     this.authenticationFormGroup = new FormGroup({
       email: new FormControl(this.authenticationModel.email, [

@@ -1,4 +1,5 @@
-<div class="row room">
+<div class="row room"
+    *ngIf="room$ | async as room">
     <div class="col-md-12">
 
         <div class="room-header">
@@ -7,14 +8,12 @@
 
         <div class="room-content">
             <div class="col-12">
-                <app-message 
-                    *ngFor="let message of room.messages"
-                    [message]="message"></app-message>
+                <app-messages [messages$]="room.messages$"></app-messages>
             </div>
         </div>
     
         <form [formGroup]="messageForm"
-            (submit)="onSubmitMessage()"
+            (submit)="onSubmitMessage(room.guid)"
             class="room-form">
             
             <div class="col-12">

@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import { Subscription, Observable, merge } from 'rxjs';
 
 import { RoomService } from '../services/room.service';
 import { Room } from '../models/room.model';
@@ -13,7 +14,7 @@ import { Room } from '../models/room.model';
 })
 export class RoomComponent implements OnInit, OnDestroy
 {
-  room: Room;
+  room$: Observable<Room>;
   messageForm: FormGroup;
 
   private paramsSub: Subscription;
@@ -24,8 +25,10 @@ export class RoomComponent implements OnInit, OnDestroy
 
   ngOnInit(): void {
     this.paramsSub =
-      this.route.params.subscribe((params: Params) => {
-        this.room = this.roomService.getRoomByGuid(params['guid']);
+      this.route.params
+      .subscribe((params: Params) => 
+      {
+        this.room$ = this.roomService.getRoomByGuid(params['guid']);
       });
 
     this.initMessageForm();
@@ -41,10 +44,10 @@ export class RoomComponent implements OnInit, OnDestroy
     });
   }
 
-  onSubmitMessage(): void {
-    if (this.messageForm.valid) 
+  onSubmitMessage(roomGuid: string): void {
+    if (this.messageForm.valid && roomGuid) 
     {
-      this.roomService.addMessage(this.room, this.messageForm.value.content);
+      this.roomService.addMessage(roomGuid, this.messageForm.value.content);
       this.messageForm.reset();
     }
   }

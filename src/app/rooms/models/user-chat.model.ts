@@ -1,3 +1,5 @@
+import { UserModel } from 'src/app/shared/models/user.model';
+
 export class UserChat {
     guid: string;
     name: string;
@@ -5,12 +7,11 @@ export class UserChat {
     imgPath: string;
     surname: string;
 
-    constructor(guid: string, name: string, fullname: string, imgPath: string, surname: string) 
+    constructor(user: UserModel) 
     {
-        this.guid = guid;
-        this.name = name;
-        this.fullname = fullname;
-        this.imgPath = imgPath;
-        this.surname = surname;
+        this.guid = user.guid;
+        this.name = user.name;
+        this.fullname = user.fullname;
+        this.imgPath = user.imgPath;
     }
 }

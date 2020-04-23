@@ -1,0 +1,33 @@
+<div *ngIf="messages$ | async as messages">
+
+    <div 
+        *ngFor="let message of messages"
+        class="row message mb-3">
+
+        <div class="col-10"
+            [ngClass]="{'message-user': message.isCurrentUser, 'offset-2': message.isCurrentUser}">
+
+            <div class="row">
+                
+                <div class="col-12 mb-2 p-0"
+                    [ngClass]="{'text-right': message.isCurrentUser}">
+                    
+                    <div *ngIf="message.userChat$ | async as userChat">
+                        <img src="{{userChat.imgPath}}" 
+                            class="message-user-img"
+                            alt="{{userChat.name}}">
+                    
+                        <span>{{userChat.name}} <small>{{message.date}}</small></span>
+                    </div>
+
+                </div>
+
+                <div class="col-12 message-content">
+                    {{message.content}}
+                </div>
+
+            </div>
+
+        </div>
+        
+</div>

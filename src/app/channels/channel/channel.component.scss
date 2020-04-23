@@ -5,36 +5,38 @@
 .channel {
     position: relative;
     height: 100%;
+    overflow: hidden;
 
-    .channel-header {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        
-        height: 2.5rem;
-
-        background-color: theme-color('light');
-        color: theme-color('gray');
-    }
-    .channel-content {
-        margin-top: 3.5rem;
-        margin-bottom: 8.5rem;
-    }
-    .channel-form {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-
-        height: 7rem;
-
-        background-color: theme-color('light');
-
-        textarea {
-            resize: none;
-            height: 2.5rem;
-            width: 100%;
+    .channel-inner {
+        height: 100%;
+    
+        .channel-header {
+            height: 50px;
+            text-transform: uppercase;
+            padding: 10px;
         }
+        .channel-content {
+            height: calc(100% - 100px);
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        .channel-form {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 50px;
+
+            .form-group {
+                padding-left: 10px;
+                padding-right: 10px;
+
+                textarea {
+                    resize: none;
+                    height: 2.5rem;
+                }
+            }
+        }
+
     }
+
 }

@@ -12,8 +12,8 @@
     .message-content {
         padding: 1rem;
         border-radius: 9px;
-        color: theme-color('dark');
-        background-color: theme-color('light');
+        color: theme-color('light');
+        background-color: theme-color('dark');
 
         &:after {
             bottom: 100%;
@@ -24,7 +24,7 @@
             width: 0;
             position: absolute;
             pointer-events: none;
-            border-bottom-color: theme-color('light');
+            border-bottom-color: theme-color('dark');
             border-width: 10px;
             margin-left: -10px;
         }

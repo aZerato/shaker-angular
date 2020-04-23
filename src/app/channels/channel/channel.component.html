@@ -1,9 +1,11 @@
 <div class="row channel"
     *ngIf="channel$ | async as channel">
-    <div class="col-md-12">
+    <div class="col-md-12 channel-inner">
 
         <div class="channel-header">
-            <h2 col="col-12">Channel {{ channel.guid }}</h2>
+            <h5 col="col-12">
+                <fa-icon [icon]="faCommentAlt"></fa-icon> Channel {{ channel.guid }}
+            </h5>
         </div>
 
         <div class="channel-content">
@@ -14,25 +16,26 @@
     
         <form [formGroup]="messageForm"
             (submit)="onSubmitMessage(channel.guid)"
-            class="channel-form">
-            
-            <div class="col-12">
-                <div class="form-group pt-2 mb-O">
+            class="channel-form col-12">
+           
+                <div class="form-group">
+                    <div class="row">
                     <textarea
-                        class="form-control"
+                        class="form-control col-11"
                         formControlName="content"
                         name="content"
-                        placeholder ="Type your message" rows="3">
+                        placeholder ="Type your message" 
+                        rows="3">
                     </textarea>
+            
+                    <button 
+                        class="btn btn-primary"
+                        class="col-1">
+                        <fa-icon [icon]="faPaperPlane"></fa-icon>
+                    </button>
                 </div>
-            </div>
 
-            <div class="col-2 offset-10 text-right">
-                <button class="btn btn-primary ">
-                    Send
-                </button>
             </div>
-
         </form>
             
     </div>

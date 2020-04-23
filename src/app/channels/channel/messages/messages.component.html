@@ -22,7 +22,8 @@
 
                 </div>
 
-                <div class="col-12 message-content">
+                <div class="col message-content"
+                    [ngClass]="{'float-right': message.isCurrentUser}">
                     {{message.content}}
                 </div>
 

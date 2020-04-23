@@ -3,6 +3,10 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 
+html, body {
+    height: 100%;
+}
+
 body {
     background-color: theme-color('gray-dark');
 }

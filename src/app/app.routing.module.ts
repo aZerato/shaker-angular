@@ -68,13 +68,12 @@ const appRoutes: Routes = [
         canActivate: [
             AuthenticationGuard
         ],
-    },
-    {
-        path: 'channel/:guid', 
-        component: ChannelComponent,
-        canActivate: [
-            AuthenticationGuard
-        ],
+        children: [
+            {
+                path: ':guid', 
+                component: ChannelComponent
+            }
+        ]
     },
     { 
         path: 'page/forbidden', 

@@ -4,6 +4,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Subscription, Observable } from 'rxjs';
 
+import { faPaperPlane, faCommentAlt, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+
 import { ChannelService } from '../services/channel.service';
 
 import { Channel } from '../models/channel.model';
@@ -16,6 +18,9 @@ import { MessageService } from '../services/message.service';
 })
 export class ChannelComponent implements OnInit, OnDestroy
 {
+  faPaperPlane: IconDefinition = faPaperPlane;
+  faCommentAlt: IconDefinition = faCommentAlt;
+
   channel$: Observable<Channel>;
   messageForm: FormGroup;
 

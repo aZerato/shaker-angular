@@ -1,21 +1,39 @@
-<div class="row">
-    <div class="col-md-12">
-
-        <h2>Channels</h2>
-
-        <hr>
-
-        <button class="btn btn-primary"
-            (click)="onCreateChannel()">
-            Create
-        </button>
+<div class="row channels h-100">
+    
+    <div class="col-3 channels-list p-0">
 
         <ul>
-           <li *ngFor="let channel of channels" >
-               <a [routerLink]="['/channel', channel.guid]">Channel id : {{ channel.guid }}</a>
-           </li> 
+            <li class="active">
+                <a>
+                    <h4>
+                        <fa-icon 
+                        (click)="onCreateChannel()"
+                        [icon]="faPlusSquare"></fa-icon>
+                        
+                        Create channel
+                    </h4>
+                </a>
+            </li>
+            
+            <li *ngFor="let channel of channels">
+                <a [routerLink]="['/channel', channel.guid]">
+                    
+                    <fa-icon [icon]="faRocket"></fa-icon>
+                    
+                    <span>{{ channel.guid }}</span>
+
+                </a>
+            </li>
+            
         </ul>
 
     </div>
+
+    <div class="col-9 channel-detail">
+
+        <router-outlet></router-outlet>
+
+    </div>
+
 </div>
 

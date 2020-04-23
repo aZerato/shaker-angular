@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-md-12">
+
+        <h2>Channels</h2>
+
+        <hr>
+
+        <button class="btn btn-primary"
+            (click)="onCreateChannel()">
+            Create
+        </button>
+
+        <ul>
+           <li *ngFor="let channel of channels" >
+               <a [routerLink]="['/channel', channel.guid]">Channel id : {{ channel.guid }}</a>
+           </li> 
+        </ul>
+
+    </div>
+</div>
+

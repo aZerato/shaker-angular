@@ -16,11 +16,11 @@ import { AccountComponent } from './users/account/account.component';
 import { NewComponent } from './users/new/new.component';
 // end Users components
 
-// start Rooms components
-import { RoomsComponent } from './rooms/rooms.component';
-import { RoomComponent } from './rooms/room/room.component';
-import { MessagesComponent } from './rooms/room/messages/messages.component';
-// end Rooms components
+// start Channels components
+import { ChannelsComponent } from './channels/channels.component';
+import { ChannelComponent } from './channels/channel/channel.component';
+import { MessagesComponent } from './channels/channel/messages/messages.component';
+// end Channels components
 
 // start Shared components
 import { PageComponent } from './page/page.component';
@@ -41,8 +41,8 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     AccountComponent,
     NewComponent,
 
-    RoomsComponent,
-    RoomComponent,
+    ChannelsComponent,
+    ChannelComponent,
     MessagesComponent,
 
     HomeComponent,

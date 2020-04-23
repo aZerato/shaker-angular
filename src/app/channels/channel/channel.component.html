@@ -1,20 +1,20 @@
-<div class="row room"
-    *ngIf="room$ | async as room">
+<div class="row channel"
+    *ngIf="channel$ | async as channel">
     <div class="col-md-12">
 
-        <div class="room-header">
-            <h2 col="col-12">Room {{ room.guid }}</h2>
+        <div class="channel-header">
+            <h2 col="col-12">Channel {{ channel.guid }}</h2>
         </div>
 
-        <div class="room-content">
+        <div class="channel-content">
             <div class="col-12">
-                <app-messages [messages$]="room.messages$"></app-messages>
+                <app-messages [messages$]="channel.messages$"></app-messages>
             </div>
         </div>
     
         <form [formGroup]="messageForm"
-            (submit)="onSubmitMessage(room.guid)"
-            class="room-form">
+            (submit)="onSubmitMessage(channel.guid)"
+            class="channel-form">
             
             <div class="col-12">
                 <div class="form-group pt-2 mb-O">

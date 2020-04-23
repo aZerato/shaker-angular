@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
-export const roomSchema:JSONSchema = {
+export const channelSchema:JSONSchema = {
     type: 'object',
     properties: {
         guid: { type: 'string' },
@@ -17,13 +17,13 @@ export const roomSchema:JSONSchema = {
     ]
 };
 
-export const roomsKeyArr:string = "Rooms";
-export const roomsSchemaArr:JSONSchemaArray = {
+export const channelsKeyArr:string = "Channels";
+export const channelsSchemaArr:JSONSchemaArray = {
     type: 'array',
-    items: roomSchema
+    items: channelSchema
 };
 
-export class Room {
+export class Channel {
     
     guid: string;
     name: string;
@@ -40,18 +40,18 @@ export class Room {
         this.messages$ = new Observable<Message[]>();
     }
 
-    prepareSave(room: Room): Room
+    prepareSave(channel: Channel): Channel
     {
-        const roomSave = Object.assign({}, room);
+        const channelSave = Object.assign({}, channel);
 
-        delete roomSave.messages$;
-        delete roomSave.users;
+        delete channelSave.messages$;
+        delete channelSave.users;
         
-        return roomSave;
+        return channelSave;
     }
 
-    static prepareGet(room: Room) {
+    static prepareGet(channel: Channel) {
 
-        room.messages$ = new Observable<Message[]>();
+        channel.messages$ = new Observable<Message[]>();
     }
 }

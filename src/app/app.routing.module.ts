@@ -11,8 +11,8 @@ import { LogoutComponent } from './users/logout/logout.component';
 import { UsersComponent } from './users/users.component';
 import { NewComponent } from './users/new/new.component';
 
-import { RoomsComponent } from './rooms/rooms.component';
-import { RoomComponent } from './rooms/room/room.component';
+import { ChannelsComponent } from './channels/channels.component';
+import { ChannelComponent } from './channels/channel/channel.component';
 
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
 import { CheckUserConnectedGuard } from './shared/guards/check-user-connected.guard';
@@ -63,15 +63,15 @@ const appRoutes: Routes = [
         ]
     },
     {
-        path: 'rooms',
-        component: RoomsComponent,
+        path: 'channel',
+        component: ChannelsComponent,
         canActivate: [
             AuthenticationGuard
         ],
     },
     {
-        path: 'rooms/:guid', 
-        component: RoomComponent,
+        path: 'channel/:guid', 
+        component: ChannelComponent,
         canActivate: [
             AuthenticationGuard
         ],

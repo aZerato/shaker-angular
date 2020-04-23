@@ -3,14 +3,14 @@ import { formatDate } from '@angular/common';
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
 import { UserChat } from './user-chat.model';
-import { Room } from './room.model';
+import { Channel } from './channel.model';
 import { Observable } from 'rxjs';
 
 export const messageSchema:JSONSchema = {
     type: 'object',
     properties: {
         guid: { type: 'string' },
-        roomGuid: { type: 'string' },
+        channelGuid: { type: 'string' },
         
         userGuid: { type: 'string' },
         
@@ -20,7 +20,7 @@ export const messageSchema:JSONSchema = {
     },
     required: [
         'guid',
-        'roomGuid',
+        'channelGuid',
         'userGuid',
         'content',
         'date',
@@ -34,12 +34,10 @@ export const messagesSchemaArr:JSONSchemaArray = {
     items: messageSchema
 };
 
-export const roomKeyArr:string = "Rooms";
-
 export class Message 
 {
     guid: string;
-    roomGuid: string;
+    channelGuid: string;
     
     userChat$: Observable<UserChat>;
     userGuid: string;
@@ -49,10 +47,10 @@ export class Message
     date: string;
     status: string;
 
-    constructor(content: string, roomGuid: string, userGuid: string, isCurrentUser: boolean, status: string) 
+    constructor(content: string, channelGuid: string, userGuid: string, isCurrentUser: boolean, status: string) 
     {
         this.guid = Date.now().toString();
-        this.roomGuid = roomGuid;
+        this.channelGuid = channelGuid;
 
         this.userGuid = userGuid;
         this.isCurrentUser = isCurrentUser;

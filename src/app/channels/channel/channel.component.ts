@@ -2,33 +2,33 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { Subscription, Observable, merge } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
-import { RoomService } from '../services/room.service';
-import { Room } from '../models/room.model';
+import { ChannelService } from '../services/channel.service';
+import { Channel } from '../models/channel.model';
 
 @Component({
-  selector: 'app-room',
-  templateUrl: './room.component.html',
-  styleUrls: ['./room.component.scss']
+  selector: 'app-channel',
+  templateUrl: './channel.component.html',
+  styleUrls: ['./channel.component.scss']
 })
-export class RoomComponent implements OnInit, OnDestroy
+export class ChannelComponent implements OnInit, OnDestroy
 {
-  room$: Observable<Room>;
+  channel$: Observable<Channel>;
   messageForm: FormGroup;
 
   private paramsSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
-    private roomService: RoomService) { }
+    private channelService: ChannelService) { }
 
   ngOnInit(): void {
     this.paramsSub =
       this.route.params
       .subscribe((params: Params) => 
       {
-        this.room$ = this.roomService.getRoomByGuid(params['guid']);
+        this.channel$ = this.channelService.getChannelByGuid(params['guid']);
       });
 
     this.initMessageForm();
@@ -44,10 +44,10 @@ export class RoomComponent implements OnInit, OnDestroy
     });
   }
 
-  onSubmitMessage(roomGuid: string): void {
-    if (this.messageForm.valid && roomGuid) 
+  onSubmitMessage(channelGuid: string): void {
+    if (this.messageForm.valid && channelGuid) 
     {
-      this.roomService.addMessage(roomGuid, this.messageForm.value.content);
+      this.channelService.addMessage(channelGuid, this.messageForm.value.content);
       this.messageForm.reset();
     }
   }

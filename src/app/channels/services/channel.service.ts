@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
 
-import { Room, roomsKeyArr, roomsSchemaArr } from '../models/room.model';
+import { Channel, channelsKeyArr, channelsSchemaArr } from '../models/channel.model';
 import { UserChat } from '../models/user-chat.model';
 import { Message, messagesKeyArr, messagesSchemaArr } from '../models/message.model';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
@@ -14,7 +14,7 @@ import { UserModel } from 'src/app/shared/models/user.model';
 @Injectable({
  providedIn: 'root'
 })
-export class RoomService
+export class ChannelService
 {
     constructor(private storageMap: StorageMap,
         private authicationService: AuthenticationService) { }
@@ -24,34 +24,34 @@ export class RoomService
         return new UserChat(user);
     }
 
-    getAllRooms(): Observable<Room[]> {
+    getAllChannels(): Observable<Channel[]> {
         return this.storageMap
-            .get<Room[]>(roomsKeyArr, roomsSchemaArr);
+            .get<Channel[]>(channelsKeyArr, channelsSchemaArr);
     }
 
-    getRoomByGuid(guid: string): Observable<Room> {
-        return this.getAllRooms()
-            .pipe<Room>(
-                map((rooms: Room[]) => {
-                    const room = rooms.find(room => room.guid === guid);
+    getChannelByGuid(guid: string): Observable<Channel> {
+        return this.getAllChannels()
+            .pipe<Channel>(
+                map((channels: Channel[]) => {
+                    const channel = channels.find(ch => ch.guid === guid);
 
-                    Room.prepareGet(room);
-                    room.messages$ = this.getMessagesOfRoom(guid);
+                    Channel.prepareGet(channel);
+                    channel.messages$ = this.getMessagesOfChannel(guid);
                     
-                    return room;
+                    return channel;
                 })
             );
     }
 
-    getMessagesOfRoom(roomGuid: string): Observable<Message[]> 
+    getMessagesOfChannel(channelGuid: string): Observable<Message[]> 
     {
         const user:UserChat = this.getCurrentUser();
 
-        return this.getAllMessages(roomGuid)
+        return this.getAllMessages(channelGuid)
             .pipe<Message[]>(
                 map((messages: Message[]) => {
                     
-                    let msgs = messages?.filter(msg => msg.roomGuid === roomGuid);
+                    let msgs = messages?.filter(msg => msg.channelGuid === channelGuid);
                     
                     if (!msgs) {
                         return [];
@@ -80,58 +80,60 @@ export class RoomService
             );
     }
 
-    getAllMessages(roomGuid: string): Observable<Message[]> 
+    getAllMessages(channelGuid: string): Observable<Message[]> 
     {
         return this.storageMap
             .get<Message[]>(
-                `${messagesKeyArr}_${roomGuid}`,
+                `${messagesKeyArr}_${channelGuid}`,
                 messagesSchemaArr
             ).pipe<Message[]>(
                 map((messages: Message[]) => {
-                    return messages?.filter(msg => msg.roomGuid === roomGuid);
+                    return messages?.filter(msg => msg.channelGuid === channelGuid);
                 })
             );
     }
 
-    roomAdded: Subject<Room> = new Subject<Room>();
-    addRoom(): void 
+    channelAdded: Subject<Channel> = new Subject<Channel>();
+    addChannel(): void 
     {
-        const room = new Room(
+        const channel = new Channel(
             'Conversation',
             [this.getCurrentUser()]
         );
         
-        this.addDefaultBotMessage(room.guid);
+        this.addDefaultBotMessage(channel.guid);
 
-        this.getAllRooms()
-            .subscribe((rooms: Room[]) => 
+        this.getAllChannels()
+            .subscribe((channels: Channel[]) => 
                 {
-                    const roomSave = room.prepareSave(room);
-                    if (!rooms) rooms = [];
-                    rooms.push(roomSave);
+                    const channelSave = channel.prepareSave(channel);
+                    
+                    if (!channels) channels = []; 
+                    channels.push(channelSave);
+
                     this.storageMap.set(
-                        roomsKeyArr,
-                        rooms,
-                        roomsSchemaArr)
+                        channelsKeyArr,
+                        channels,
+                        channelsSchemaArr)
                         .subscribe(() => {
-                            this.roomAdded.next(room);
+                            this.channelAdded.next(channel);
                         });
                 });
     }
 
     messageAdded: Subject<Message[]> = new Subject<Message[]>();
-    addMessage(roomGuid: string, content: string): void {
+    addMessage(channelGuid: string, content: string): void {
         const user = this.getCurrentUser();
-        const message = new Message(content, roomGuid, user.guid, true, 'ok');
+        const message = new Message(content, channelGuid, user.guid, true, 'ok');
 
-        this.getAllMessages(roomGuid)
+        this.getAllMessages(channelGuid)
             .subscribe((messages: Message[]) => 
             {
                 const msgSave = message.prepareSave(message);
                 if (!messages) messages = [];
                 messages.push(msgSave);
                 this.storageMap.set(
-                    `${messagesKeyArr}_${roomGuid}`,
+                    `${messagesKeyArr}_${channelGuid}`,
                     messages,
                     messagesSchemaArr)
                     .subscribe(() => {
@@ -144,23 +146,23 @@ export class RoomService
             });
     }
 
-    private addDefaultBotMessage(roomGuid: string): void 
+    private addDefaultBotMessage(channelGuid: string): void 
     {
         const message = new Message("Hello",
-                        roomGuid, 
+                        channelGuid, 
                         'bot',
                         false,
                         '');
         message.userChat$ = this.botUserChat();
         
-        this.getAllMessages(roomGuid)
+        this.getAllMessages(channelGuid)
         .subscribe((messages: Message[]) => 
         {
             const msgSave = message.prepareSave(message);
             messages = [];
             messages.push(msgSave);
             this.storageMap.set(
-                `${messagesKeyArr}_${roomGuid}`,
+                `${messagesKeyArr}_${channelGuid}`,
                 messages,
                 messagesSchemaArr)
                 .subscribe(() => {

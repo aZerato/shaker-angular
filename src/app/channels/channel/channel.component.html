@@ -18,9 +18,10 @@
             (submit)="onSubmitMessage(channel.guid)"
             class="channel-form col-12">
            
-                <div class="form-group">
-                    <div class="row">
+            <div class="form-group">
+                <div class="row">
                     <textarea
+                        (keyup.enter)="onSubmitMessage(channel.guid)"
                         class="form-control col-11"
                         formControlName="content"
                         name="content"
@@ -34,7 +35,6 @@
                         <fa-icon [icon]="faPaperPlane"></fa-icon>
                     </button>
                 </div>
-
             </div>
         </form>
             

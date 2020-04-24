@@ -18,30 +18,25 @@ export class ChannelsComponent implements OnInit
   faPlusSquare: IconDefinition = faPlusSquare;
   faRocket: IconDefinition = faRocket;
 
-  channels: Channel[] = [];
+  channels: Channel[];
 
-  getAllChannelsSub: Subscription;
   channelAddedSub: Subscription;
 
   constructor(
     private router: Router,
     private channelService: ChannelService) { }
 
-  ngOnInit(): void {
-    this.getAllChannelsSub = 
-      this.channelService.getAllChannels()
-      .subscribe((channels: Channel[]) => {
-        this.channels = channels;
-      });
+  ngOnInit(): void 
+  {  
+     this.channels = this.channelService.channelsBehaviorSub.getValue();
     
     this.channelAddedSub = 
-      this.channelService.channelAdded.subscribe((channel: Channel) => {
+      this.channelService.channelAddedSub.subscribe((channel: Channel) => {
         this.router.navigate(['/channel', channel.guid]);
       });
   }
 
   ngOnDestroy(): void {
-    this.getAllChannelsSub.unsubscribe();
     this.channelAddedSub.unsubscribe();
   }
 

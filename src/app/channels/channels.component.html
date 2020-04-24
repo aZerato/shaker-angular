@@ -4,17 +4,15 @@
 
         <ul>
             <li class="active">
-                <a>
+                <a (click)="onCreateChannel()">
                     <h4>
-                        <fa-icon 
-                        (click)="onCreateChannel()"
-                        [icon]="faPlusSquare"></fa-icon>
+                        <fa-icon [icon]="faPlusSquare"></fa-icon>
                         
                         Create channel
                     </h4>
                 </a>
             </li>
-            
+
             <li *ngFor="let channel of channels">
                 <a [routerLink]="['/channel', channel.guid]">
                     
@@ -24,7 +22,7 @@
 
                 </a>
             </li>
-            
+
         </ul>
 
     </div>

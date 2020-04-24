@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
@@ -15,19 +15,36 @@ import { Channel, channelsKeyArr, channelsSchemaArr } from '../models/channel.mo
 })
 export class ChannelService
 {
+    private _getAllChannelsObs: Observable<Channel[]>;
+    private _channels: Channel[] = [];
+    channelsBehaviorSub: BehaviorSubject<Channel[]> = new BehaviorSubject<Channel[]>(this._channels);
+    channelAddedSub: Subject<Channel> = new Subject<Channel>();
+
     constructor(private storageMap: StorageMap,
         private messageService: MessageService,
-        private userChatService: UserChatService) { }
+        private userChatService: UserChatService) 
+    { 
+        this._getAllChannelsObs = 
+            this.storageMap.get<Channel[]>(channelsKeyArr, channelsSchemaArr);
+
+        this._getAllChannelsObs
+            .subscribe((channels: Channel[]) => {
+                this._channels.push(...channels);
+                this.channelsBehaviorSub = new BehaviorSubject<Channel[]>(this._channels);
+            });
+    }
+
 
     getAllChannels(): Observable<Channel[]> {
-        return this.storageMap
-            .get<Channel[]>(channelsKeyArr, channelsSchemaArr);
+        return this._getAllChannelsObs;
     }
 
     getChannelByGuid(guid: string): Observable<Channel> {
-        return this.getAllChannels()
+        return this._getAllChannelsObs
             .pipe<Channel>(
                 map((channels: Channel[]) => {
+                    if (!channels) return;
+
                     const channel = channels.find(ch => ch.guid === guid);
 
                     Channel.prepareGet(channel);
@@ -38,7 +55,6 @@ export class ChannelService
             );
     }
 
-    channelAdded: Subject<Channel> = new Subject<Channel>();
     addChannel(): void 
     {
         const channel = new Channel(
@@ -48,21 +64,17 @@ export class ChannelService
         
         this.messageService.addDefaultBotMessage(channel.guid);
 
-        this.getAllChannels()
-            .subscribe((channels: Channel[]) => 
-                {
-                    const channelSave = channel.prepareSave(channel);
-                    
-                    if (!channels) channels = []; 
-                    channels.push(channelSave);
+        const channelSave = channel.prepareSave(channel);
+        
+        this._channels.push(channelSave);
 
-                    this.storageMap.set(
-                        channelsKeyArr,
-                        channels,
-                        channelsSchemaArr)
-                        .subscribe(() => {
-                            this.channelAdded.next(channel);
-                        });
-                });
+        this.storageMap.set(
+            channelsKeyArr,
+            this._channels,
+            channelsSchemaArr)
+            .subscribe(() => {
+                this.channelsBehaviorSub.next(this._channels);
+                this.channelAddedSub.next(channel);
+            });
     }
 }

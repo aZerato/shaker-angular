@@ -13,7 +13,6 @@ import { Channel, channelsKeyArr, channelsSchemaArr } from '../models/channel.mo
 export class ChannelService
 {
     private _channels: Channel[];
-    channelsBehaviorSub: BehaviorSubject<Channel[]> = new BehaviorSubject<Channel[]>(this._channels);
     channelAddedSub: Subject<Channel> = new Subject<Channel>();
 
     constructor(private storageMap: StorageMap) 
@@ -25,7 +24,6 @@ export class ChannelService
                     .pipe<Channel[]>(map((channels: Channel[]) => {
                         if (!channels) channels = [];
                         this._channels = channels;
-                        this.channelsBehaviorSub = new BehaviorSubject<Channel[]>(this._channels);
                         return this._channels;
                     }));
     }
@@ -56,7 +54,6 @@ export class ChannelService
             this._channels,
             channelsSchemaArr)
             .subscribe(() => {
-                this.channelsBehaviorSub.next(this._channels);
                 this.channelAddedSub.next(channel);
             });
     }

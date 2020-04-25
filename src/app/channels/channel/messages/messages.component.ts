@@ -22,7 +22,8 @@ export class MessagesComponent implements OnInit, OnDestroy
 
   private _channel: Channel;
   private _dataSub: Subscription;
-  private _behaviorSub: Subscription;
+  private _getStorageMessagesChannelsObsSub: Subscription;
+  private _getMessageAddedSub: Subscription;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -40,18 +41,27 @@ export class MessagesComponent implements OnInit, OnDestroy
 
           this.currentUserGuid = this.authenticationService.getUserConnected().guid;
 
-          this._behaviorSub = 
+          this._getStorageMessagesChannelsObsSub = 
             this.messageService
             .getStorageMessagesChannelsObs(this._channel.guid)
             .subscribe((msgs: Message[]) => {
               this.messages = msgs;
             });
+
+          this._getMessageAddedSub = 
+            this.messageService
+            .getMessageAddedSub(this._channel.guid)
+            .subscribe((msg: Message) => {
+              this.messages.push(msg);
+            });
+
         });
   }
 
   ngOnDestroy(): void 
   {
     this._dataSub.unsubscribe();
-    this._behaviorSub.unsubscribe();
+    this._getStorageMessagesChannelsObsSub?.unsubscribe();
+    this._getMessageAddedSub?.unsubscribe();
   }
 }

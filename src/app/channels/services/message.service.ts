@@ -19,7 +19,6 @@ class MessagesByChannel
     messageAddedSub: Subject<Message> = new Subject<Message>();
     messagesStorageObs: Observable<Message[]>;
     messages: Message[] = [];
-    messagesBehaviorSub: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>(this.messages);
 
     constructor(
         channelGuid: string,
@@ -32,14 +31,8 @@ class MessagesByChannel
                 .pipe<Message[]>(map((msgs: Message[]) => {
                     if(!msgs) msgs = [];
                     this.messages = msgs;
-                    this.messagesBehaviorSub = new BehaviorSubject<Message[]>(this.messages);
                     return this.messages;
                 }));
-
-            this.messageAddedSub.subscribe((msg: Message) => {
-                this.messages.push(msg);            
-                this.messagesBehaviorSub.next(this.messages);
-            });
         }
 }
 
@@ -61,7 +54,7 @@ export class MessageService
 
     private linkChannelsAndMessages(): void 
     {
-        this.channelService.channelsBehaviorSub
+        this.channelService.getAllChannelsObs()
             .subscribe((channels: Channel[]) => 
             {
                 channels.forEach((channel: Channel) => {
@@ -69,12 +62,11 @@ export class MessageService
                 });
             });
 
-        const channelAddedSub = this.channelService.channelAddedSub;
-            
-        channelAddedSub.subscribe((channel: Channel) => {
-            this.linkChannelAndMessages(channel);
-            this.addBotMessage(channel.guid, botGuid);
-        });
+        this.channelService.channelAddedSub
+            .subscribe((channel: Channel) => {
+                this.linkChannelAndMessages(channel);
+                this.addBotMessage(channel.guid, botGuid);
+            });
     }
 
     private linkChannelAndMessages(channel: Channel): void
@@ -96,6 +88,11 @@ export class MessageService
     {
         return this._messagesByChannels
                     .find(mc => mc.channelGuid === channelGuid);
+    }
+
+    getMessageAddedSub(channelGuid: string): Subject<Message>
+    {
+        return this.getMessagesByChannel(channelGuid).messageAddedSub;
     }
 
     addUserMessage(channelGuid: string, content: string): void 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Data } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { faPlusSquare, faRocket, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -20,6 +20,7 @@ export class ChannelsComponent implements OnInit
 
   channels: Channel[];
 
+  channelServiceSub: Subscription;
   channelAddedSub: Subscription;
 
   constructor(
@@ -28,19 +29,22 @@ export class ChannelsComponent implements OnInit
 
   ngOnInit(): void 
   {  
-    this.channelService
-      .getAllChannelsObs()
-      .subscribe((channels: Channel[]) => {
-        this.channels = channels;
-      });
+    this.channelServiceSub =
+      this.channelService
+        .getAllChannelsObs()
+        .subscribe((channels: Channel[]) => {
+          this.channels = channels;
+        });
 
     this.channelAddedSub = 
       this.channelService.channelAddedSub.subscribe((channel: Channel) => {
+        this.channels.push(channel);
         this.router.navigate(['/channel', channel.guid]);
       });
   }
 
   ngOnDestroy(): void {
+    this.channelServiceSub.unsubscribe();
     this.channelAddedSub.unsubscribe();
   }
 

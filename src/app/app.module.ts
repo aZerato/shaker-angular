@@ -21,6 +21,7 @@ import { NewComponent } from './users/new/new.component';
 
 // start Channels components
 import { ChannelsComponent } from './channels/channels.component';
+import { HomeChannelsComponent } from './channels/home/home-channels.component';
 import { ChannelComponent } from './channels/channel/channel.component';
 import { MessagesComponent } from './channels/channel/messages/messages.component';
 import { UserMessageComponent } from './channels/channel/messages/user-message/user-message.component';
@@ -46,6 +47,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     NewComponent,
 
     ChannelsComponent,
+    HomeChannelsComponent,
     ChannelComponent,
     MessagesComponent,
     UserMessageComponent,

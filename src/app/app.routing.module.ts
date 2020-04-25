@@ -12,6 +12,7 @@ import { UsersComponent } from './users/users.component';
 import { NewComponent } from './users/new/new.component';
 
 import { ChannelsComponent } from './channels/channels.component';
+import { HomeChannelsComponent } from './channels/home/home-channels.component';
 import { ChannelComponent } from './channels/channel/channel.component';
 
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
@@ -70,6 +71,10 @@ const appRoutes: Routes = [
             AuthenticationGuard
         ],
         children: [
+            {
+                path: '',
+                component: HomeChannelsComponent
+            },
             {
                 path: ':guid', 
                 component: ChannelComponent,

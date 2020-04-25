@@ -21,13 +21,18 @@
                 border-spacing: 0;
                 box-sizing: border-box;
 
-                &.active 
+                &.active {
+                    a {
+                        color: #00a9b4;
+                    }
+                }
+
+                &.channel-list-item.main
                 {
                     background: #f2f4f7; 
 
                     a {
                         padding: 0;
-                        color: #00a9b4;
                         
                         fa-icon {
                             padding-right: 8px;
@@ -39,8 +44,14 @@
                             margin: 0;
                             font-size: 14px;
                             font-weight: 600;
-                            border-bottom: 1px solid #D5D7DE;
                         }
+                    }
+
+                    &:last-of-type 
+                    {
+                        
+                            border-bottom: 1px solid #D5D7DE;
+                        
                     }
                 }
 

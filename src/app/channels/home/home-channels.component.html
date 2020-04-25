@@ -1,0 +1,29 @@
+<div class="row mt-4">
+
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-4"
+        *ngFor="let channel of channels" >
+
+        <div class="card">
+            <a class="text-white"
+                [routerLink]="['/channel', channel.guid]">
+
+                <fa-icon [icon]="faRocket" class="rocket"></fa-icon>
+
+                <img class="card-img" src="./assets/img/bot-avatar.png" alt="Card image cap">
+
+                <div class="card-img-overlay">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span>{{ channel.name }}</span>
+                        </h5>
+
+                        <p class="card-text">An awesome channel.</p>
+                    </div>
+                </div>
+
+            </a>
+        </div>
+    </div>  
+
+</div>
+

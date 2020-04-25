@@ -3,7 +3,19 @@
     <div class="col-3 channels-list p-0">
 
         <ul>
-            <li class="active">
+            <li class="channel-list-item main"
+                [routerLinkActive]="['active']"
+                [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/channel']">
+                    <h4>
+                        <fa-icon [icon]="faSatellite"></fa-icon>
+                        
+                        Channels list
+                    </h4>
+                </a>
+            </li>
+
+            <li class="channel-list-item main">
                 <a (click)="onCreateChannel()">
                     <h4>
                         <fa-icon [icon]="faPlusSquare"></fa-icon>
@@ -13,12 +25,13 @@
                 </a>
             </li>
 
-            <li *ngFor="let channel of channels">
+            <li [routerLinkActive]="['active']"
+                *ngFor="let channel of channels">
                 <a [routerLink]="['/channel', channel.guid]">
                     
                     <fa-icon [icon]="faRocket"></fa-icon>
                     
-                    <span>{{ channel.guid }}</span>
+                    <span>{{ channel.name }}</span>
 
                 </a>
             </li>

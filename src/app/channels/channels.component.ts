@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { faPlusSquare, faRocket, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare, faRocket, IconDefinition, faSatellite } from '@fortawesome/free-solid-svg-icons';
 
 import { ChannelService } from './services/channel.service';
 import { Channel } from './models/channel.model';
@@ -18,6 +18,7 @@ export class ChannelsComponent implements OnInit
 {
   faPlusSquare: IconDefinition = faPlusSquare;
   faRocket: IconDefinition = faRocket;
+  faSatellite: IconDefinition = faSatellite;
 
   channels: Channel[];
 

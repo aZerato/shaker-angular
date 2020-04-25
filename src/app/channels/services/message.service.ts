@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject, BehaviorSubject, pipe } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
@@ -8,8 +8,6 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { Message, messagesKeyArr, messagesSchemaArr } from '../models/message.model';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
 import { UserModel } from 'src/app/shared/models/user.model';
-
-const botGuid: string = 'bot';
 
 class MessagesByChannel 
 {

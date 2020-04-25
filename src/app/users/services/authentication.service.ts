@@ -6,8 +6,11 @@ import { map, flatMap } from 'rxjs/operators';
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 import { AuthenticationModel, authenticationKey, authenticationSchema } from '../models/authentication.model';
-import { UserModel, usersSchemaArr, usersKey, userSchema } from '../../shared/models/user.model';
+import { UserModel, usersSchemaArr, usersKey } from '../../shared/models/user.model';
 import { CreationModel } from '../models/creation.model';
+
+export const botGuid: string = 'bot';
+export const botUserModel: UserModel = new UserModel('bot', '', '', '', './assets/img/bot-avatar.png');
 
 @Injectable({
  providedIn: 'root'
@@ -181,6 +184,11 @@ export class AuthenticationService
 
     getUserByGuid(guid: string): Observable<UserModel>
     {
+        if (guid === botGuid)
+        {
+            return of(botUserModel);
+        }
+
         return this._usersObs
             .pipe<UserModel>(
                 map((users :UserModel[]) => {

@@ -12,13 +12,14 @@ import { UsersComponent } from './users/users.component';
 import { NewComponent } from './users/new/new.component';
 
 import { ChannelsComponent } from './channels/channels.component';
-import { HomeChannelsComponent } from './channels/home/home-channels.component';
+import { ChannelsHomeComponent } from './channels/home/channels-home.component';
 import { ChannelComponent } from './channels/channel/channel.component';
+import { ChannelSettingsComponent } from './channels/channel/settings/channel-settings.component';
+import { ChannelResolverService } from './channels/resolvers/channel.resolver';
 
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
 import { CheckUserConnectedGuard } from './shared/guards/check-user-connected.guard';
 import { ConnectedRedirectionGuard } from './shared/guards/connected-redirection.guard copy';
-import { ChannelResolverService } from './channels/resolvers/channel.resolver';
 
 const appRoutes: Routes = [
     { 
@@ -73,11 +74,18 @@ const appRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: HomeChannelsComponent
+                component: ChannelsHomeComponent
             },
             {
                 path: ':guid', 
                 component: ChannelComponent,
+                resolve: {
+                    channel: ChannelResolverService
+                }
+            },
+            {
+                path: ':guid/settings',
+                component: ChannelSettingsComponent,
                 resolve: {
                     channel: ChannelResolverService
                 }

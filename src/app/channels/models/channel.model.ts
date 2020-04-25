@@ -4,11 +4,13 @@ export const channelSchema:JSONSchema = {
     type: 'object',
     properties: {
         guid: { type: 'string' },
-        name: { type: 'string' }
+        name: { type: 'string' },
+        imgPath: { type: 'string' }
     },
     required: [
         'guid',
-        'name'
+        'name',
+        'imgPath'
     ]
 };
 
@@ -22,11 +24,12 @@ export class Channel {
     
     guid: string;
     name: string;
+    imgPath: string;
 
-    constructor(
-        name: string) 
+    constructor(name: string) 
     {
         this.guid = Date.now().toString();
         this.name = name;
+        this.imgPath = "./assets/img/bot-avatar.png";
     }
 }

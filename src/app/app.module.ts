@@ -21,8 +21,9 @@ import { NewComponent } from './users/new/new.component';
 
 // start Channels components
 import { ChannelsComponent } from './channels/channels.component';
-import { HomeChannelsComponent } from './channels/home/home-channels.component';
+import { ChannelsHomeComponent } from './channels/home/channels-home.component';
 import { ChannelComponent } from './channels/channel/channel.component';
+import { ChannelSettingsComponent } from './channels/channel/settings/channel-settings.component';
 import { MessagesComponent } from './channels/channel/messages/messages.component';
 import { UserMessageComponent } from './channels/channel/messages/user-message/user-message.component';
 // end Channels components
@@ -47,8 +48,9 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     NewComponent,
 
     ChannelsComponent,
-    HomeChannelsComponent,
+    ChannelsHomeComponent,
     ChannelComponent,
+    ChannelSettingsComponent,
     MessagesComponent,
     UserMessageComponent,
 

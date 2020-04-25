@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -10,11 +9,11 @@ import { ChannelService } from '../services/channel.service';
 import { Channel } from '../models/channel.model';
 
 @Component({
-  selector: 'app-home-channels',
-  templateUrl: './home-channels.component.html',
-  styleUrls: ['./home-channels.component.scss']
+  selector: 'app-channels-home',
+  templateUrl: './channels-home.component.html',
+  styleUrls: ['./channels-home.component.scss']
 })
-export class HomeChannelsComponent implements OnInit 
+export class ChannelsHomeComponent implements OnInit 
 {
   faPlusSquare: IconDefinition = faPlusSquare;
   faRocket: IconDefinition = faRocket;

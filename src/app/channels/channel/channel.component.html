@@ -1,10 +1,16 @@
 <div class="row channel">
     <div class="col-md-12 channel-inner">
 
-        <div class="channel-header">
-            <h5 col="col-12">
-                <fa-icon [icon]="faCommentAlt"></fa-icon> Channel {{ channel.guid }}
-            </h5>
+        <div class="channel-header row">
+            <div class="col-8">
+                <fa-icon [icon]="faCommentAlt"></fa-icon> {{ channel.name }}
+            </div>
+            <div class="col-4 text-right">
+                <a class="btn btn-outline-dark"
+                    [routerLink]="['settings']">
+                    <fa-icon [icon]="faCogs"></fa-icon>
+                </a>
+            </div>
         </div>
 
         <div class="channel-content">

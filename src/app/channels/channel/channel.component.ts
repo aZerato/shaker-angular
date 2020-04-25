@@ -4,7 +4,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
-import { faPaperPlane, faCommentAlt, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faPaperPlane, 
+  faCommentAlt,
+  faCogs, 
+  IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { Channel } from '../models/channel.model';
 import { MessageService } from '../services/message.service';
@@ -18,6 +22,7 @@ export class ChannelComponent implements OnInit, OnDestroy
 {
   faPaperPlane: IconDefinition = faPaperPlane;
   faCommentAlt: IconDefinition = faCommentAlt;
+  faCogs: IconDefinition = faCogs;
 
   channel: Channel = new Channel('');
   messageForm: FormGroup;

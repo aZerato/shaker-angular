@@ -6,6 +6,8 @@ import { MessageService } from '../../services/message.service';
 
 import { Message } from '../../models/message.model';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
+import { Channel } from '../../models/channel.model';
+import { ActivatedRoute, Data } from '@angular/router';
 
 @Component({
   selector: 'app-messages',
@@ -14,34 +16,42 @@ import { AuthenticationService } from 'src/app/users/services/authentication.ser
 })
 export class MessagesComponent implements OnInit, OnDestroy
 {
-  @Input()
-  channelGuid: string;
-
   currentUserGuid: string;
-
+  
   messages: Message[] = [];
 
+  private _channel: Channel;
+  private _dataSub: Subscription;
   private _behaviorSub: Subscription;
 
   constructor(
     private authenticationService: AuthenticationService,
-    private messageService: MessageService) 
+    private messageService: MessageService,
+    private route: ActivatedRoute) 
     { }
 
   ngOnInit(): void 
   {
-    this.currentUserGuid = this.authenticationService.getUserConnected().guid;
+    this._dataSub =
+      this.route.data
+        .subscribe((data: Data) => 
+        {
+          this._channel = data['channel'];
 
-    const getMessagesByChannelSub = 
-      this.messageService.getMessagesByChannelBehaviorSub(this.channelGuid);
-      
-    this._behaviorSub = getMessagesByChannelSub.subscribe((msgs: Message[]) => {
-      this.messages = msgs;
-    });
+          this.currentUserGuid = this.authenticationService.getUserConnected().guid;
+
+          this._behaviorSub = 
+            this.messageService
+            .getStorageMessagesChannelsObs(this._channel.guid)
+            .subscribe((msgs: Message[]) => {
+              this.messages = msgs;
+            });
+        });
   }
 
   ngOnDestroy(): void 
   {
+    this._dataSub.unsubscribe();
     this._behaviorSub.unsubscribe();
   }
 }

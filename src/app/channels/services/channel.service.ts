@@ -12,29 +12,26 @@ import { Channel, channelsKeyArr, channelsSchemaArr } from '../models/channel.mo
 })
 export class ChannelService
 {
-    private _getAllChannelsObs: Observable<Channel[]>;
-    private _channels: Channel[] = [];
+    private _channels: Channel[];
     channelsBehaviorSub: BehaviorSubject<Channel[]> = new BehaviorSubject<Channel[]>(this._channels);
     channelAddedSub: Subject<Channel> = new Subject<Channel>();
 
     constructor(private storageMap: StorageMap) 
-    {
-        this._getAllChannelsObs = 
-            this.storageMap.get<Channel[]>(channelsKeyArr, channelsSchemaArr)
-            .pipe<Channel[]>(map((channels: Channel[]) => {
-                if (!channels) channels = [];
-                this._channels.push(...channels);
-                this.channelsBehaviorSub = new BehaviorSubject<Channel[]>(this._channels);
-                return this._channels;
-            }));
-    }
+    { }
 
     getAllChannelsObs() : Observable<Channel[]> {
-        return this._getAllChannelsObs.pipe(publish());
+        return this.storageMap
+                    .get<Channel[]>(channelsKeyArr, channelsSchemaArr)
+                    .pipe<Channel[]>(map((channels: Channel[]) => {
+                        if (!channels) channels = [];
+                        this._channels = channels;
+                        this.channelsBehaviorSub = new BehaviorSubject<Channel[]>(this._channels);
+                        return this._channels;
+                    }));
     }
 
     getChannelByGuid(guid: string): Observable<Channel> {
-        return this._getAllChannelsObs
+        return this.getAllChannelsObs()
             .pipe<Channel>(
                 map((channels: Channel[]) => {
                     if (!channels) return;

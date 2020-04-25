@@ -33,11 +33,10 @@ export class AuthenticationService
                 authenticationSchema);
 
         this._userConnectedObs
-            .subscribe((user: UserModel) => {
-                
+            .pipe(map((user: UserModel) => { 
                 this._userConnected = user;
                 this.userConnectedBehaviorSub = new BehaviorSubject<UserModel>(this._userConnected);
-            });
+            }));
 
         this._usersObs = 
             this.storageMap.get<UserModel[]>(
@@ -45,11 +44,11 @@ export class AuthenticationService
                 usersSchemaArr);
 
         this._usersObs
-            .subscribe((users: UserModel[]) => {
+            .pipe(map((users: UserModel[]) => {
                 if (!users) users = [];
                 this._users.push(...users);
                 this.usersBehaviorSub = new BehaviorSubject<UserModel[]>(this._users);
-            });
+            }));
     }
 
     private onError(error?: any, message?: string): void {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
 
@@ -9,32 +10,36 @@ import { ChannelService } from './channel.service';
 import { Channel } from '../models/channel.model';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
 import { UserModel } from 'src/app/shared/models/user.model';
-import { publish } from 'rxjs/operators';
 
 const botGuid: string = 'bot';
 
 class MessagesByChannel 
 {
     channelGuid: string;
-    storageMessagesObs: Observable<Message[]>;
-    private _messages: Message[] = [];
-    messageBehaviorSub: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>(this._messages);
     messageAddedSub: Subject<Message> = new Subject<Message>();
+    messagesStorageObs: Observable<Message[]>;
+    messages: Message[] = [];
+    messagesBehaviorSub: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>(this.messages);
 
     constructor(
         channelGuid: string,
-        storageMessagesObs: Observable<Message[]>)
+        messagesStorageObs: Observable<Message[]>)
         {
             this.channelGuid = channelGuid;
-
-            this.storageMessagesObs = storageMessagesObs;
             
-            this.storageMessagesObs
-                .subscribe((messages: Message[]) => {
-                    if (!messages) messages = [];
-                    this._messages.push(...messages);
-                    this.messageBehaviorSub = new BehaviorSubject<Message[]>(this._messages);
-                });
+            this.messagesStorageObs = 
+                messagesStorageObs
+                .pipe<Message[]>(map((msgs: Message[]) => {
+                    if(!msgs) msgs = [];
+                    this.messages = msgs;
+                    this.messagesBehaviorSub = new BehaviorSubject<Message[]>(this.messages);
+                    return this.messages;
+                }));
+
+            this.messageAddedSub.subscribe((msg: Message) => {
+                this.messages.push(msg);            
+                this.messagesBehaviorSub.next(this.messages);
+            });
         }
 }
 
@@ -51,27 +56,24 @@ export class MessageService
         private authenticationService: AuthenticationService) 
     {
         this._user = this.authenticationService.getUserConnected();
-
-        this.channelService.getAllChannelsObs()
-            .pipe(publish())
-            .subscribe((channels: Channel[]) => 
-            { 
-                this.linkChannelsAndMessages(channels);
-            });
+        this.linkChannelsAndMessages();
     }
 
-    private linkChannelsAndMessages(channels: Channel[]): void 
+    private linkChannelsAndMessages(): void 
     {
-        channels = channels ?? this.channelService.channelsBehaviorSub.getValue();
-        const channelAddedSub = this.channelService.channelAddedSub;
-        
-        channels.forEach((channel: Channel) => {
-            this.linkChannelAndMessages(channel);
-        });
+        this.channelService.channelsBehaviorSub
+            .subscribe((channels: Channel[]) => 
+            {
+                channels.forEach((channel: Channel) => {
+                    this.linkChannelAndMessages(channel);
+                });
+            });
 
+        const channelAddedSub = this.channelService.channelAddedSub;
+            
         channelAddedSub.subscribe((channel: Channel) => {
-            this.addBotMessage(channel.guid, botGuid);
             this.linkChannelAndMessages(channel);
+            this.addBotMessage(channel.guid, botGuid);
         });
     }
 
@@ -83,7 +85,7 @@ export class MessageService
         this._messagesByChannels.push(messagesByChannel);
     }
 
-    private getStorageMessagesChannelsObs(channelGuid: string): Observable<Message[]>
+    getStorageMessagesChannelsObs(channelGuid: string): Observable<Message[]>
     {
         return this.storageMap.get(
             `${messagesKeyArr}_${channelGuid}`,
@@ -92,29 +94,13 @@ export class MessageService
 
     private getMessagesByChannel(channelGuid: string): MessagesByChannel
     {
-        if (this._messagesByChannels.length === 0) 
-            this.linkChannelsAndMessages(undefined);
-
         return this._messagesByChannels
                     .find(mc => mc.channelGuid === channelGuid);
-    }
-
-    getMessagesByChannelObs(channelGuid: string): Observable<Message[]> 
-    {
-        return this.getMessagesByChannel(channelGuid)
-                    .storageMessagesObs;
-    }
-
-    getMessagesByChannelBehaviorSub(channelGuid: string): BehaviorSubject<Message[]> 
-    {
-        return this.getMessagesByChannel(channelGuid)
-                    .messageBehaviorSub;
     }
 
     addUserMessage(channelGuid: string, content: string): void 
     {
         this.addMessage(channelGuid, this._user.guid, content);
-        
     }
 
     private addBotMessage(channelGuid: string, content: string): void 
@@ -124,21 +110,20 @@ export class MessageService
 
     private addMessage(channelGuid: string, userGuid: string, content: string): void 
     {
-        const behaviorSub = this.getMessagesByChannelBehaviorSub(channelGuid);
-        const messages = behaviorSub.getValue();
+        const msgsByChannel = this.getMessagesByChannel(channelGuid);
         const message = new Message(
             content, 
             channelGuid, 
             userGuid);
 
-        messages.push(message);
+        msgsByChannel.messages.push(message);
 
         this.storageMap.set(
             `${messagesKeyArr}_${channelGuid}`,
-            messages,
+            msgsByChannel.messages,
             messagesSchemaArr)
             .subscribe(() => {
-                behaviorSub.next(messages);
+                msgsByChannel.messageAddedSub.next(message);
             });
     }
 }

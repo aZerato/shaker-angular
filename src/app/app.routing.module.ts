@@ -17,6 +17,7 @@ import { ChannelComponent } from './channels/channel/channel.component';
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
 import { CheckUserConnectedGuard } from './shared/guards/check-user-connected.guard';
 import { ConnectedRedirectionGuard } from './shared/guards/connected-redirection.guard copy';
+import { ChannelResolverService } from './channels/resolvers/channel.resolver';
 
 const appRoutes: Routes = [
     { 
@@ -71,7 +72,10 @@ const appRoutes: Routes = [
         children: [
             {
                 path: ':guid', 
-                component: ChannelComponent
+                component: ChannelComponent,
+                resolve: {
+                    channel: ChannelResolverService
+                }
             }
         ]
     },

@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { faPaperPlane, faCommentAlt, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-
-import { ChannelService } from '../services/channel.service';
 
 import { Channel } from '../models/channel.model';
 import { MessageService } from '../services/message.service';
@@ -29,22 +27,14 @@ export class ChannelComponent implements OnInit, OnDestroy
 
   constructor(
     private route: ActivatedRoute,
-    private channelService: ChannelService,
     private messageService: MessageService) { }
 
   ngOnInit(): void {
     this._paramsSub =
-      this.route.params
-        .subscribe((params: Params) => 
+      this.route.data
+        .subscribe((data: Data) => 
         {
-          const guid = params['guid'];
-
-          this._getChannelByGuidSub =
-            this.channelService
-            .getChannelByGuid(guid)
-            .subscribe((channel: Channel) => {
-              this.channel = channel;
-            });
+          this.channel = data['channel'];
         });
 
     this.initMessageForm();

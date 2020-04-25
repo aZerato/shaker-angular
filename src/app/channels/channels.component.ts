@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Data } from '@angular/router';
 
 import { faPlusSquare, faRocket, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -28,8 +28,12 @@ export class ChannelsComponent implements OnInit
 
   ngOnInit(): void 
   {  
-    this.channels = this.channelService.channelsBehaviorSub.getValue();
-    
+    this.channelService
+      .getAllChannelsObs()
+      .subscribe((channels: Channel[]) => {
+        this.channels = channels;
+      });
+
     this.channelAddedSub = 
       this.channelService.channelAddedSub.subscribe((channel: Channel) => {
         this.router.navigate(['/channel', channel.guid]);

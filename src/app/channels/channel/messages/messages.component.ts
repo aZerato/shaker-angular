@@ -8,6 +8,7 @@ import { Message } from '../../models/message.model';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
 import { Channel } from '../../models/channel.model';
 import { ActivatedRoute, Data } from '@angular/router';
+import { UserModel } from 'src/app/shared/models/user.model';
 
 @Component({
   selector: 'app-messages',
@@ -22,6 +23,7 @@ export class MessagesComponent implements OnInit, OnDestroy
 
   private _channel: Channel;
   private _dataSub: Subscription;
+  private _getUserConnectedSub: Subscription;
   private _getStorageMessagesChannelsObsSub: Subscription;
   private _getMessageAddedSub: Subscription;
 
@@ -39,20 +41,28 @@ export class MessagesComponent implements OnInit, OnDestroy
         {
           this._channel = data['channel'];
 
-          this.currentUserGuid = this.authenticationService.getUserConnected().guid;
+          this._getUserConnectedSub = 
+            this.authenticationService
+              .getUserConnected()
+              .subscribe((user: UserModel) => {
+                this.currentUserGuid = user.guid;
+              });
 
           this._getStorageMessagesChannelsObsSub = 
             this.messageService
             .getStorageMessagesChannelsObs(this._channel.guid)
             .subscribe((msgs: Message[]) => {
               this.messages = msgs;
-            });
 
-          this._getMessageAddedSub = 
-            this.messageService
-            .getMessageAddedSub(this._channel.guid)
-            .subscribe((msg: Message) => {
-              this.messages.push(msg);
+              this._getMessageAddedSub =
+                this.messageService.getMessageAddedSub(this._channel.guid)
+                .subscribe((message: Message) => 
+                {
+                  if (this.messages.find(msg => msg.guid === message.guid)) 
+                    return;
+                  
+                  this.messages.push(message);
+                });
             });
 
         });
@@ -61,6 +71,7 @@ export class MessagesComponent implements OnInit, OnDestroy
   ngOnDestroy(): void 
   {
     this._dataSub.unsubscribe();
+    this._getUserConnectedSub?.unsubscribe();
     this._getStorageMessagesChannelsObsSub?.unsubscribe();
     this._getMessageAddedSub?.unsubscribe();
   }

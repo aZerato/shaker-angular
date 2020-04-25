@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { faPlusSquare, faRocket, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-
 import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
+
+import { faPlusSquare, faRocket, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { ChannelService } from './services/channel.service';
 import { Channel } from './models/channel.model';
@@ -32,20 +33,28 @@ export class ChannelsComponent implements OnInit
     this.channelServiceSub =
       this.channelService
         .getAllChannelsObs()
+        .pipe(first())
         .subscribe((channels: Channel[]) => {
           this.channels = channels;
         });
 
     this.channelAddedSub = 
-      this.channelService.channelAddedSub.subscribe((channel: Channel) => {
-        this.channels.push(channel);
-        this.router.navigate(['/channel', channel.guid]);
-      });
+      this.channelService
+        .channelAddedSub
+        .subscribe((channel: Channel) => 
+        {
+          if (!(this.channels.length === 1 && this.channels[0].guid === channel.guid))
+          {
+            this.channels.push(channel);
+          }
+          
+          this.router.navigate(['/channel', channel.guid]);
+        });
   }
 
   ngOnDestroy(): void {
     this.channelServiceSub.unsubscribe();
-    this.channelAddedSub.unsubscribe();
+    this.channelAddedSub?.unsubscribe();
   }
 
   onCreateChannel(): void {

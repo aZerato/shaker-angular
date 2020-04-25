@@ -22,15 +22,14 @@ export class ChannelComponent implements OnInit, OnDestroy
   channel: Channel = new Channel('');
   messageForm: FormGroup;
 
-  private _paramsSub: Subscription;
-  private _getChannelByGuidSub: Subscription;
+  private _dataSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this._paramsSub =
+    this._dataSub =
       this.route.data
         .subscribe((data: Data) => 
         {
@@ -41,8 +40,7 @@ export class ChannelComponent implements OnInit, OnDestroy
   }
 
   ngOnDestroy(): void {
-    this._paramsSub.unsubscribe();
-    this._getChannelByGuidSub.unsubscribe();
+    this._dataSub.unsubscribe();
   }
 
   initMessageForm(): void {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject, of, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject, of, BehaviorSubject, concat } from 'rxjs';
+import { map, flatMap } from 'rxjs/operators';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
 
@@ -143,32 +143,40 @@ export class AuthenticationService
 
     isAuthenticated(): Observable<boolean>
     {
-        if (this.getUserConnected())
+        return this.getUserConnected()
+            .pipe<boolean>(
+                map((user: UserModel) => 
+                {
+                    if (user)
+                    {
+                        this.authenticationStatusChangeSubject.next(true);
+                        return true;
+                    }
+                    else 
+                    {
+                        return false;
+                    }
+                }));
+    }
+
+    getUserConnected(): Observable<UserModel> 
+    {
+        if (this._userConnected)
         {
-            return of(true)
+            return of(this._userConnected);
         }
         
         return this.getAuthenticatedUser()
-            .pipe<boolean>(
-                map((auth: AuthenticationModel) => {
-                    if (auth)
-                    {
-                        this.getUserByGuid(auth.guid)
-                            .subscribe((user: UserModel) => {
-                                this._userConnected = user;
-                                this.authenticationStatusChangeSubject.next(true);
-                            });
-
-                        return true;
-                    }
-                    return false;
-                })
-            );
-    }
-
-    getUserConnected(): UserModel 
-    {
-        return this._userConnected;
+            .pipe<UserModel>(
+                flatMap((auth: AuthenticationModel) => 
+                {
+                    return this.getUserByGuid(auth.guid)
+                                .pipe<UserModel>(
+                                    map((userConnected: UserModel) => 
+                                    {
+                                        return this._userConnected = userConnected;
+                                    }));
+                }));
     }
 
     getUserByGuid(guid: string): Observable<UserModel>

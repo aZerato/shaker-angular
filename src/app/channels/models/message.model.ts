@@ -2,10 +2,6 @@ import { formatDate } from '@angular/common';
 
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
-import { UserChat } from './user-chat.model';
-import { Channel } from './channel.model';
-import { Observable } from 'rxjs';
-
 export const messageSchema:JSONSchema = {
     type: 'object',
     properties: {
@@ -15,16 +11,14 @@ export const messageSchema:JSONSchema = {
         userGuid: { type: 'string' },
         
         content: { type: 'string' },
-        date: { type: 'string' },
-        status: { type: 'string' },
+        date: { type: 'string' }
     },
     required: [
         'guid',
         'channelGuid',
         'userGuid',
         'content',
-        'date',
-        'status'
+        'date'
     ]
 };
 
@@ -39,39 +33,22 @@ export class Message
     guid: string;
     channelGuid: string;
     
-    userChat$: Observable<UserChat>;
     userGuid: string;
-    isCurrentUser: boolean;
     
     content: string;
     date: string;
-    status: string;
 
-    constructor(content: string, channelGuid: string, userGuid: string, isCurrentUser: boolean, status: string) 
+    constructor(
+        content: string, 
+        channelGuid: string, 
+        userGuid: string) 
     {
         this.guid = Date.now().toString();
         this.channelGuid = channelGuid;
 
         this.userGuid = userGuid;
-        this.isCurrentUser = isCurrentUser;
 
         this.date = formatDate(Date.now(), 'short', "en");
         this.content = content;
-        this.status = status;
-    }
-
-    prepareSave(message: Message): Message
-    {
-        const messageSave = Object.assign({}, message);
-
-        delete messageSave.userChat$;
-        delete messageSave.isCurrentUser;
-
-        return messageSave;
-    }
-
-    static prepareGet(message: Message): void
-    {
-        message.userChat$ = new Observable<UserChat>();
     }
 }

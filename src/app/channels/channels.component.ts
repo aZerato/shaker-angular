@@ -28,7 +28,7 @@ export class ChannelsComponent implements OnInit
 
   ngOnInit(): void 
   {  
-     this.channels = this.channelService.channelsBehaviorSub.getValue();
+    this.channels = this.channelService.channelsBehaviorSub.getValue();
     
     this.channelAddedSub = 
       this.channelService.channelAddedSub.subscribe((channel: Channel) => {

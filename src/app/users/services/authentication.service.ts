@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject, of, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
@@ -17,11 +17,40 @@ export class AuthenticationService
     authenticationStatusChangeSubject: Subject<boolean> = new Subject<boolean>();
     creationErrorSubject: Subject<string> = new Subject<string>();
 
-    private userAuthenticationStatus: boolean = false;
+    private _userConnectedObs: Observable<UserModel>;
+    userConnectedBehaviorSub: BehaviorSubject<UserModel>
+    private _userConnected: UserModel;
 
-    private userConnected: UserModel;
+    private _usersObs: Observable<UserModel[]>;
+    usersBehaviorSub: BehaviorSubject<UserModel[]>
+    private _users: UserModel[] = [];
 
-    constructor(private storageMap: StorageMap) { }
+    constructor(private storageMap: StorageMap) 
+    { 
+        this._userConnectedObs = 
+            this.storageMap.get<UserModel>(
+                authenticationKey,
+                authenticationSchema);
+
+        this._userConnectedObs
+            .subscribe((user: UserModel) => {
+                
+                this._userConnected = user;
+                this.userConnectedBehaviorSub = new BehaviorSubject<UserModel>(this._userConnected);
+            });
+
+        this._usersObs = 
+            this.storageMap.get<UserModel[]>(
+                usersKey,
+                usersSchemaArr);
+
+        this._usersObs
+            .subscribe((users: UserModel[]) => {
+                if (!users) users = [];
+                this._users.push(...users);
+                this.usersBehaviorSub = new BehaviorSubject<UserModel[]>(this._users);
+            });
+    }
 
     private onError(error?: any, message?: string): void {
         if (error)
@@ -42,95 +71,74 @@ export class AuthenticationService
     {
         const user = new UserModel(create.name, create.email, create.password);
 
-        this.getAllUsers()
-            .subscribe((userDatabases: UserModel[]) => 
-            {
-                const userDatabase = userDatabases?.find(ub => ub.email === user.email);
-                if (userDatabase) 
-                {
-                    this.onError(null, 'This user already exist !');
-                }
-                else 
-                {
-                    if (!userDatabases) userDatabases = [];
-                    userDatabases.push(user);
+        const userDatabase = this._users?.find(ub => ub.email === user.email);
+        if (userDatabase) 
+        {
+            this.onError(null, 'This user already exist !');
+        }
+        else 
+        {
+            this._users.push(user);
 
-                    this.storageMap.set(
-                        usersKey,
-                        userDatabases,
-                        usersSchemaArr
-                    ).subscribe(() => {
-                        
-                        const auth = new AuthenticationModel(user, false);
-                        auth.prepareSave();
-                        this.storageMap.set(
-                            authenticationKey,
-                            auth,
-                            authenticationSchema
-                        ).subscribe(() => {
-                            this.userAuthenticationStatus = true;
-                            this.userConnected = user;
-                            this.authenticationStatusChangeSubject.next(this.userAuthenticationStatus);
-                        },
-                        (error: any) => {
-                            this.onError(error);
-                        });
-                    },
-                    (error: any) => {
-                        this.onError(error);
-                    });
-                }
+            this.storageMap.set(
+                usersKey,
+                this._users,
+                usersSchemaArr
+            ).subscribe(() => {
+                
+                const auth = new AuthenticationModel(user, false);
+                auth.prepareSave();
+                this.storageMap.set(
+                    authenticationKey,
+                    auth,
+                    authenticationSchema
+                ).subscribe(() => {
+                    this._userConnected = user;
+                    this.authenticationStatusChangeSubject.next(true);
+                },
+                (error: any) => {
+                    this.onError(error);
+                });
             },
             (error: any) => {
                 this.onError(error);
             });
+        }
     }
 
     login(auth: AuthenticationModel): void
     {
-        // call svr.
-        
-        // find local.
-        this.getAllUsers()
-            .subscribe((users: UserModel[]) => {
-                const user = users?.find(ub => ub.email == auth.email && ub.password == auth.password);    
-                if (user) 
-                {
-                    const auth = new AuthenticationModel(user, false);
-                    auth.prepareSave();
-                    this.storageMap.set(
-                        authenticationKey,
-                        auth,
-                        authenticationSchema
-                    ).subscribe(() => {
-                        this.userAuthenticationStatus = true;
-                        this.userConnected = user;
-                        this.authenticationStatusChangeSubject.next(this.userAuthenticationStatus);
-                    },
-                    (error: any) => {
-                        this.onError(error);
-                    });
-                }
-                else 
-                {
-                    this.userAuthenticationStatus = false;
-                    this.userConnected = undefined;
-                    this.authenticationStatusChangeSubject.next(this.userAuthenticationStatus);
-                }
+        const user = this._users?.find(ub => ub.email == auth.email && ub.password == auth.password);    
+        if (user) 
+        {
+            const auth = new AuthenticationModel(user, false);
+            auth.prepareSave();
+            this.storageMap.set(
+                authenticationKey,
+                auth,
+                authenticationSchema
+            ).subscribe(() => {
+                this._userConnected = user;
+                this.authenticationStatusChangeSubject.next(true);
+            },
+            (error: any) => {
+                this.onError(error);
             });
+        }
+        else 
+        {
+            this._userConnected = undefined;
+            this.authenticationStatusChangeSubject.next(false);
+        }
     }
 
     logoff(): void
     {
-        // call svr.
-
-        // local
         this.storageMap.delete(
             authenticationKey
         ).subscribe(() => {
-            this.userAuthenticationStatus = false;
-            this.userConnected = undefined;
-            this.authenticationStatusChangeSubject.next(this.userAuthenticationStatus);
+            this._userConnected = undefined;
+            this.authenticationStatusChangeSubject.next(false);
         });
     }
 
@@ -148,9 +156,8 @@ export class AuthenticationService
                     {
                         this.getUserByGuid(auth.guid)
                             .subscribe((user: UserModel) => {
-                                this.userAuthenticationStatus = true;
-                                this.userConnected = user;
-                                this.authenticationStatusChangeSubject.next(this.userAuthenticationStatus);
+                                this._userConnected = user;
+                                this.authenticationStatusChangeSubject.next(true);
                             });
 
                         return true;
@@ -162,21 +169,12 @@ export class AuthenticationService
 
     getUserConnected(): UserModel 
     {
-        return this.userConnected;
-    }
-
-    getAllUsers(): Observable<UserModel[]>
-    {
-        return this.storageMap
-            .get<UserModel[]>(
-                usersKey,
-                usersSchemaArr
-            );
+        return this._userConnected;
     }
 
     getUserByGuid(guid: string): Observable<UserModel>
     {
-        return this.getAllUsers()
+        return this._usersObs
             .pipe<UserModel>(
                 map((users :UserModel[]) => {
                     return users?.find(user => user.guid === guid);

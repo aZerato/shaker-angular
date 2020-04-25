@@ -1,26 +1,47 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
-import { Observable, merge } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { MessageService } from '../../services/message.service';
 
 import { Message } from '../../models/message.model';
+import { AuthenticationService } from 'src/app/users/services/authentication.service';
 
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })
-export class MessagesComponent implements OnInit
+export class MessagesComponent implements OnInit, OnDestroy
 {
   @Input()
-  messages$: Observable<Message[]>;
+  channelGuid: string;
 
-  constructor(private messageService: MessageService) { }
+  currentUserGuid: string;
+
+  messages: Message[] = [];
+
+  private _behaviorSub: Subscription;
+
+  constructor(
+    private authenticationService: AuthenticationService,
+    private messageService: MessageService) 
+    { }
 
   ngOnInit(): void 
   {
-    this.messages$ = merge(this.messages$,
-      this.messageService.messageAdded);
+    this.currentUserGuid = this.authenticationService.getUserConnected().guid;
+
+    const getMessagesByChannelSub = 
+      this.messageService.getMessagesByChannelBehaviorSub(this.channelGuid);
+      
+    this._behaviorSub = getMessagesByChannelSub.subscribe((msgs: Message[]) => {
+      this.messages = msgs;
+    });
+  }
+
+  ngOnDestroy(): void 
+  {
+    this._behaviorSub.unsubscribe();
   }
 }

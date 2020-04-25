@@ -1,8 +1,3 @@
-import { UserChat } from './user-chat.model';
-import { Message } from './message.model';
-
-import { Observable } from 'rxjs';
-
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
 export const channelSchema:JSONSchema = {
@@ -27,31 +22,11 @@ export class Channel {
     
     guid: string;
     name: string;
-    users: UserChat[];
-    messages$: Observable<Message[]>;
 
     constructor(
-        name: string, 
-        users: UserChat[]) 
+        name: string) 
     {
         this.guid = Date.now().toString();
         this.name = name;
-        this.users = users;
-        this.messages$ = new Observable<Message[]>();
-    }
-
-    prepareSave(channel: Channel): Channel
-    {
-        const channelSave = Object.assign({}, channel);
-
-        delete channelSave.messages$;
-        delete channelSave.users;
-        
-        return channelSave;
-    }
-
-    static prepareGet(channel: Channel) {
-
-        channel.messages$ = new Observable<Message[]>();
     }
 }

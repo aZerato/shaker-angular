@@ -1,5 +1,4 @@
-<div class="row channel"
-    *ngIf="channel$ | async as channel">
+<div class="row channel">
     <div class="col-md-12 channel-inner">
 
         <div class="channel-header">
@@ -10,18 +9,18 @@
 
         <div class="channel-content">
             <div class="col-12">
-                <app-messages [messages$]="channel.messages$"></app-messages>
+                <app-messages [channelGuid]="channel.guid"></app-messages>
             </div>
         </div>
     
         <form [formGroup]="messageForm"
-            (submit)="onSubmitMessage(channel.guid)"
+            (submit)="onSubmitMessage()"
             class="channel-form col-12">
            
             <div class="form-group">
                 <div class="row">
                     <textarea
-                        (keyup.enter)="onSubmitMessage(channel.guid)"
+                        (keyup.enter)="onSubmitMessage()"
                         class="form-control col-11"
                         formControlName="content"
                         name="content"

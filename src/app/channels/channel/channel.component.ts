@@ -21,10 +21,11 @@ export class ChannelComponent implements OnInit, OnDestroy
   faPaperPlane: IconDefinition = faPaperPlane;
   faCommentAlt: IconDefinition = faCommentAlt;
 
-  channel$: Observable<Channel>;
+  channel: Channel = new Channel('');
   messageForm: FormGroup;
 
-  private paramsSub: Subscription;
+  private _paramsSub: Subscription;
+  private _getChannelByGuidSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,18 +33,26 @@ export class ChannelComponent implements OnInit, OnDestroy
     private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.paramsSub =
+    this._paramsSub =
       this.route.params
-      .subscribe((params: Params) => 
-      {
-        this.channel$ = this.channelService.getChannelByGuid(params['guid']);
-      });
+        .subscribe((params: Params) => 
+        {
+          const guid = params['guid'];
+
+          this._getChannelByGuidSub =
+            this.channelService
+            .getChannelByGuid(guid)
+            .subscribe((channel: Channel) => {
+              this.channel = channel;
+            });
+        });
 
     this.initMessageForm();
   }
 
   ngOnDestroy(): void {
-    this.paramsSub.unsubscribe();
+    this._paramsSub.unsubscribe();
+    this._getChannelByGuidSub.unsubscribe();
   }
 
   initMessageForm(): void {
@@ -52,10 +61,13 @@ export class ChannelComponent implements OnInit, OnDestroy
     });
   }
 
-  onSubmitMessage(channelGuid: string): void {
-    if (this.messageForm.valid && channelGuid) 
+  onSubmitMessage(): void {
+    if (this.messageForm.valid) 
     {
-      this.messageService.addMessage(channelGuid, this.messageForm.value.content);
+      this.messageService.addUserMessage(
+        this.channel.guid, 
+        this.messageForm.value.content);
+        
       this.messageForm.reset();
     }
   }

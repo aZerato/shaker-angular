@@ -1,4 +1,4 @@
-<div class="row auth">
+<div class="row user-new">
     <div class="col-md-4 offset-md-4 my-auto">
         
         <div class="card">
@@ -8,7 +8,7 @@
 
             <div class="card-body">
 
-                <h1 class="card-title">LogIn</h1>
+                <h1 class="card-title">Create a new account</h1>
 
                 <hr>
 
@@ -17,8 +17,18 @@
                     {{ errorMessage }}
                 </div>
 
-                <form [formGroup]="authenticationFormGroup" 
+                <form [formGroup]="creationFormGroup" 
                     (submit)="onSubmit()">
+
+                    <div class="form-group">
+                    
+                        <input type="string" 
+                                class="form-control" 
+                                placeholder="Enter name"
+                                formControlName="name">
+
+                    </div>
+
 
                     <div class="form-group">
                     
@@ -43,25 +53,13 @@
 
                     </div>
 
-                    <div class="form-check mb-3">
-                        
-                        <input type="checkbox" 
-                                class="form-check-input"
-                                formControlName="rememberMe">
-                        
-                        <label class="form-check-label" 
-                                for="rememberMe">
-                            Remember me
-                        </label>
-
-                    </div>
-
                     <button type="submit" class="btn btn-primary">
-                        Submit
+                        Create
                     </button>
 
                 </form>
             </div>
         </div>
+
     </div>
 </div>

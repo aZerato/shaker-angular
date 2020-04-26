@@ -5,15 +5,14 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { AuthenticationService } from '../services/authentication.service';
-import { UserModel } from 'src/app/shared/models/user.model';
 import { CreationModel } from '../models/creation.model';
 
 @Component({
-  selector: 'app-new-user',
-  templateUrl: './new.component.html',
-  styleUrls: ['./new.component.scss']
+  selector: 'app-user-new',
+  templateUrl: './user-new.component.html',
+  styleUrls: ['./user-new.component.scss']
 })
-export class NewComponent implements OnInit, OnDestroy
+export class UserNewComponent implements OnInit, OnDestroy
 {
   errorMessage: string;
   creationFormGroup: FormGroup;

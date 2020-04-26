@@ -16,7 +16,7 @@ import { AuthComponent } from './users/auth/auth.component';
 import { LogoutComponent } from './users/logout/logout.component';
 import { ProfileComponent } from './users/profile/profile.component';
 import { AccountComponent } from './users/account/account.component';
-import { NewComponent } from './users/new/new.component';
+import { UserNewComponent } from './users/new/user-new.component';
 // end Users components
 
 // start Channels components
@@ -45,7 +45,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     LogoutComponent,
     ProfileComponent,
     AccountComponent,
-    NewComponent,
+    UserNewComponent,
 
     ChannelsComponent,
     ChannelsHomeComponent,

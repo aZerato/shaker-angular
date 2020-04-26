@@ -14,16 +14,18 @@ import { UserModel } from 'src/app/shared/models/user.model';
 export class AuthComponent implements OnInit, OnDestroy
 {
   authenticationFormGroup: FormGroup;
-  
-  private authenticationModel: AuthenticationModel;
-  private isAuthenticatedSub: Subscription;
+  errorMessage: string;
+
+  private _authenticationModel: AuthenticationModel;
+  private _isAuthenticatedSub: Subscription;
+  private _creationErrorSub: Subscription;
 
   constructor(private router: Router,
     private authenticationService: AuthenticationService) {  }
 
   ngOnInit(): void 
   {
-    this.isAuthenticatedSub = 
+    this._isAuthenticatedSub = 
       this.authenticationService.authenticationStatusChangeSubject
         .subscribe((authenticated: boolean) => {
           if (authenticated)
@@ -31,36 +33,49 @@ export class AuthComponent implements OnInit, OnDestroy
             this.router.navigate(['/users']);
           }
         });
-    
+
+    this._creationErrorSub =
+      this.authenticationService.creationErrorSubject
+        .subscribe((error: string) => {
+          this.errorMessage = error;
+        });
+  
     this.initForm();
   }
 
   ngOnDestroy(): void
   {
-    this.isAuthenticatedSub.unsubscribe();
+    this._isAuthenticatedSub.unsubscribe();
+    this._creationErrorSub.unsubscribe();
   }
 
   onSubmit(): void
   {
+    this.errorMessage = '';
     if (this.authenticationFormGroup.valid)
     {
-      this.authenticationService.login(this.authenticationFormGroup.value);
+      const user = new UserModel(
+        this.authenticationFormGroup.value.name, 
+        this.authenticationFormGroup.value.email,
+        this.authenticationFormGroup.value.password);
+      this._authenticationModel = new AuthenticationModel(user, false);
+      this.authenticationService.login(this._authenticationModel);
     }
   }
 
   private initForm(): void 
   {
     const user = new UserModel('', '', '');
-    this.authenticationModel = new AuthenticationModel(user, false);
+    this._authenticationModel = new AuthenticationModel(user, false);
 
     this.authenticationFormGroup = new FormGroup({
-      email: new FormControl(this.authenticationModel.email, [
+      email: new FormControl(this._authenticationModel.email, [
         Validators.required
       ]),
-      password: new FormControl(this.authenticationModel.password, [
+      password: new FormControl(this._authenticationModel.password, [
         Validators.required
       ]),
-      rememberMe: new FormControl(this.authenticationModel.rememberMe)
+      rememberMe: new FormControl(this._authenticationModel.rememberMe)
     });
   }
 }

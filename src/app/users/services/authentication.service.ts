@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject, of, BehaviorSubject, concat } from 'rxjs';
-import { map, flatMap } from 'rxjs/operators';
+import { Observable, Subject, of, BehaviorSubject, concat, throwError } from 'rxjs';
+import { map, flatMap, take } from 'rxjs/operators';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
 
@@ -71,25 +71,59 @@ export class AuthenticationService
 
     create(create: CreationModel): void
     {
-        const user = new UserModel(create.name, create.email, create.password);
-
-        const userDatabase = this._users?.find(ub => ub.email === user.email);
-        if (userDatabase) 
+        this._usersObs
+        .subscribe((users: UserModel[]) => 
         {
-            this.onError(null, 'This user already exist !');
-        }
-        else 
-        {
-            this._users.push(user);
+            const user = new UserModel(create.name, create.email, create.password);
+        
+            const userDatabase = users.find(ub => ub.email === user.email);
+            if (userDatabase) 
+            {
+                this.onError(null, 'This user already exist !');
+            }
+            else 
+            {
+                this.storageMap.set(
+                    usersKey,
+                    this._users,
+                    usersSchemaArr
+                ).subscribe(() => {
+                    
+                    const auth = new AuthenticationModel(user, false);
+                    auth.prepareSave();
+                    this.storageMap.set(
+                        authenticationKey,
+                        auth,
+                        authenticationSchema
+                    ).subscribe(() => {
+                        this._userConnected = user;
+                        this.authenticationStatusChangeSubject.next(true);
+                    },
+                    (error: any) => {
+                        this.onError(error);
+                    });
+                },
+                (error: any) => {
+                    this.onError(error);
+                });
+            }
+        });
+    }
 
-            this.storageMap.set(
-                usersKey,
-                this._users,
-                usersSchemaArr
-            ).subscribe(() => {
+    login(auth: AuthenticationModel): void
+    {
+        this._usersObs
+            .subscribe((users: UserModel[]) => {
+                const user = users.find(ub => ub.email === auth.email && ub.password === auth.password);
                 
-                const auth = new AuthenticationModel(user, false);
+                if (!user)
+                {
+                    this.onError(null, '404: User not found !');
+                    return;
+                }
+
                 auth.prepareSave();
+
                 this.storageMap.set(
                     authenticationKey,
                     auth,
@@ -105,33 +139,6 @@ export class AuthenticationService
             (error: any) => {
                 this.onError(error);
             });
-        }
-    }
-
-    login(auth: AuthenticationModel): void
-    {
-        const user = this._users?.find(ub => ub.email == auth.email && ub.password == auth.password);    
-        if (user) 
-        {
-            const auth = new AuthenticationModel(user, false);
-            auth.prepareSave();
-            this.storageMap.set(
-                authenticationKey,
-                auth,
-                authenticationSchema
-            ).subscribe(() => {
-                this._userConnected = user;
-                this.authenticationStatusChangeSubject.next(true);
-            },
-            (error: any) => {
-                this.onError(error);
-            });
-        }
-        else 
-        {
-            this._userConnected = undefined;
-            this.authenticationStatusChangeSubject.next(false);
-        }
     }
 
     logoff(): void
@@ -152,7 +159,6 @@ export class AuthenticationService
                 {
                     if (user)
                     {
-                        this.authenticationStatusChangeSubject.next(true);
                         return true;
                     }
                     else 
@@ -173,10 +179,14 @@ export class AuthenticationService
             .pipe<UserModel>(
                 flatMap((auth: AuthenticationModel) => 
                 {
+                    if (!auth)
+                        return of(null);
+
                     return this.getUserByGuid(auth.guid)
                                 .pipe<UserModel>(
                                     map((userConnected: UserModel) => 
                                     {
+                                        this.authenticationStatusChangeSubject.next(true);
                                         return this._userConnected = userConnected;
                                     }));
                 }));

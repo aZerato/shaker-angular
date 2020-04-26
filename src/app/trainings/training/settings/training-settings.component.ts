@@ -9,8 +9,7 @@ import { Training } from '../../models/training.model';
 
 @Component({
   selector: 'app-training-settings',
-  templateUrl: './training-settings.component.html',
-  styleUrls: ['./training-settings.component.scss']
+  templateUrl: './training-settings.component.html'
 })
 export class TrainingSettingsComponent implements OnInit, OnDestroy
 {

@@ -1,7 +1,7 @@
-<div class="row channel">
-    <div class="col-md-12 channel-inner">
+<div class="row details">
+    <div class="col-md-12 details-inner">
 
-        <div class="channel-header row">
+        <div class="details-header row">
             <div class="col-8">
                 <fa-icon [icon]="faCommentAlt"></fa-icon> {{ channel.name }}
             </div>
@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="channel-content">
+        <div class="details-content">
             <div class="col-12">
                 <app-messages></app-messages>
             </div>
@@ -21,7 +21,7 @@
     
         <form [formGroup]="messageForm"
             (submit)="onSubmitMessage()"
-            class="channel-form col-12">
+            class="details-form col-12">
            
             <div class="form-group">
                 <div class="row">

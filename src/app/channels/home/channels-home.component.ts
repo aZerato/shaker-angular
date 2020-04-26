@@ -10,8 +10,7 @@ import { Channel } from '../models/channel.model';
 
 @Component({
   selector: 'app-channels-home',
-  templateUrl: './channels-home.component.html',
-  styleUrls: ['./channels-home.component.scss']
+  templateUrl: './channels-home.component.html'
 })
 export class ChannelsHomeComponent implements OnInit 
 {
@@ -20,15 +19,15 @@ export class ChannelsHomeComponent implements OnInit
 
   channels: Channel[];
 
-  channelServiceSub: Subscription;
+  private _channelServiceSub: Subscription;
 
   constructor(
-    private channelService: ChannelService) { }
+    private _channelService: ChannelService) { }
 
   ngOnInit(): void 
   {  
-    this.channelServiceSub =
-      this.channelService
+    this._channelServiceSub =
+      this._channelService
         .getAllEntitiesObs()
         .pipe(first())
         .subscribe((channels: Channel[]) => {
@@ -37,6 +36,6 @@ export class ChannelsHomeComponent implements OnInit
   }
 
   ngOnDestroy(): void {
-    this.channelServiceSub.unsubscribe();
+    this._channelServiceSub.unsubscribe();
   }
 }

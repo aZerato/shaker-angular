@@ -11,8 +11,7 @@ import { Channel } from './models/channel.model';
 
 @Component({
   selector: 'app-channels',
-  templateUrl: './channels.component.html',
-  styleUrls: ['./channels.component.scss']
+  templateUrl: './channels.component.html'
 })
 export class ChannelsComponent implements OnInit 
 {
@@ -22,25 +21,25 @@ export class ChannelsComponent implements OnInit
 
   channels: Channel[];
 
-  channelServiceSub: Subscription;
-  channelAddedSub: Subscription;
+  private _channelServiceSub: Subscription;
+  private _channelAddedSub: Subscription;
 
   constructor(
-    private router: Router,
-    private channelService: ChannelService) { }
+    private _router: Router,
+    private _channelService: ChannelService) { }
 
   ngOnInit(): void 
   {  
-    this.channelServiceSub =
-      this.channelService
+    this._channelServiceSub =
+      this._channelService
         .getAllEntitiesObs()
         .pipe(first())
         .subscribe((channels: Channel[]) => {
           this.channels = channels;
         });
 
-    this.channelAddedSub = 
-      this.channelService
+    this._channelAddedSub = 
+      this._channelService
         .entityAddedSub
         .subscribe((channel: Channel) => 
         {
@@ -49,16 +48,16 @@ export class ChannelsComponent implements OnInit
             this.channels.push(channel);
           }
           
-          this.router.navigate(['/channel', channel.guid]);
+          this._router.navigate(['/channel', channel.guid]);
         });
   }
 
   ngOnDestroy(): void {
-    this.channelServiceSub.unsubscribe();
-    this.channelAddedSub?.unsubscribe();
+    this._channelServiceSub.unsubscribe();
+    this._channelAddedSub?.unsubscribe();
   }
 
   onCreateChannel(): void {
-    this.channelService.addEntity();
+    this._channelService.addEntity();
   }
 }

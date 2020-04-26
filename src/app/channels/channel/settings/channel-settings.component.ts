@@ -9,8 +9,7 @@ import { Channel } from '../../models/channel.model';
 
 @Component({
   selector: 'app-channel-settings',
-  templateUrl: './channel-settings.component.html',
-  styleUrls: ['./channel-settings.component.scss']
+  templateUrl: './channel-settings.component.html'
 })
 export class ChannelSettingsComponent implements OnInit, OnDestroy
 {

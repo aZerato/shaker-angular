@@ -10,8 +10,7 @@ import { Training } from '../models/training.model';
 
 @Component({
   selector: 'app-trainings-home',
-  templateUrl: './trainings-home.component.html',
-  styleUrls: ['./trainings-home.component.scss']
+  templateUrl: './trainings-home.component.html'
 })
 export class TrainingsHomeComponent implements OnInit 
 {

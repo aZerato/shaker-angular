@@ -12,6 +12,7 @@ import {
 
 import { Channel } from '../models/channel.model';
 import { MessageService } from '../services/message.service';
+import { ChannelService } from '../services/channel.service';
 
 @Component({
   selector: 'app-channel',
@@ -24,18 +25,22 @@ export class ChannelComponent implements OnInit, OnDestroy
   faCommentAlt: IconDefinition = faCommentAlt;
   faCogs: IconDefinition = faCogs;
 
-  channel: Channel = new Channel('');
+  channel: Channel;
   messageForm: FormGroup;
 
   private _dataSub: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
-    private messageService: MessageService) { }
+    private _route: ActivatedRoute,
+    private _channelService: ChannelService,
+    private _messageService: MessageService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
+    this.channel = this._channelService.createBaseObject();
+
     this._dataSub =
-      this.route.data
+      this._route.data
         .subscribe((data: Data) => 
         {
           this.channel = data['channel'];
@@ -48,7 +53,8 @@ export class ChannelComponent implements OnInit, OnDestroy
     this._dataSub.unsubscribe();
   }
 
-  initMessageForm(): void {
+  initMessageForm(): void 
+  {
     this.messageForm = new FormGroup({
       content: new FormControl('', Validators.required)
     });
@@ -57,7 +63,7 @@ export class ChannelComponent implements OnInit, OnDestroy
   onSubmitMessage(): void {
     if (this.messageForm.valid) 
     {
-      this.messageService.addUserMessage(
+      this._messageService.addUserMessage(
         this.channel.guid, 
         this.messageForm.value.content);
         

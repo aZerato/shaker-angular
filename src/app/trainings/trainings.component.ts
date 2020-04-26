@@ -11,8 +11,7 @@ import { Training } from './models/training.model';
 
 @Component({
   selector: 'app-trainings',
-  templateUrl: './trainings.component.html',
-  styleUrls: ['./trainings.component.scss']
+  templateUrl: './trainings.component.html'
 })
 export class TrainingsComponent implements OnInit 
 {

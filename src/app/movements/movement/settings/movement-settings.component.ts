@@ -9,8 +9,7 @@ import { Movement } from '../../models/movement.model';
 
 @Component({
   selector: 'app-movement-settings',
-  templateUrl: './movement-settings.component.html',
-  styleUrls: ['./movement-settings.component.scss']
+  templateUrl: './movement-settings.component.html'
 })
 export class MovementSettingsComponent implements OnInit, OnDestroy
 {

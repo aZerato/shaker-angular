@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 import { movementsKeyArr, Movement, movementsSchemaArr } from '../models/movement.model';

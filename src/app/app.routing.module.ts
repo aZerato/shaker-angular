@@ -28,9 +28,9 @@ import { MovementSettingsComponent } from './movements/movement/settings/movemen
 import { MovementComponent } from './movements/movement/movement.component';
 
 import { TrainingResolverService } from './trainings/resolvers/training.resolver';
-import { TrainingSettingsComponent } from './trainings/movement/settings/training-settings.component';
+import { TrainingSettingsComponent } from './trainings/training/settings/training-settings.component';
 import { TrainingsComponent } from './trainings/trainings.component';
-import { TrainingComponent } from './trainings/movement/training.component';
+import { TrainingComponent } from './trainings/training/training.component';
 import { TrainingsHomeComponent } from './trainings/home/trainings-home.component';
 
 const appRoutes: Routes = [

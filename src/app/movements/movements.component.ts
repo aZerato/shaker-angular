@@ -11,8 +11,7 @@ import { Movement } from './models/movement.model';
 
 @Component({
   selector: 'app-movements',
-  templateUrl: './movements.component.html',
-  styleUrls: ['./movements.component.scss']
+  templateUrl: './movements.component.html'
 })
 export class MovementsComponent implements OnInit 
 {
@@ -26,7 +25,7 @@ export class MovementsComponent implements OnInit
   private _movementAddedSub: Subscription;
 
   constructor(
-    private router: Router,
+    private _router: Router,
     private _movementService: MovementService) { }
 
   ngOnInit(): void 
@@ -49,7 +48,7 @@ export class MovementsComponent implements OnInit
             this.movements.push(movement);
           }
           
-          this.router.navigate(['/movement', movement.guid]);
+          this._router.navigate(['/movement', movement.guid]);
         });
   }
 

@@ -43,8 +43,8 @@ import { MovementSettingsComponent } from './movements/movement/settings/movemen
 
 import { TrainingsComponent } from './trainings/trainings.component';
 import { TrainingsHomeComponent } from './trainings/home/trainings-home.component';
-import { TrainingComponent } from './trainings/movement/training.component';
-import { TrainingSettingsComponent } from './trainings/movement/settings/training-settings.component';
+import { TrainingComponent } from './trainings/training/training.component';
+import { TrainingSettingsComponent } from './trainings/training/settings/training-settings.component';
 
 @NgModule({
   declarations: [

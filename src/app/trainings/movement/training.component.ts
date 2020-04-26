@@ -4,7 +4,7 @@ import { ActivatedRoute, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { 
-  faDumbbell,
+  faMap,
   faCogs, 
   IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -17,7 +17,7 @@ import { Training } from '../models/training.model';
 })
 export class TrainingComponent implements OnInit, OnDestroy
 {
-  faDumbbell: IconDefinition = faDumbbell;
+  faMap: IconDefinition = faMap;
   faCogs: IconDefinition = faCogs;
 
   training: Training = new Training('');

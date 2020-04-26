@@ -33,7 +33,7 @@ export class ChannelsComponent implements OnInit
   {  
     this.channelServiceSub =
       this.channelService
-        .getAllChannelsObs()
+        .getAllEntitiesObs()
         .pipe(first())
         .subscribe((channels: Channel[]) => {
           this.channels = channels;
@@ -41,7 +41,7 @@ export class ChannelsComponent implements OnInit
 
     this.channelAddedSub = 
       this.channelService
-        .channelAddedSub
+        .entityAddedSub
         .subscribe((channel: Channel) => 
         {
           if (!(this.channels.length === 1 && this.channels[0].guid === channel.guid))
@@ -59,6 +59,6 @@ export class ChannelsComponent implements OnInit
   }
 
   onCreateChannel(): void {
-    this.channelService.addChannel();
+    this.channelService.addEntity();
   }
 }

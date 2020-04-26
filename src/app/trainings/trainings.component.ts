@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { faPlusSquare, faDumbbell, IconDefinition, faList } from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare, faMap, IconDefinition, faList } from '@fortawesome/free-solid-svg-icons';
 
 import { TrainingService } from './services/trainings.service';
 import { Training } from './models/training.model';
@@ -17,7 +17,7 @@ import { Training } from './models/training.model';
 export class TrainingsComponent implements OnInit 
 {
   faPlusSquare: IconDefinition = faPlusSquare;
-  faDumbbell: IconDefinition = faDumbbell;
+  faMap: IconDefinition = faMap;
   faList: IconDefinition = faList;
 
   trainings: Training[];

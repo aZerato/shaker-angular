@@ -19,7 +19,7 @@ export class ChannelResolverService implements Resolve<Channel> {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): 
         Channel | Observable<Channel> | Promise<Channel> 
     {
-        return this.channelService.getChannelByGuid(route.params['guid'])
+        return this.channelService.getEntityByGuid<Channel>(route.params['guid'])
                     .pipe(map(channel => {
                         if (channel)
                         {

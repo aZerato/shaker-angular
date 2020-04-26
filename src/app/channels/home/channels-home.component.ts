@@ -29,7 +29,7 @@ export class ChannelsHomeComponent implements OnInit
   {  
     this.channelServiceSub =
       this.channelService
-        .getAllChannelsObs()
+        .getAllEntitiesObs()
         .pipe(first())
         .subscribe((channels: Channel[]) => {
           this.channels = channels;

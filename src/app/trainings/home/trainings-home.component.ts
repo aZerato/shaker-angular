@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { faDumbbell, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faMap, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { TrainingService } from '../services/trainings.service';
 import { Training } from '../models/training.model';
@@ -15,7 +15,7 @@ import { Training } from '../models/training.model';
 })
 export class TrainingsHomeComponent implements OnInit 
 {
-  faDumbell: IconDefinition = faDumbbell;
+  faMap: IconDefinition = faMap;
 
   trainings: Training[];
 

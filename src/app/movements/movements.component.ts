@@ -33,7 +33,7 @@ export class MovementsComponent implements OnInit
   {  
     this._getAllMovementsSub =
       this._movementService
-        .getAllMovementsObs()
+        .getAllEntitiesObs()
         .pipe(first())
         .subscribe((movements: Movement[]) => {
           this.movements = movements;
@@ -41,7 +41,7 @@ export class MovementsComponent implements OnInit
 
     this._movementAddedSub = 
       this._movementService
-        .movementAddedSub
+        .entityAddedSub
         .subscribe((movement: Movement) => 
         {
           if (!(this.movements.length === 1 && this.movements[0].guid === movement.guid))
@@ -59,6 +59,6 @@ export class MovementsComponent implements OnInit
   }
 
   onCreateMovement(): void {
-    this._movementService.addMovement();
+    this._movementService.addEntity();
   }
 }

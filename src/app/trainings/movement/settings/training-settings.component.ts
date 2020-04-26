@@ -46,6 +46,8 @@ export class TrainingSettingsComponent implements OnInit, OnDestroy
 
   private initForm(): void 
   {
+    this.trainingUpdated = this._trainingService.createBaseObject();
+
     this.trainingSettingsFormGroup = new FormGroup({
       name: new FormControl(this.trainingUpdated.name, [
         Validators.required

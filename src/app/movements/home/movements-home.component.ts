@@ -28,7 +28,7 @@ export class MovementsHomeComponent implements OnInit
   {  
     this._movementServiceSub =
       this._movementService
-        .getAllMovementsObs()
+        .getAllEntitiesObs()
         .pipe(first())
         .subscribe((movements: Movement[]) => {
           this.movements = movements;

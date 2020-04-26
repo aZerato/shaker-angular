@@ -46,6 +46,8 @@ export class MovementSettingsComponent implements OnInit, OnDestroy
 
   private initForm(): void 
   {
+    this.movementUpdated = this._movementService.createBaseObject();
+    
     this.movementSettingsFormGroup = new FormGroup({
       name: new FormControl(this.movementUpdated.name, [
         Validators.required

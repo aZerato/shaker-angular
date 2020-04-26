@@ -19,7 +19,7 @@ export class MovementResolverService implements Resolve<Movement> {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): 
             Movement | Observable<Movement> | Promise<Movement> 
     {
-        return this._movementService.getMovementByGuid(route.params['guid'])
+        return this._movementService.getEntityByGuid<Movement>(route.params['guid'])
                     .pipe(map(movement => {
                         if (movement)
                         {

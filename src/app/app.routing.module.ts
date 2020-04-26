@@ -21,6 +21,12 @@ import { AuthenticationGuard } from './shared/guards/authentication.guard';
 import { CheckUserConnectedGuard } from './shared/guards/check-user-connected.guard';
 import { ConnectedRedirectionGuard } from './shared/guards/connected-redirection.guard copy';
 
+import { MovementsComponent } from './movements/movements.component';
+import { MovementResolverService } from './movements/resolvers/movement.resolver';
+import { MovementsHomeComponent } from './movements/home/movements-home.component';
+import { MovementSettingsComponent } from './movements/movement/settings/movement-settings.component';
+import { MovementComponent } from './movements/movement/movement.component';
+
 const appRoutes: Routes = [
     { 
       path: '',
@@ -88,6 +94,33 @@ const appRoutes: Routes = [
                 component: ChannelSettingsComponent,
                 resolve: {
                     channel: ChannelResolverService
+                }
+            }
+        ]
+    },
+    {
+        path: 'movement',
+        component: MovementsComponent,
+        canActivate: [
+            AuthenticationGuard
+        ],
+        children: [
+            {
+                path: '',
+                component: MovementsHomeComponent
+            },
+            {
+                path: ':guid', 
+                component: MovementComponent,
+                resolve: {
+                    movement: MovementResolverService
+                }
+            },
+            {
+                path: ':guid/settings',
+                component: MovementSettingsComponent,
+                resolve: {
+                    movement: MovementResolverService
                 }
             }
         ]

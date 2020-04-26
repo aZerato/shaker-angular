@@ -34,6 +34,10 @@ import { HomeComponent } from './home/home.component';
 
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { MovementsComponent } from './movements/movements.component';
+import { MovementsHomeComponent } from './movements/home/movements-home.component';
+import { MovementComponent } from './movements/movement/movement.component';
+import { MovementSettingsComponent } from './movements/movement/settings/movement-settings.component';
 // end Shared components
 
 @NgModule({
@@ -53,6 +57,11 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     ChannelSettingsComponent,
     MessagesComponent,
     UserMessageComponent,
+
+    MovementsComponent,
+    MovementsHomeComponent,
+    MovementComponent,
+    MovementSettingsComponent,
 
     HomeComponent,
     PageComponent,

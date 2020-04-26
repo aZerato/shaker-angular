@@ -1,0 +1,50 @@
+<div class="row movements h-100">
+    
+    <div class="col-3 movements-list p-0">
+
+        <ul>
+            <li class="movement-list-item main"
+                [routerLinkActive]="['active']"
+                [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/movement']">
+                    <h4>
+                        <fa-icon [icon]="faList"></fa-icon>
+                        
+                        Movements list
+                    </h4>
+                </a>
+            </li>
+
+            <li class="movement-list-item main">
+                <a (click)="onCreateMovement()">
+                    <h4>
+                        <fa-icon [icon]="faPlusSquare"></fa-icon>
+                        
+                        Create movement
+                    </h4>
+                </a>
+            </li>
+
+            <li [routerLinkActive]="['active']"
+                *ngFor="let movement of movements">
+                <a [routerLink]="['/movement', movement.guid]">
+                    
+                    <fa-icon [icon]="faDumbbell"></fa-icon>
+                    
+                    <span>{{ movement.name }}</span>
+
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="col-9 movement-detail">
+
+        <router-outlet></router-outlet>
+
+    </div>
+
+</div>
+

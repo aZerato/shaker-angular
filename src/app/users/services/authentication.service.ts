@@ -76,13 +76,15 @@ export class AuthenticationService
         {
             const user = new UserModel(create.name, create.email, create.password);
         
-            const userDatabase = users.find(ub => ub.email === user.email);
+            const userDatabase = users?.find(ub => ub.email === user.email);
             if (userDatabase) 
             {
                 this.onError(null, 'This user already exist !');
             }
             else 
             {
+                this._users.push(user);
+
                 this.storageMap.set(
                     usersKey,
                     this._users,
@@ -114,7 +116,7 @@ export class AuthenticationService
     {
         this._usersObs
             .subscribe((users: UserModel[]) => {
-                const user = users.find(ub => ub.email === auth.email && ub.password === auth.password);
+                const user = users?.find(ub => ub.email === auth.email && ub.password === auth.password);
                 
                 if (!user)
                 {

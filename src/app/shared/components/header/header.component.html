@@ -29,6 +29,15 @@
               class="nav-item">
               <a class="nav-link"
                 (click)="isMenuCollapsed = true"
+                [routerLink]="['/movement']"
+                routerLinkActive="active">
+                  Movements
+              </a>
+            </li>
+            <li *ngIf="isAuthenticated" 
+              class="nav-item">
+              <a class="nav-link"
+                (click)="isMenuCollapsed = true"
                 [routerLink]="['/channel']"
                 routerLinkActive="active">
                   Channels

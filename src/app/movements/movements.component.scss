@@ -1,0 +1,90 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.movements 
+{
+    .movements-list 
+    {
+        background: #e5e8ef;
+        height: 100%;
+        
+        ul 
+        {
+            padding-left: 0;
+            list-style: none;
+            width: 100%;
+
+            li
+            {
+                display: list-item;
+                border-spacing: 0;
+                box-sizing: border-box;
+
+                &.active {
+                    a {
+                        color: #00a9b4;
+                    }
+                }
+
+                &.movement-list-item.main
+                {
+                    background: #f2f4f7; 
+
+                    a {
+                        padding: 0;
+                        
+                        fa-icon {
+                            padding-right: 8px;
+                        }
+
+                        h4 
+                        {
+                            padding: 17px 15px;
+                            margin: 0;
+                            font-size: 14px;
+                            font-weight: 600;
+                        }
+                    }
+
+                    &:last-of-type 
+                    {
+                        
+                            border-bottom: 1px solid #D5D7DE;
+                        
+                    }
+                }
+
+                &:hover {
+                    background: #f2f4f7; 
+                    
+                    a {
+                        color: #00a9b4;
+                    }
+                }
+                
+                a 
+                {
+                    color: #6a6a6a;
+                    display: block;
+                    padding: 15px;
+                    font-weight: 300;
+                    text-decoration: none;
+
+                    fa-icon {
+                        padding-left: 10px;
+                    }
+
+                    span {
+                        padding-left: 10px;
+                    }
+                }
+            }    
+        }
+    }
+
+    .movement-detail 
+    {
+        height: 100%;
+    }
+}

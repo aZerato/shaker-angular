@@ -26,6 +26,15 @@
               </a>
             </li>
             <li *ngIf="isAuthenticated" 
+            class="nav-item">
+            <a class="nav-link"
+              (click)="isMenuCollapsed = true"
+              [routerLink]="['/training']"
+              routerLinkActive="active">
+                Trainings
+            </a>
+          </li>
+            <li *ngIf="isAuthenticated" 
               class="nav-item">
               <a class="nav-link"
                 (click)="isMenuCollapsed = true"

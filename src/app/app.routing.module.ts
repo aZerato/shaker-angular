@@ -27,6 +27,12 @@ import { MovementsHomeComponent } from './movements/home/movements-home.componen
 import { MovementSettingsComponent } from './movements/movement/settings/movement-settings.component';
 import { MovementComponent } from './movements/movement/movement.component';
 
+import { TrainingResolverService } from './trainings/resolvers/training.resolver';
+import { TrainingSettingsComponent } from './trainings/movement/settings/training-settings.component';
+import { TrainingsComponent } from './trainings/trainings.component';
+import { TrainingComponent } from './trainings/movement/training.component';
+import { TrainingsHomeComponent } from './trainings/home/trainings-home.component';
+
 const appRoutes: Routes = [
     { 
       path: '',
@@ -121,6 +127,33 @@ const appRoutes: Routes = [
                 component: MovementSettingsComponent,
                 resolve: {
                     movement: MovementResolverService
+                }
+            }
+        ]
+    },
+    {
+        path: 'training',
+        component: TrainingsComponent,
+        canActivate: [
+            AuthenticationGuard
+        ],
+        children: [
+            {
+                path: '',
+                component: TrainingsHomeComponent
+            },
+            {
+                path: ':guid', 
+                component: TrainingComponent,
+                resolve: {
+                    training: TrainingResolverService
+                }
+            },
+            {
+                path: ':guid/settings',
+                component: TrainingSettingsComponent,
+                resolve: {
+                    movement: TrainingResolverService
                 }
             }
         ]

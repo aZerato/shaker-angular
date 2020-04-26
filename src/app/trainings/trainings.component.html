@@ -1,0 +1,50 @@
+<div class="row trainings h-100">
+    
+    <div class="col-3 trainings-list p-0">
+
+        <ul>
+            <li class="training-list-item main"
+                [routerLinkActive]="['active']"
+                [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/training']">
+                    <h4>
+                        <fa-icon [icon]="faList"></fa-icon>
+                        
+                        Trainings list
+                    </h4>
+                </a>
+            </li>
+
+            <li class="training-list-item main">
+                <a (click)="onCreate()">
+                    <h4>
+                        <fa-icon [icon]="faPlusSquare"></fa-icon>
+                        
+                        Create training
+                    </h4>
+                </a>
+            </li>
+
+            <li [routerLinkActive]="['active']"
+                *ngFor="let training of trainings">
+                <a [routerLink]="['/training', training.guid]">
+                    
+                    <fa-icon [icon]="faDumbbell"></fa-icon>
+                    
+                    <span>{{ training.name }}</span>
+
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="col-9 training-detail">
+
+        <router-outlet></router-outlet>
+
+    </div>
+
+</div>
+

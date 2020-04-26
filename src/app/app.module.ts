@@ -34,11 +34,17 @@ import { HomeComponent } from './home/home.component';
 
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+// end Shared components
+
 import { MovementsComponent } from './movements/movements.component';
 import { MovementsHomeComponent } from './movements/home/movements-home.component';
 import { MovementComponent } from './movements/movement/movement.component';
 import { MovementSettingsComponent } from './movements/movement/settings/movement-settings.component';
-// end Shared components
+
+import { TrainingsComponent } from './trainings/trainings.component';
+import { TrainingsHomeComponent } from './trainings/home/trainings-home.component';
+import { TrainingComponent } from './trainings/movement/training.component';
+import { TrainingSettingsComponent } from './trainings/movement/settings/training-settings.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +68,11 @@ import { MovementSettingsComponent } from './movements/movement/settings/movemen
     MovementsHomeComponent,
     MovementComponent,
     MovementSettingsComponent,
+
+    TrainingsComponent,
+    TrainingsHomeComponent,
+    TrainingComponent,
+    TrainingSettingsComponent,
 
     HomeComponent,
     PageComponent,

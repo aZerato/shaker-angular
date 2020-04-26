@@ -5,7 +5,13 @@
 .page-details {
 
     .details-inner {
-    
+        
+        .details-content {
+            height: calc(100% - 100px);
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+
         .details-form {
             position: absolute;
             bottom: 0;

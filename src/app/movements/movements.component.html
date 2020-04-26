@@ -24,7 +24,9 @@
                     </h4>
                 </a>
             </li>
+        </ul>
 
+        <ul class="secondary">
             <li [routerLinkActive]="['active']"
                 *ngFor="let movement of movements">
                 <a [routerLink]="['/movement', movement.guid]">
@@ -35,7 +37,6 @@
 
                 </a>
             </li>
-
         </ul>
 
     </div>

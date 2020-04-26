@@ -24,8 +24,16 @@ body {
         ul 
         {
             padding-left: 0;
+            margin-bottom: 0;
             list-style: none;
             width: 100%;
+
+            &.secondary 
+            {
+                padding: 0;
+                overflow: auto;
+                height: calc(100% - 100px);
+            }
 
             li
             {
@@ -98,7 +106,7 @@ body {
     .details
     {
         height: 100%;
-
+        
         .card {
             background: #00a9b4; 
             background: -webkit-linear-gradient(to right, #5B86E5, #00a9b4);
@@ -143,7 +151,7 @@ body {
                     padding: 10px;
                 }
                 .details-content {
-                    height: calc(100% - 100px);
+                    height: 100%;
                     overflow-x: hidden;
                     overflow-y: scroll;
                 }

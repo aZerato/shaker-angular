@@ -24,7 +24,9 @@
                     </h4>
                 </a>
             </li>
+        </ul>
 
+        <ul class="secondary">
             <li [routerLinkActive]="['active']"
                 *ngFor="let channel of channels">
                 <a [routerLink]="['/channel', channel.guid]">

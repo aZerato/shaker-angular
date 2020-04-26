@@ -13,8 +13,11 @@ body {
 
 .default-page 
 {
+    height: 100%;
+
     .side-list 
     {
+        padding: 0;
         background: #e5e8ef;
         height: 100%;
         
@@ -102,7 +105,8 @@ body {
             background: linear-gradient(to right, #5B86E5, #00a9b4);
         
             border: 0;
-        
+            transition: box-shadow 0.3s ease-in-out;
+            
             &:hover {
                 box-shadow: 0px 0px 20px -5px rgba(82,82,82,1);
             }

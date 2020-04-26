@@ -10,8 +10,7 @@ import { Movement } from '../models/movement.model';
 
 @Component({
   selector: 'app-movements-home',
-  templateUrl: './movements-home.component.html',
-  styleUrls: ['./movements-home.component.scss']
+  templateUrl: './movements-home.component.html'
 })
 export class MovementsHomeComponent implements OnInit 
 {

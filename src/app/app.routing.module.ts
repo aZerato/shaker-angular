@@ -33,6 +33,10 @@ import { TrainingsComponent } from './trainings/trainings.component';
 import { TrainingComponent } from './trainings/training/training.component';
 import { TrainingsHomeComponent } from './trainings/home/trainings-home.component';
 
+import { PlanningComponent } from './planning/planning.component';
+
+import { MetricsComponent } from './metrics/metrics.component';
+
 const appRoutes: Routes = [
     { 
       path: '',
@@ -75,6 +79,20 @@ const appRoutes: Routes = [
                 path: 'account', 
                 component: AccountComponent
             }
+        ]
+    },
+    {
+        path: 'planning',
+        component: PlanningComponent,
+        canActivate: [
+            AuthenticationGuard
+        ]
+    },
+    {
+        path: 'metrics',
+        component: MetricsComponent,
+        canActivate: [
+            AuthenticationGuard
         ]
     },
     {

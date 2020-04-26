@@ -27,13 +27,31 @@
             </li>
             <li *ngIf="isAuthenticated" 
             class="nav-item">
-            <a class="nav-link"
-              (click)="isMenuCollapsed = true"
-              [routerLink]="['/training']"
-              routerLinkActive="active">
-                Trainings
-            </a>
-          </li>
+              <a class="nav-link"
+                (click)="isMenuCollapsed = true"
+                [routerLink]="['/planning']"
+                routerLinkActive="active">
+                  Planning
+              </a>
+            </li>
+            <li *ngIf="isAuthenticated" 
+            class="nav-item">
+              <a class="nav-link"
+                (click)="isMenuCollapsed = true"
+                [routerLink]="['/metrics']"
+                routerLinkActive="active">
+                  Metrics
+              </a>
+            </li>
+            <li *ngIf="isAuthenticated" 
+            class="nav-item">
+              <a class="nav-link"
+                (click)="isMenuCollapsed = true"
+                [routerLink]="['/training']"
+                routerLinkActive="active">
+                  Trainings
+              </a>
+            </li>
             <li *ngIf="isAuthenticated" 
               class="nav-item">
               <a class="nav-link"

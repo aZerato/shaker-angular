@@ -46,6 +46,10 @@ import { TrainingsHomeComponent } from './trainings/home/trainings-home.componen
 import { TrainingComponent } from './trainings/training/training.component';
 import { TrainingSettingsComponent } from './trainings/training/settings/training-settings.component';
 
+import { PlanningComponent } from './planning/planning.component';
+
+import { MetricsComponent } from './metrics/metrics.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,6 +60,10 @@ import { TrainingSettingsComponent } from './trainings/training/settings/trainin
     ProfileComponent,
     AccountComponent,
     UserNewComponent,
+
+    PlanningComponent,
+
+    MetricsComponent,
 
     ChannelsComponent,
     ChannelsHomeComponent,

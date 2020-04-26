@@ -1,0 +1,50 @@
+<div class="row default-page">
+    
+    <div class="col-3 side-list">
+
+        <ul>
+            <li class="list-item main">
+                <a>
+                    <h4>
+                        <fa-icon [icon]="faCalendar"></fa-icon>
+                        
+                        Planning
+                    </h4>
+                </a>
+            </li>
+            <li class="list-item main">
+                <a>
+                    <h4>
+                        <fa-icon [icon]="faFilter"></fa-icon>
+                        
+                        Filters
+                    </h4>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="secondary">
+            <li>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="filter1Cb">
+                    <label class="form-check-label" for="filter1Cb">filter 1</label>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="filter1Cb">
+                    <label class="form-check-label" for="filter1Cb">filter 1</label>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="col-9 details">
+
+        <router-outlet></router-outlet>
+
+    </div>
+
+</div>
+

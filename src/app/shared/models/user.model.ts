@@ -1,5 +1,5 @@
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
-import { BaseEntity } from './base-entity.model';
+import { BaseEntity, IBaseEntity } from './base-entity.model';
 
 export const userSchema:JSONSchema = {
     type: 'object',
@@ -24,7 +24,7 @@ export const usersSchemaArr:JSONSchemaArray = {
     items: userSchema
 };
 
-export class UserModel extends BaseEntity
+export class UserModel extends BaseEntity implements IBaseEntity
 {   
     name: string;
     fullname: string;

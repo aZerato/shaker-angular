@@ -1,6 +1,6 @@
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
-import { BaseEntity } from 'src/app/shared/models/base-entity.model';
+import { BaseEntity, IBaseEntity } from 'src/app/shared/models/base-entity.model';
 
 export const trainingSchema:JSONSchema = {
     type: 'object',
@@ -22,7 +22,7 @@ export const trainingsSchemaArr:JSONSchemaArray = {
     items: trainingSchema
 };
 
-export class Training extends BaseEntity
+export class Training extends BaseEntity implements IBaseEntity
 {
     name: string;
     imgPath: string;

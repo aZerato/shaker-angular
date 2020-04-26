@@ -1,6 +1,6 @@
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
-import { BaseEntity } from 'src/app/shared/models/base-entity.model';
+import { BaseEntity, IBaseEntity } from 'src/app/shared/models/base-entity.model';
 
 export const channelSchema:JSONSchema = {
     type: 'object',
@@ -22,9 +22,8 @@ export const channelsSchemaArr:JSONSchemaArray = {
     items: channelSchema
 };
 
-export class Channel extends BaseEntity 
-{
-    
+export class Channel extends BaseEntity implements IBaseEntity 
+{   
     name: string;
     imgPath: string;
 

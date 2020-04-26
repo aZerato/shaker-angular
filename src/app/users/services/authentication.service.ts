@@ -92,7 +92,7 @@ export class AuthenticationService
                 ).subscribe(() => {
                     
                     const auth = new AuthenticationModel(user, false);
-                    auth.prepareSave();
+                    auth.prepareSave(user);
                     this.storageMap.set(
                         authenticationKey,
                         auth,
@@ -124,7 +124,7 @@ export class AuthenticationService
                     return;
                 }
 
-                auth.prepareSave();
+                auth.prepareSave(user);
 
                 this.storageMap.set(
                     authenticationKey,

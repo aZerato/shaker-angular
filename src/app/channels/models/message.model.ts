@@ -2,7 +2,7 @@ import { formatDate } from '@angular/common';
 
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
-import { BaseEntity } from 'src/app/shared/models/base-entity.model';
+import { BaseEntity, IBaseEntity } from 'src/app/shared/models/base-entity.model';
 
 export const messageSchema:JSONSchema = {
     type: 'object',
@@ -30,7 +30,7 @@ export const messagesSchemaArr:JSONSchemaArray = {
     items: messageSchema
 };
 
-export class Message extends BaseEntity
+export class Message extends BaseEntity implements IBaseEntity
 {
     channelGuid: string;
     

@@ -2,6 +2,8 @@ import { formatDate } from '@angular/common';
 
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
+import { BaseEntity } from 'src/app/shared/models/base-entity.model';
+
 export const messageSchema:JSONSchema = {
     type: 'object',
     properties: {
@@ -28,9 +30,8 @@ export const messagesSchemaArr:JSONSchemaArray = {
     items: messageSchema
 };
 
-export class Message 
+export class Message extends BaseEntity
 {
-    guid: string;
     channelGuid: string;
     
     userGuid: string;
@@ -43,7 +44,8 @@ export class Message
         channelGuid: string, 
         userGuid: string) 
     {
-        this.guid = Date.now().toString();
+        super();
+
         this.channelGuid = channelGuid;
 
         this.userGuid = userGuid;

@@ -1,41 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { BaseResolverService } from 'src/app/shared/resolvers/base.resolver';
 
 import { TrainingService } from '../services/trainings.service';
 import { Training } from '../models/training.model';
-import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
-export class TrainingResolverService implements Resolve<Training> {
+export class TrainingResolverService extends BaseResolverService<Training> {
 
     constructor(
-        private _router: Router,
-        private _trainingService: TrainingService) { }
-
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): 
-            Training | Observable<Training> | Promise<Training> 
-    {
-        return this._trainingService
-                    .getEntityByGuid<Training>(route.params['guid'])
-                    .pipe(map(training => {
-                        if (training)
-                        {
-                            return training;
-                        }
-                        else
-                        {
-                            this._router.navigate(['/training']);
-                            return null;
-                        }
-                    },
-                    error => {
-                        this._router.navigate(['/training']);
-                        return null;
-                    }));
-    }
-
+        router: Router,
+        trainingService: TrainingService) 
+        { 
+            super(router, trainingService, '/training');
+        }
 }

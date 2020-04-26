@@ -1,4 +1,5 @@
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
+import { BaseEntity } from './base-entity.model';
 
 export const userSchema:JSONSchema = {
     type: 'object',
@@ -23,9 +24,8 @@ export const usersSchemaArr:JSONSchemaArray = {
     items: userSchema
 };
 
-export class UserModel
+export class UserModel extends BaseEntity
 {   
-    guid: string;
     name: string;
     fullname: string;
     imgPath: string;
@@ -34,7 +34,8 @@ export class UserModel
 
     constructor(name: string, email: string, password: string, fullname?: string, imgPath?: string)
     {
-        this.guid = Date.now().toString();
+        super();
+        
         this.name = name;
         this.email = email;
         this.password = password;

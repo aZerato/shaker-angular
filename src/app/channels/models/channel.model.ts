@@ -1,5 +1,7 @@
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
+import { BaseEntity } from 'src/app/shared/models/base-entity.model';
+
 export const channelSchema:JSONSchema = {
     type: 'object',
     properties: {
@@ -20,15 +22,16 @@ export const channelsSchemaArr:JSONSchemaArray = {
     items: channelSchema
 };
 
-export class Channel {
+export class Channel extends BaseEntity 
+{
     
-    guid: string;
     name: string;
     imgPath: string;
 
     constructor(name: string) 
     {
-        this.guid = Date.now().toString();
+        super();
+
         this.name = name;
         this.imgPath = "./assets/img/bot-avatar.png";
     }

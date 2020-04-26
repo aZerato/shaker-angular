@@ -1,5 +1,7 @@
 import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
+import { BaseEntity } from 'src/app/shared/models/base-entity.model';
+
 export const movementSchema:JSONSchema = {
     type: 'object',
     properties: {
@@ -20,15 +22,15 @@ export const movementsSchemaArr:JSONSchemaArray = {
     items: movementSchema
 };
 
-export class Movement {
-    
-    guid: string;
+export class Movement extends BaseEntity
+{
     name: string;
     imgPath: string;
 
     constructor(name: string) 
     {
-        this.guid = Date.now().toString();
+        super();
+        
         this.name = name;
         this.imgPath = "./assets/img/bot-avatar.png";
     }

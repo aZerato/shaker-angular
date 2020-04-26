@@ -1,40 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { Observable, EMPTY } from 'rxjs';
+import { BaseResolverService } from 'src/app/shared/resolvers/base.resolver';
 
 import { ChannelService } from '../services/channel.service';
-import { Channel } from '../models/channel.model';
-import { catchError, map } from 'rxjs/operators';
+import { Channel } from '../models/channel.model'
 
 @Injectable({
     providedIn: 'root'
 })
-export class ChannelResolverService implements Resolve<Channel> {
+export class ChannelResolverService extends BaseResolverService<Channel> {
 
     constructor(
-        private router: Router,
-        private channelService: ChannelService) { }
-
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): 
-        Channel | Observable<Channel> | Promise<Channel> 
-    {
-        return this.channelService.getEntityByGuid<Channel>(route.params['guid'])
-                    .pipe(map(channel => {
-                        if (channel)
-                        {
-                            return channel;
-                        }
-                        else
-                        {
-                            this.router.navigate(['/channel']);
-                            return null;
-                        }
-                    },
-                    error => {
-                        this.router.navigate(['/channel']);
-                        return null;
-                    }));
-    }
-
+        router: Router,
+        channelService: ChannelService) 
+        { 
+            super(router, channelService, '/channel');
+        }
 }

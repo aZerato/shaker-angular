@@ -1,4 +1,7 @@
 import { JSONSchema } from '@ngx-pwa/local-storage';
+
+import { BaseEntity } from 'src/app/shared/models/base-entity.model';
+
 import { UserModel } from 'src/app/shared/models/user.model';
 
 export const authenticationKey:string = 'authenticatedUser'; 
@@ -15,17 +18,17 @@ export const authenticationSchema: JSONSchema = {
     ]
 };
 
-export class AuthenticationModel
+export class AuthenticationModel extends BaseEntity
 {
     private date: string;
-    guid: string;
     email: string;
     password: string;
     rememberMe: boolean;
 
     constructor(user: UserModel, rememberMe: boolean)
     {
-        this.guid = user.guid;
+        super();
+
         this.date = Date.now().toString();
         this.email = user.email;
         this.password = user.password;

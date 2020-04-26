@@ -1,40 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { BaseResolverService } from 'src/app/shared/resolvers/base.resolver';
 
 import { MovementService } from '../services/movement.service';
 import { Movement } from '../models/movement.model';
-import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
-export class MovementResolverService implements Resolve<Movement> {
+export class MovementResolverService extends BaseResolverService<Movement> {
 
     constructor(
-        private _router: Router,
-        private _movementService: MovementService) { }
-
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): 
-            Movement | Observable<Movement> | Promise<Movement> 
-    {
-        return this._movementService.getEntityByGuid<Movement>(route.params['guid'])
-                    .pipe(map(movement => {
-                        if (movement)
-                        {
-                            return movement;
-                        }
-                        else
-                        {
-                            this._router.navigate(['/movement']);
-                            return null;
-                        }
-                    },
-                    error => {
-                        this._router.navigate(['/movement']);
-                        return null;
-                    }));
-    }
-
+        router: Router,
+        movementService: MovementService) { 
+            super(router, movementService, '/movement');
+        }
 }

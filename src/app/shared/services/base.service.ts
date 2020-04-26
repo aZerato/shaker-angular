@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { StorageMap, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
-export abstract class BaseService<T>
+import { BaseEntity, IBaseEntity } from '../models/base-entity.model';
+
+export abstract class BaseService<TBaseEntity extends IBaseEntity>
 {
     private _storageMap: StorageMap;
-    private _localEntities: T[];
-    private _entitiesStorageMap: Observable<any>; // any = T[]
-    entityAddedSub: Subject<T> = new Subject<T>();
+    private _localEntities: TBaseEntity[];
+    private _entitiesStorageMap: Observable<TBaseEntity[]>; // any = T[]
+    entityAddedSub: Subject<TBaseEntity> = new Subject<TBaseEntity>();
 
     private _entitiesKeyArr: string;
     private _entitiesSchemaArr: JSONSchemaArray;
@@ -25,32 +25,33 @@ export abstract class BaseService<T>
         this._entitiesSchemaArr = entitiesSchemaArr;
 
         this._entitiesStorageMap = this._storageMap
-            .get<any>(this._entitiesKeyArr, this._entitiesSchemaArr)
-            .pipe<any>(map((entities: any) => {
-                if (!entities) entities = [];
-                this._localEntities = entities;
-                return this._localEntities;
-            }));
+            .get<TBaseEntity[]>(this._entitiesKeyArr, this._entitiesSchemaArr)
+            .pipe<TBaseEntity[]>(
+                map((entities: TBaseEntity[]) => {
+                    if (!entities) entities = [];
+                    this._localEntities = entities;
+                    return this._localEntities;
+                }));
     }
 
-    getAllEntitiesObs<T>() : Observable<T[]> {
+    getAllEntitiesObs() : Observable<TBaseEntity[]> {
         return this._entitiesStorageMap;
     }
 
-    getEntityByGuid<T>(guid: string): Observable<T> {
+    getEntityByGuid(guid: string): Observable<TBaseEntity> {
         return this._entitiesStorageMap
-            .pipe<T>(
-                map((entities: T[]) => {
+            .pipe<TBaseEntity>(
+                map((entities: TBaseEntity[]) => {
                     if (!entities) return;
 
-                    const entity = entities.find(en => en['guid'] === guid);
+                    const entity = entities.find(en => en.guid === guid);
 
                     return entity;
                 })
             );
     }
 
-    addEntity<T>(): void 
+    addEntity(): void 
     {
         const init = this._localEntities;
             
@@ -60,14 +61,14 @@ export abstract class BaseService<T>
             return;
         }
         
-        this.getAllEntitiesObs<T>()
-            .subscribe((entities: T[]) => 
+        this.getAllEntitiesObs()
+            .subscribe((entities: TBaseEntity[]) => 
         {
             this.saveEntity(entities);
         });
     }
 
-    private saveEntity<T>(entities: T[]): void
+    private saveEntity(entities: TBaseEntity[]): void
     {
         const entity = this.createBaseObject();
 

@@ -1,10 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // start externals modules
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { FlatpickrModule } from 'angularx-flatpickr';
 // end externals modules
 
 import { AppComponent } from './app.component';
@@ -47,6 +51,7 @@ import { TrainingComponent } from './trainings/training/training.component';
 import { TrainingSettingsComponent } from './trainings/training/settings/training-settings.component';
 
 import { PlanningComponent } from './planning/planning.component';
+import { CalendarComponent } from './planning/calendar/calendar.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
 
@@ -62,6 +67,7 @@ import { MetricsComponent } from './metrics/metrics.component';
     UserNewComponent,
 
     PlanningComponent,
+    CalendarComponent,
 
     MetricsComponent,
 
@@ -90,11 +96,14 @@ import { MetricsComponent } from './metrics/metrics.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+    FlatpickrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -36,6 +36,7 @@ import { TrainingsHomeComponent } from './trainings/home/trainings-home.componen
 import { PlanningComponent } from './planning/planning.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
+import { CalendarComponent } from './planning/calendar/calendar.component';
 
 const appRoutes: Routes = [
     { 
@@ -86,6 +87,12 @@ const appRoutes: Routes = [
         component: PlanningComponent,
         canActivate: [
             AuthenticationGuard
+        ],
+        children: [
+            {
+                path: '',
+                component: CalendarComponent
+            }
         ]
     },
     {

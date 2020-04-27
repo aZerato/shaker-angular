@@ -34,9 +34,10 @@ import { TrainingComponent } from './trainings/training/training.component';
 import { TrainingsHomeComponent } from './trainings/home/trainings-home.component';
 
 import { PlanningComponent } from './planning/planning.component';
+import { CalendarComponent } from './planning/calendar/calendar.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
-import { CalendarComponent } from './planning/calendar/calendar.component';
+import { MetricsChartComponent } from './metrics/chart/metrics-chart.component';
 
 const appRoutes: Routes = [
     { 
@@ -100,6 +101,12 @@ const appRoutes: Routes = [
         component: MetricsComponent,
         canActivate: [
             AuthenticationGuard
+        ],
+        children: [
+            {
+                path: '',
+                component: MetricsChartComponent
+            }
         ]
     },
     {

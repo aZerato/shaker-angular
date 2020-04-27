@@ -15,8 +15,8 @@ export class MetricService extends BaseService<Metric>
 {
     constructor(
         storageMap: StorageMap,
-        metricTypeService: MetricTypeService,
-        calendarService: CalendarService) 
+        metricTypeService: MetricTypeService
+        ) 
     { 
         super(storageMap, metricsKeyArr, metricsSchemaArr);
 

@@ -1,0 +1,33 @@
+<div class="row details">
+    <div class="details-inner col">
+
+        <div class="details-header row">
+            <div class="col-8">
+                Metrics chart
+            </div>
+        </div>
+
+        <div class="details-content row">
+
+            <div class="col-sm-6 col-md-4 col-lg-3 mt-3">
+                <!--
+                    https://stackblitz.com/edit/swimlane-line-chart?embed=1&file=app/app.component.ts%5C%22,%5C%22type%5C%22:%5C%22link%5C%22,%5C%22title%5C%22:%5C%22line-chart
+                -->
+                <div *ngIf="metricsGraphDatas">
+                    <ngx-charts-line-chart
+                        [view]="view"
+                        [legend]="legend"
+                        [showXAxisLabel]="showXAxisLabel"
+                        [showYAxisLabel]="showYAxisLabel"
+                        [xAxis]="xAxis"
+                        [yAxis]="yAxis"
+                        [xAxisLabel]="xAxisLabel"
+                        [yAxisLabel]="yAxisLabel"
+                        [results]="metricsGraphDatas">
+                    </ngx-charts-line-chart>
+                </div>
+            </div>  
+
+        </div>  
+    </div>  
+</div>

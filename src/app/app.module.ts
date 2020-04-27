@@ -9,6 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 // end externals modules
 
 import { AppComponent } from './app.component';
@@ -54,6 +55,7 @@ import { PlanningComponent } from './planning/planning.component';
 import { CalendarComponent } from './planning/calendar/calendar.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
+import { MetricsChartComponent } from './metrics/chart/metrics-chart.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,7 @@ import { MetricsComponent } from './metrics/metrics.component';
     CalendarComponent,
 
     MetricsComponent,
+    MetricsChartComponent,
 
     ChannelsComponent,
     ChannelsHomeComponent,
@@ -103,7 +106,8 @@ import { MetricsComponent } from './metrics/metrics.component';
     NgbModule,
     FontAwesomeModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
-    FlatpickrModule.forRoot()
+    FlatpickrModule.forRoot(),
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

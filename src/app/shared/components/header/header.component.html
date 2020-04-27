@@ -22,6 +22,7 @@
                 (click)="isMenuCollapsed = true"
                 [routerLink]="['/page', 'project']"
                 routerLinkActive="active">
+                  <fa-icon [icon]="faRuler"></fa-icon>
                   Projet
               </a>
             </li>
@@ -31,6 +32,7 @@
                 (click)="isMenuCollapsed = true"
                 [routerLink]="['/planning']"
                 routerLinkActive="active">
+                  <fa-icon [icon]="faCalendar"></fa-icon>
                   Planning
               </a>
             </li>
@@ -40,6 +42,7 @@
                 (click)="isMenuCollapsed = true"
                 [routerLink]="['/metrics']"
                 routerLinkActive="active">
+                  <fa-icon [icon]="faSquareRootAlt"></fa-icon>
                   Metrics
               </a>
             </li>
@@ -49,6 +52,7 @@
                 (click)="isMenuCollapsed = true"
                 [routerLink]="['/training']"
                 routerLinkActive="active">
+                  <fa-icon [icon]="faMap"></fa-icon>
                   Trainings
               </a>
             </li>
@@ -58,6 +62,7 @@
                 (click)="isMenuCollapsed = true"
                 [routerLink]="['/movement']"
                 routerLinkActive="active">
+                  <fa-icon [icon]="faDumbbell"></fa-icon>
                   Movements
               </a>
             </li>
@@ -67,6 +72,7 @@
                 (click)="isMenuCollapsed = true"
                 [routerLink]="['/channel']"
                 routerLinkActive="active">
+                  <fa-icon [icon]="faRocket"></fa-icon>
                   Channels
               </a>
             </li>
@@ -79,6 +85,7 @@
                   (click)="isMenuCollapsed = true"
                   routerLink="/auth"
                   routerLinkActive="active">
+                    <fa-icon [icon]="faHandPeace"></fa-icon>
                     LogIn
                 </a>
             </li>
@@ -88,6 +95,7 @@
                   (click)="isMenuCollapsed = true"
                   routerLink="/new"
                   routerLinkActive="active">
+                    <fa-icon [icon]="faSignInAlt"></fa-icon>
                     SignIn
                 </a>
             </li>
@@ -97,6 +105,7 @@
                     (click)="isMenuCollapsed = true"
                     routerLink="/users/account"
                     routerLinkActive="active">
+                      <fa-icon [icon]="faUser"></fa-icon>
                       Account
                 </a>
             </li>
@@ -106,6 +115,7 @@
                     (click)="isMenuCollapsed = true"
                     routerLink="/logout"
                     routerLinkActive="active">
+                      <fa-icon [icon]="faSignOutAlt"></fa-icon>
                       Logout
                 </a>
             </li>

@@ -15,8 +15,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-metrics',
-  templateUrl: './metrics.component.html',
-  styleUrls: ['./metrics.component.scss']
+  templateUrl: './metrics.component.html'
 })
 export class MetricsComponent implements OnInit 
 {

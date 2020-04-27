@@ -99,6 +99,25 @@ body {
                         padding-left: 10px;
                     }
                 }
+
+                .form-check 
+                {
+                    
+                    input[type="checkbox"] {
+                        visibility: hidden;
+                    }
+
+                    input[type="checkbox"]:checked + .form-check-label {
+                        background-color:  #00a9b4;
+                        color: theme-color('light');
+                    }
+                    
+                    .form-check-label 
+                    {
+                        padding: 15px 30px;
+                        width: 100%;
+                    }
+                }
             }    
         }
     }

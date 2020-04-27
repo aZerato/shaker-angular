@@ -1,0 +1,22 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+ul li .form-check 
+{
+    
+    input[type="checkbox"] {
+        visibility: hidden;
+    }
+
+    input[type="checkbox"]:checked + .form-check-label {
+        background-color:  #00a9b4;
+        color: theme-color('light');
+    }
+    
+    .form-check-label 
+    {
+        padding: 15px 30px;
+        width: 100%;
+    }
+}

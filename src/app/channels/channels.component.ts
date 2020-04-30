@@ -43,12 +43,12 @@ export class ChannelsComponent implements OnInit
         .entityAddedSub
         .subscribe((channel: Channel) => 
         {
-          if (!(this.channels.length === 1 && this.channels[0].guid === channel.guid))
+          if (!(this.channels.length === 1 && this.channels[0].id === channel.id))
           {
             this.channels.push(channel);
           }
           
-          this._router.navigate(['/channel', channel.guid]);
+          this._router.navigate(['/channel', channel.id]);
         });
   }
 
@@ -58,6 +58,9 @@ export class ChannelsComponent implements OnInit
   }
 
   onCreateChannel(): void {
-    this._channelService.addEntity();
+    const ch = new Channel();
+    ch.name = "New channel " + Date.now;
+
+    this._channelService.addEntity(ch);
   }
 }

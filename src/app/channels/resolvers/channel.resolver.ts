@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { BaseResolverService } from 'src/app/shared/resolvers/base.resolver';
+import { BaseServerResolverService } from 'src/app/shared/resolvers/base-server.resolver';
 
 import { ChannelService } from '../services/channel.service';
 import { Channel } from '../models/channel.model'
@@ -9,7 +9,7 @@ import { Channel } from '../models/channel.model'
 @Injectable({
     providedIn: 'root'
 })
-export class ChannelResolverService extends BaseResolverService<Channel> {
+export class ChannelResolverService extends BaseServerResolverService<Channel> {
 
     constructor(
         router: Router,

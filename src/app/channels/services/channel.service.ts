@@ -1,30 +1,40 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
-import { StorageMap } from '@ngx-pwa/local-storage';
+import { environment } from 'src/environments/environment';
 
-import { Channel, channelsKeyArr, channelsSchemaArr } from '../models/channel.model';
-import { MessageService } from './message.service';
-import { BaseService } from 'src/app/shared/services/base.service';
+import { BaseServerService } from 'src/app/shared/services/base-server.service';
+
+import { Channel } from '../models/channel.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ChannelService extends BaseService<Channel> 
+export class ChannelService extends BaseServerService<Channel> 
 {
-    constructor(_storageMap: StorageMap,
-        private _messageService: MessageService) 
+    constructor(httpClient: HttpClient) 
     {
-        super(_storageMap, channelsKeyArr, channelsSchemaArr);
+        super(httpClient, environment.backend.routes.channels);
+    }
 
-        this.entityAddedSub.subscribe((channel: Channel) => {
-            this._messageService.addBotMessage(channel.guid, 'Hello !');
-        });
+    getMessages(id: number): Observable<Channel> {
+        return this._httpClient
+                .get<Channel>(this._apiUrl, 
+                {
+                        params: { 
+                            id: id.toString(),
+                            msgs: "true"
+                        }
+                });
     }
     
     createBaseObject() {
-        return new Channel('Conversation');
+        const ch = new Channel();
+        ch.name = "Channel " + Date.now.toString();
+        return ch;
     }
+
+
 }

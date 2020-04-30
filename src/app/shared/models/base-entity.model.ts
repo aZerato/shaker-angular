@@ -1,13 +1,12 @@
 export class BaseEntity implements IBaseEntity
 {   
-    guid: string;
-
-    constructor()
-    {
-        this.guid = Date.now().toString();
-    }
+    id: number;
+    creation: string;
+    error: string;
 }
 
 export interface IBaseEntity {
-    guid: string;
+    id: number;
+    creation: string;
+    error: string;
 }

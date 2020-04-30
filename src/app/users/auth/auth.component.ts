@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../services/authentication.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthenticationModel } from '../models/authentication.model';
+
 import { Subscription } from 'rxjs';
-import { UserModel } from 'src/app/shared/models/user.model';
+
+import { AuthenticationService } from '../services/authentication.service';
+import { AuthenticationModel } from '../models/authentication.model';
 
 @Component({
   selector: 'app-auth',
@@ -35,7 +36,7 @@ export class AuthComponent implements OnInit, OnDestroy
         });
 
     this._creationErrorSub =
-      this.authenticationService.creationErrorSubject
+      this.authenticationService.authenticationErrorSubject
         .subscribe((error: string) => {
           this.errorMessage = error;
         });
@@ -54,28 +55,25 @@ export class AuthComponent implements OnInit, OnDestroy
     this.errorMessage = '';
     if (this.authenticationFormGroup.valid)
     {
-      const user = new UserModel(
-        this.authenticationFormGroup.value.name, 
-        this.authenticationFormGroup.value.email,
+      this._authenticationModel = new AuthenticationModel(
+        this.authenticationFormGroup.value.userName, 
         this.authenticationFormGroup.value.password);
-      this._authenticationModel = new AuthenticationModel(user, false);
+
       this.authenticationService.login(this._authenticationModel);
     }
   }
 
   private initForm(): void 
   {
-    const user = new UserModel('', '', '');
-    this._authenticationModel = new AuthenticationModel(user, false);
+    this._authenticationModel = new AuthenticationModel('', '');
 
     this.authenticationFormGroup = new FormGroup({
-      email: new FormControl(this._authenticationModel.email, [
+      userName: new FormControl(this._authenticationModel.userName, [
         Validators.required
       ]),
       password: new FormControl(this._authenticationModel.password, [
         Validators.required
-      ]),
-      rememberMe: new FormControl(this._authenticationModel.rememberMe)
+      ])
     });
   }
 }

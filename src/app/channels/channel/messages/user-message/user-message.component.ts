@@ -3,7 +3,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
-import { UserModel } from 'src/app/shared/models/user.model';
+import { User } from 'src/app/shared/models/user.model';
 
 @Component({
   selector: 'app-user-message',
@@ -13,9 +13,9 @@ import { UserModel } from 'src/app/shared/models/user.model';
 export class UserMessageComponent implements OnInit, OnDestroy
 {
   @Input()
-  userGuid: string;
+  userId: number;
 
-  user: UserModel;
+  user: User;
 
   private _getUserByGuidSub: Subscription;
 
@@ -24,8 +24,8 @@ export class UserMessageComponent implements OnInit, OnDestroy
   ngOnInit(): void 
   {
     this._getUserByGuidSub =
-      this.authenticationService.getUserByGuid(this.userGuid)
-      .subscribe((user: UserModel) => {
+      this.authenticationService.getUserByGuid(this.userId)
+      .subscribe((user: User) => {
         this.user = user;
       });
   }

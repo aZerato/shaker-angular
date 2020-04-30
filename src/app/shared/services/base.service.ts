@@ -3,13 +3,14 @@ import { map } from 'rxjs/operators';
 
 import { StorageMap, JSONSchemaArray } from '@ngx-pwa/local-storage';
 
-import { BaseEntity, IBaseEntity } from '../models/base-entity.model';
+import { IBaseEntity } from '../models/base-entity.model';
 
+/// BaseService for use localstorage.
 export abstract class BaseService<TBaseEntity extends IBaseEntity>
 {
     private _storageMap: StorageMap;
     private _localEntities: TBaseEntity[];
-    private _entitiesStorageMap: Observable<TBaseEntity[]>; // any = T[]
+    private _entitiesStorageMap: Observable<TBaseEntity[]>;
     entityAddedSub: Subject<TBaseEntity> = new Subject<TBaseEntity>();
 
     private _entitiesKeyArr: string;
@@ -38,13 +39,13 @@ export abstract class BaseService<TBaseEntity extends IBaseEntity>
         return this._entitiesStorageMap;
     }
 
-    getEntityByGuid(guid: string): Observable<TBaseEntity> {
+    getEntityByGuid(id: number): Observable<TBaseEntity> {
         return this._entitiesStorageMap
             .pipe<TBaseEntity>(
                 map((entities: TBaseEntity[]) => {
                     if (!entities) return;
 
-                    const entity = entities.find(en => en.guid === guid);
+                    const entity = entities.find(en => en.id === id);
 
                     return entity;
                 })

@@ -5,12 +5,12 @@ import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 export const metricTypeSchema:JSONSchema = {
     type: 'object',
     properties: {
-        guid: { type: 'string' },
+        id: { type: 'integer' },
         name: { type: 'string' },
         description: { type: 'string' },
     },
     required: [
-        'guid',
+        'id',
         'name',
         'description'
     ]

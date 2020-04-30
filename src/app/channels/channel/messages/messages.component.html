@@ -3,21 +3,21 @@
     class="row message mb-3">
 
     <div class="col-10"
-        [ngClass]="{'message-user': message.userGuid === currentUserGuid, 
-                    'offset-2': message.userGuid === currentUserGuid}">
+        [ngClass]="{'message-user': message.userId === currentUserId, 
+                    'offset-2': message.userId === currentUserId}">
 
         <div class="row">
             
             <div class="col-12 mb-2 p-0"
-                [ngClass]="{'text-right': message.userGuid === currentUserGuid}">
+                [ngClass]="{'text-right': message.userId === currentUserId}">
                 
-                <app-user-message [userGuid]="message.userGuid"></app-user-message>
+                <app-user-message [userId]="message.userId"></app-user-message>
 
                 <small>{{message.date}}</small>
             </div>
 
             <div class="col message-content"
-                [ngClass]="{'float-right': message.userGuid === currentUserGuid }">
+                [ngClass]="{'float-right': message.userId === currentUserId }">
                 {{message.content}}
             </div>
 

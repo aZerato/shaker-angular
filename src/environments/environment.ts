@@ -3,7 +3,19 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  backend: {
+    routes: {
+      root: 'https://localhost:5001',
+      creation: 'https://localhost:5001/auth/create',
+      login: 'https://localhost:5001/auth/authenticate',
+
+      users: 'https://localhost:5001/api/users',
+
+      channels: 'https://localhost:5001/api/channels',
+      messages: 'https://localhost:5001/api/messages'
+    }
+  }
 };
 
 /*

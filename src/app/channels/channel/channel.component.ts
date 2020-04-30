@@ -13,6 +13,7 @@ import {
 import { Channel } from '../models/channel.model';
 import { MessageService } from '../services/message.service';
 import { ChannelService } from '../services/channel.service';
+import { Message } from '../models/message.model';
 
 @Component({
   selector: 'app-channel',
@@ -63,9 +64,11 @@ export class ChannelComponent implements OnInit, OnDestroy
   onSubmitMessage(): void {
     if (this.messageForm.valid) 
     {
-      this._messageService.addUserMessage(
-        this.channel.guid, 
-        this.messageForm.value.content);
+      const msg = new Message();
+      msg.channelId = this.channel.id;
+      msg.content = this.messageForm.value.content;
+      
+      this._messageService.addEntity(msg);
         
       this.messageForm.reset();
     }

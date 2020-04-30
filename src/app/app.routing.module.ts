@@ -121,14 +121,14 @@ const appRoutes: Routes = [
                 component: ChannelsHomeComponent
             },
             {
-                path: ':guid', 
+                path: ':id', 
                 component: ChannelComponent,
                 resolve: {
                     channel: ChannelResolverService
                 }
             },
             {
-                path: ':guid/settings',
+                path: ':id/settings',
                 component: ChannelSettingsComponent,
                 resolve: {
                     channel: ChannelResolverService
@@ -148,14 +148,14 @@ const appRoutes: Routes = [
                 component: MovementsHomeComponent
             },
             {
-                path: ':guid', 
+                path: ':id', 
                 component: MovementComponent,
                 resolve: {
                     movement: MovementResolverService
                 }
             },
             {
-                path: ':guid/settings',
+                path: ':id/settings',
                 component: MovementSettingsComponent,
                 resolve: {
                     movement: MovementResolverService
@@ -175,14 +175,14 @@ const appRoutes: Routes = [
                 component: TrainingsHomeComponent
             },
             {
-                path: ':guid', 
+                path: ':id', 
                 component: TrainingComponent,
                 resolve: {
                     training: TrainingResolverService
                 }
             },
             {
-                path: ':guid/settings',
+                path: ':id/settings',
                 component: TrainingSettingsComponent,
                 resolve: {
                     movement: TrainingResolverService

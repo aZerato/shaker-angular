@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 
 // start externals modules
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -103,6 +104,7 @@ import { MetricsChartComponent } from './metrics/chart/metrics-chart.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     NgbModule,
     FontAwesomeModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),

@@ -7,8 +7,9 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 
 import { AuthenticationModel } from '../models/authentication.model';
 import { User } from '../../shared/models/user.model';
-import { BearerModel, bearerKey, bearerSchema } from '../models/bearer.model';
+import { Bearer, bearerKey, bearerSchema } from '../models/bearer.model';
 import { environment } from 'src/environments/environment';
+import { flatMap, map } from 'rxjs/operators';
 
 @Injectable({
  providedIn: 'root'
@@ -51,7 +52,7 @@ export class AuthenticationService
                 return;
             }
             
-            const bearer = new BearerModel(user);
+            const bearer = new Bearer(user);
             this._storageMap.set(
                 bearerKey,
                 bearer,
@@ -71,11 +72,8 @@ export class AuthenticationService
 
     login(auth: AuthenticationModel): void
     {
-        const httpOptions = {
-            headers: new HttpHeaders().set('Content-Type', 'application/json')
-        };
         this._httpClient
-        .post(environment.backend.routes.login, auth, httpOptions)
+        .post(environment.backend.routes.login, auth)
         .subscribe((user: User) => {
             if(user.error)
             {
@@ -83,7 +81,7 @@ export class AuthenticationService
                 return;
             }
             
-            const bearer = new BearerModel(user);
+            const bearer = new Bearer(user);
             this._storageMap.set(
                 bearerKey,
                 bearer,
@@ -113,7 +111,28 @@ export class AuthenticationService
 
     getUserConnected(): Observable<User>
     {
-        return of(this._userConnected);
+        if (this._userConnected)
+        { 
+            return of(this._userConnected);
+        }
+
+        return this.getToken()
+                .pipe<User>(
+                    flatMap((bearer: Bearer) => {
+                        if (!bearer || !bearer.userId)
+                        {
+                            return of(null)
+                        }
+                        // reuse bearer token completly in header. for re get data.
+                        return this.getUserByGuid(bearer.userId)
+                            .pipe(map((user: User) => {
+                                if (!user) return;
+
+                                this._userConnected = user;
+                                this.authenticationStatusChangeSubject.next(true);
+                            }));
+                    })
+                );
     }
 
     getUserByGuid(userId: number): Observable<User>
@@ -123,5 +142,32 @@ export class AuthenticationService
             {
                 params: { id: userId.toString() }
             });
+    }
+
+    private _bearer: Bearer;
+    getToken() : Observable<Bearer>
+    {
+        if (this._bearer) return of(this._bearer);
+
+        return this._storageMap.get(
+            bearerKey,
+            bearerSchema
+        ).pipe<Bearer>(map((bearer: Bearer) => {
+            return this._bearer = bearer;
+        }));
+    }
+
+    getHttpOptions() : Observable<any> {
+        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+        return this.getToken()
+                .pipe(map((bearer: Bearer) => 
+                {
+                    if (bearer)
+                        headers.set('Authorization', `Bearer ${bearer.token}`);
+                    return {
+                        headers: headers
+                    };
+                }));
     }
 }

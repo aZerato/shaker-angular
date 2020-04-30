@@ -7,9 +7,10 @@ export const environment = {
   backend: {
     routes: {
       root: 'https://localhost:5001',
+      
       creation: 'https://localhost:5001/auth/create',
       login: 'https://localhost:5001/auth/authenticate',
-
+      
       users: 'https://localhost:5001/api/users',
 
       channels: 'https://localhost:5001/api/channels',

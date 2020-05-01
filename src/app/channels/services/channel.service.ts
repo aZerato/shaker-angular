@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-
 import { BaseServerService } from 'src/app/shared/services/base-server.service';
+import { AuthenticationService } from 'src/app/users/services/authentication.service';
 
 import { Channel } from '../models/channel.model';
-import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ChannelService extends BaseServerService<Channel> 
 {
-    constructor(httpClient: HttpClient) 
+    constructor(
+        httpClient: HttpClient,
+        authService: AuthenticationService) 
     {
-        super(httpClient, environment.backend.routes.channels);
+        super(httpClient, authService, environment.backend.routes.channels);
     }
 
     getMessages(id: number): Observable<Channel> {
@@ -32,7 +34,7 @@ export class ChannelService extends BaseServerService<Channel>
     
     createBaseObject() {
         const ch = new Channel();
-        ch.name = "Channel " + Date.now.toString();
+        ch.name = "Channel " + Date.now().toString();
         return ch;
     }
 

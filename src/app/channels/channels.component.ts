@@ -59,7 +59,7 @@ export class ChannelsComponent implements OnInit
 
   onCreateChannel(): void {
     const ch = new Channel();
-    ch.name = "New channel " + Date.now;
+    ch.name = "New channel " + Date.now();
 
     this._channelService.addEntity(ch);
   }

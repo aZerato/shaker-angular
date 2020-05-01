@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
@@ -18,6 +18,7 @@ export class ChannelSettingsComponent implements OnInit, OnDestroy
   private _dataSub: Subscription;
 
   constructor(
+    private _router: Router,
     private _route: ActivatedRoute,
     private _channelService: ChannelService) { }
 
@@ -27,6 +28,10 @@ export class ChannelSettingsComponent implements OnInit, OnDestroy
       this._route.data.subscribe((data: Data) => {
         this.channelUpdated = data['channel'];
         this.initForm();
+
+        this._channelService.entityDeletedSub.subscribe(() => {
+          this._router.navigate(['/channel']);
+        });
       });
   }
 
@@ -39,14 +44,26 @@ export class ChannelSettingsComponent implements OnInit, OnDestroy
   {
     if (this.channelSettingsFormGroup.valid)
     {
-      alert();
+      this.channelUpdated.name = this.channelSettingsFormGroup.value.name;
+      this.channelUpdated.description = this.channelSettingsFormGroup.value.description;
+      this.channelUpdated.imgPath = this.channelSettingsFormGroup.value.imgPath;
+
+      this._channelService.updateEntity(this.channelUpdated);
     }
+  }
+
+  onDelete(): void 
+  {
+    this._channelService.deleteEntity(this.channelUpdated);
   }
 
   private initForm(): void 
   {
     this.channelSettingsFormGroup = new FormGroup({
       name: new FormControl(this.channelUpdated.name, [
+        Validators.required
+      ]),
+      description: new FormControl(this.channelUpdated.description, [
         Validators.required
       ]),
       imgPath: new FormControl(this.channelUpdated.imgPath, [

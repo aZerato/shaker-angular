@@ -10,7 +10,7 @@ export const calendarEntrySchema:JSONSchema = {
         end: { type: 'string' },
         title: { type: 'string' },
         type: { type: 'string' },
-        typeLinkGuid: { type: 'string' },
+        typeLinkId: { type: 'integer' },
         hexColor: { type: 'string' },
         allDay: { type: 'boolean' }
     },

@@ -17,14 +17,14 @@ export class UserMessageComponent implements OnInit, OnDestroy
 
   user: User;
 
-  private _getUserByGuidSub: Subscription;
+  private _getUserByIdSub: Subscription;
 
   constructor(private authenticationService: AuthenticationService) { }
 
   ngOnInit(): void 
   {
-    this._getUserByGuidSub =
-      this.authenticationService.getUserByGuid(this.userId)
+    this._getUserByIdSub =
+      this.authenticationService.getUserById(this.userId)
       .subscribe((user: User) => {
         this.user = user;
       });
@@ -32,6 +32,6 @@ export class UserMessageComponent implements OnInit, OnDestroy
 
   ngOnDestroy(): void
   {
-    this._getUserByGuidSub.unsubscribe();
+    this._getUserByIdSub.unsubscribe();
   }
 }

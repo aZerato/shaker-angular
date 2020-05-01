@@ -27,7 +27,7 @@ export class BaseServerResolverService<TBaseEntity extends IBaseEntity>
             TBaseEntity | Observable<TBaseEntity> | Promise<TBaseEntity> 
     {
         return this._baseService
-                    .getEntityByGuid(route.params['id'])
+                    .getEntityById(route.params['id'])
                     .pipe<TBaseEntity>(map((entity: TBaseEntity) => {
                         if (entity)
                         {

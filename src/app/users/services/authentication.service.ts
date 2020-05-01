@@ -124,7 +124,7 @@ export class AuthenticationService
                             return of(null)
                         }
                         // reuse bearer token completly in header. for re get data.
-                        return this.getUserByGuid(bearer.userId)
+                        return this.getUserById(bearer.userId)
                             .pipe(map((user: User) => {
                                 if (!user) return;
 
@@ -135,13 +135,10 @@ export class AuthenticationService
                 );
     }
 
-    getUserByGuid(userId: number): Observable<User>
+    getUserById(userId: number): Observable<User>
     {
         return this._httpClient
-        .get<User>(environment.backend.routes.users, 
-            {
-                params: { id: userId.toString() }
-            });
+            .get<User>(`${environment.backend.routes.users}/${userId}`);
     }
 
     private _bearer: Bearer;
@@ -165,6 +162,7 @@ export class AuthenticationService
                 {
                     if (bearer)
                         headers.set('Authorization', `Bearer ${bearer.token}`);
+                    
                     return {
                         headers: headers
                     };

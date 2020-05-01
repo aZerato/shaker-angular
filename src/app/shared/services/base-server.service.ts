@@ -4,7 +4,6 @@ import { Observable, Subject } from 'rxjs';
 
 import { IBaseEntity } from '../models/base-entity.model';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
-import { flatMap } from 'rxjs/operators';
 
 /// BaseService for use rest api.
 export abstract class BaseServerService<TBaseEntity extends IBaseEntity>
@@ -15,7 +14,6 @@ export abstract class BaseServerService<TBaseEntity extends IBaseEntity>
     
     constructor(
         protected _httpClient: HttpClient,
-        protected _authService: AuthenticationService,
         protected _apiUrl:string) 
     { }
 

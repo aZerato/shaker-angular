@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { UserModel } from 'src/app/shared/models/user.model';
+import { User } from 'src/app/shared/models/user.model';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { AuthenticationService } from '../services/authentication.service';
 export class AccountComponent implements OnInit 
 {
   accountFormGroup: FormGroup;
-  userUpdated: UserModel;
+  userUpdated: User;
 
   constructor(private _authenticationService: AuthenticationService) { }
 
@@ -19,7 +19,7 @@ export class AccountComponent implements OnInit
   {
     this._authenticationService
       .getUserConnected()
-      .subscribe((user: UserModel) => {
+      .subscribe((user: User) => {
         this.userUpdated = user;
         this.initForm();
       });
@@ -36,7 +36,7 @@ export class AccountComponent implements OnInit
       name: new FormControl(this.userUpdated.name, [
         Validators.required
       ]),
-      fullname: new FormControl(this.userUpdated.fullname, [
+      firstName: new FormControl(this.userUpdated.firstName, [
         Validators.required
       ]),
       imgPath: new FormControl(this.userUpdated.imgPath, [

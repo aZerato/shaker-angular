@@ -43,12 +43,12 @@ export class TrainingsComponent implements OnInit
         .entityAddedSub
         .subscribe((training: Training) => 
         {
-          if (!(this.trainings.length === 1 && this.trainings[0].guid === training.guid))
+          if (!(this.trainings.length === 1 && this.trainings[0].id === training.id))
           {
             this.trainings.push(training);
           }
           
-          this.router.navigate(['/training', training.guid]);
+          this.router.navigate(['/training', training.id]);
         });
   }
 

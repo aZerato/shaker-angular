@@ -19,6 +19,14 @@
             </div>
 
             <div class="form-group row">
+                <label for="description" class="col-4 col-form-label">Description</label> 
+                <div class="col-8">
+                    <textarea class="form-control" 
+                        formControlName="description"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
                 <label for="imgPath" class="col-4 col-form-label">Image Path</label> 
                 <div class="col-8">
                     <input type="url" 
@@ -37,6 +45,7 @@
                 </button>
 
                 <button name="delete" 
+                    (click)="onDelete()"
                     type="button" 
                     class="btn btn-danger">
                   Delete

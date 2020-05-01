@@ -47,8 +47,8 @@
         <ul class="secondary">
             <li *ngFor="let metricType of metricTypes">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" [id]="'metricTypeme' + metricType.guid">
-                    <label class="form-check-label" [for]="'metricTypeme' + metricType.guid">{{metricType.name}}</label>
+                    <input type="checkbox" class="form-check-input" [id]="'metricTypeme' + metricType.id">
+                    <label class="form-check-label" [for]="'metricTypeme' + metricType.id">{{metricType.name}}</label>
                 </div>
             </li>
         </ul>

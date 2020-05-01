@@ -5,7 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { AuthenticationService } from '../services/authentication.service';
-import { CreationModel } from '../models/creation.model';
+import { AuthenticationModel } from '../models/authentication.model';
 
 @Component({
   selector: 'app-user-new',
@@ -17,7 +17,7 @@ export class UserNewComponent implements OnInit, OnDestroy
   errorMessage: string;
   creationFormGroup: FormGroup;
   
-  private creationModel: CreationModel;
+  private _authenticationModel: AuthenticationModel;
   private isAuthenticatedSub: Subscription;
   private creationErrorSub: Subscription;
 
@@ -36,7 +36,7 @@ export class UserNewComponent implements OnInit, OnDestroy
         });
     
     this.creationErrorSub =
-        this.authenticationService.creationErrorSubject
+        this.authenticationService.authenticationErrorSubject
           .subscribe((error: string) => {
             this.errorMessage = error;
           });
@@ -55,22 +55,23 @@ export class UserNewComponent implements OnInit, OnDestroy
     this.errorMessage = undefined;
     if (this.creationFormGroup.valid)
     {
+      this._authenticationModel = new AuthenticationModel(
+        this.creationFormGroup.value.userName, 
+        this.creationFormGroup.value.password);
+
       this.authenticationService.create(this.creationFormGroup.value);
     }
   }
 
   private initForm(): void 
   {
-    this.creationModel = new CreationModel('', '', '');
+    this._authenticationModel = new AuthenticationModel('', '');
 
     this.creationFormGroup = new FormGroup({
-      name: new FormControl(this.creationModel.email, [
+      userName: new FormControl(this._authenticationModel.userName, [
         Validators.required
       ]),
-      email: new FormControl(this.creationModel.email, [
-        Validators.required
-      ]),
-      password: new FormControl(this.creationModel.password, [
+      password: new FormControl(this._authenticationModel.password, [
         Validators.required
       ])
     });

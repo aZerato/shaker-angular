@@ -23,7 +23,7 @@ export class CheckUserConnectedGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, 
                 state: RouterStateSnapshot): Observable<boolean | UrlTree>
     {
-        return this.authenticationService.isAuthenticated()
+        return this.authenticationService.getUserConnected()
             .pipe(
                 map(() => {
                     return true;

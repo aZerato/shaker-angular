@@ -23,10 +23,10 @@ export class AuthenticationGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, 
                 state: RouterStateSnapshot): Observable<boolean | UrlTree>
     {
-        return this.authenticationService.isAuthenticated()
+        return this.authenticationService.getUserConnected()
             .pipe(
-                map(isAuthenticated => {
-                    if (isAuthenticated)
+                map(userAuthenticated => {
+                    if (userAuthenticated)
                     {
                         return true;
                     }

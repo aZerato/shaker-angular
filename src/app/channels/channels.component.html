@@ -29,7 +29,7 @@
         <ul class="secondary">
             <li [routerLinkActive]="['active']"
                 *ngFor="let channel of channels">
-                <a [routerLink]="['/channel', channel.guid]">
+                <a [routerLink]="['/channel', channel.id]">
                     
                     <fa-icon [icon]="faRocket"></fa-icon>
                     

@@ -1,58 +1,29 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject, of, BehaviorSubject, concat, throwError } from 'rxjs';
-import { map, flatMap, take } from 'rxjs/operators';
+import { Observable, Subject, of } from 'rxjs';
 
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { StorageMap } from '@ngx-pwa/local-storage';
 
-import { AuthenticationModel, authenticationKey, authenticationSchema } from '../models/authentication.model';
-import { UserModel, usersSchemaArr, usersKey } from '../../shared/models/user.model';
-import { CreationModel } from '../models/creation.model';
-
-export const botGuid: string = 'bot';
-export const botUserModel: UserModel = new UserModel('bot', '', '', '', './assets/img/bot-avatar.png');
+import { AuthenticationModel } from '../models/authentication.model';
+import { User } from '../../shared/models/user.model';
+import { Bearer, bearerKey, bearerSchema } from '../models/bearer.model';
+import { environment } from 'src/environments/environment';
+import { flatMap, map } from 'rxjs/operators';
 
 @Injectable({
  providedIn: 'root'
 })
 export class AuthenticationService
 {
+    private _userConnected: User; 
     authenticationStatusChangeSubject: Subject<boolean> = new Subject<boolean>();
-    creationErrorSubject: Subject<string> = new Subject<string>();
+    authenticationErrorSubject: Subject<string> = new Subject<string>();
 
-    private _userConnectedObs: Observable<UserModel>;
-    userConnectedBehaviorSub: BehaviorSubject<UserModel>
-    private _userConnected: UserModel;
-
-    private _usersObs: Observable<UserModel[]>;
-    usersBehaviorSub: BehaviorSubject<UserModel[]>
-    private _users: UserModel[] = [];
-
-    constructor(private storageMap: StorageMap) 
-    { 
-        this._userConnectedObs = 
-            this.storageMap.get<UserModel>(
-                authenticationKey,
-                authenticationSchema);
-
-        this._userConnectedObs
-            .pipe(map((user: UserModel) => { 
-                this._userConnected = user;
-                this.userConnectedBehaviorSub = new BehaviorSubject<UserModel>(this._userConnected);
-            }));
-
-        this._usersObs = 
-            this.storageMap.get<UserModel[]>(
-                usersKey,
-                usersSchemaArr);
-
-        this._usersObs
-            .pipe(map((users: UserModel[]) => {
-                if (!users) users = [];
-                this._users.push(...users);
-                this.usersBehaviorSub = new BehaviorSubject<UserModel[]>(this._users);
-            }));
-    }
+    constructor(
+        private _httpClient: HttpClient,
+        private _storageMap: StorageMap) 
+    { }
 
     private onError(error?: any, message?: string): void {
         if (error)
@@ -61,160 +32,140 @@ export class AuthenticationService
         if (message)
         {
             console.trace(message);
-            this.creationErrorSubject.next(message);
+            this.authenticationErrorSubject.next(message);
         }
         else
         {
-            this.creationErrorSubject.next('Oops, we encountered an error. Please try again !');
+            this.authenticationErrorSubject.next('Oops, we encountered an error. Please try again !');
         }
     }
 
-    create(create: CreationModel): void
+    create(auth: AuthenticationModel): void
     {
-        this._usersObs
-        .subscribe((users: UserModel[]) => 
-        {
-            const user = new UserModel(create.name, create.email, create.password);
-        
-            const userDatabase = users?.find(ub => ub.email === user.email);
-            if (userDatabase) 
+        this._httpClient
+        .post(environment.backend.routes.creation, auth)
+        .subscribe((user: User) => {
+            
+            if(user.error)
             {
-                this.onError(null, 'This user already exist !');
+                this.onError(null, user.error);
+                return;
             }
-            else 
-            {
-                this._users.push(user);
-
-                this.storageMap.set(
-                    usersKey,
-                    this._users,
-                    usersSchemaArr
-                ).subscribe(() => {
-                    
-                    const auth = new AuthenticationModel(user, false);
-                    auth.prepareSave(user);
-                    this.storageMap.set(
-                        authenticationKey,
-                        auth,
-                        authenticationSchema
-                    ).subscribe(() => {
-                        this._userConnected = user;
-                        this.authenticationStatusChangeSubject.next(true);
-                    },
-                    (error: any) => {
-                        this.onError(error);
-                    });
-                },
-                (error: any) => {
-                    this.onError(error);
-                });
-            }
+            
+            const bearer = new Bearer(user);
+            this._storageMap.set(
+                bearerKey,
+                bearer,
+                bearerSchema
+            ).subscribe(() => {
+                this._userConnected = user;
+                this.authenticationStatusChangeSubject.next(true);
+            },
+            (error: any) => {
+                this.onError(error);
+            });
+        },
+        (error: any) => {
+            this.onError(error);
         });
     }
 
     login(auth: AuthenticationModel): void
     {
-        this._usersObs
-            .subscribe((users: UserModel[]) => {
-                const user = users?.find(ub => ub.email === auth.email && ub.password === auth.password);
-                
-                if (!user)
-                {
-                    this.onError(null, '404: User not found !');
-                    return;
-                }
-
-                auth.prepareSave(user);
-
-                this.storageMap.set(
-                    authenticationKey,
-                    auth,
-                    authenticationSchema
-                ).subscribe(() => {
-                    this._userConnected = user;
-                    this.authenticationStatusChangeSubject.next(true);
-                },
-                (error: any) => {
-                    this.onError(error);
-                });
+        this._httpClient
+        .post(environment.backend.routes.login, auth)
+        .subscribe((user: User) => {
+            if(user.error)
+            {
+                this.onError(null, user.error);
+                return;
+            }
+            
+            const bearer = new Bearer(user);
+            this._storageMap.set(
+                bearerKey,
+                bearer,
+                bearerSchema
+            ).subscribe(() => {
+                this._userConnected = user;
+                this.authenticationStatusChangeSubject.next(true);
             },
             (error: any) => {
                 this.onError(error);
             });
+        },
+        (error: any) => {
+            this.onError(error);
+        });
     }
 
     logoff(): void
     {
-        this.storageMap.delete(
-            authenticationKey
+        this._storageMap.delete(
+            bearerKey
         ).subscribe(() => {
             this._userConnected = undefined;
             this.authenticationStatusChangeSubject.next(false);
         });
     }
 
-    isAuthenticated(): Observable<boolean>
-    {
-        return this.getUserConnected()
-            .pipe<boolean>(
-                map((user: UserModel) => 
-                {
-                    if (user)
-                    {
-                        return true;
-                    }
-                    else 
-                    {
-                        return false;
-                    }
-                }));
-    }
-
-    getUserConnected(): Observable<UserModel> 
+    getUserConnected(): Observable<User>
     {
         if (this._userConnected)
-        {
+        { 
             return of(this._userConnected);
         }
-        
-        return this.getAuthenticatedUser()
-            .pipe<UserModel>(
-                flatMap((auth: AuthenticationModel) => 
+
+        return this.getToken()
+                .pipe<User>(
+                    flatMap((bearer: Bearer) => {
+                        if (!bearer || !bearer.userId)
+                        {
+                            return of(null)
+                        }
+                        // reuse bearer token completly in header. for re get data.
+                        return this.getUserById(bearer.userId)
+                            .pipe(map((user: User) => {
+                                if (!user) return;
+
+                                this._userConnected = user;
+                                this.authenticationStatusChangeSubject.next(true);
+                            }));
+                    })
+                );
+    }
+
+    getUserById(userId: number): Observable<User>
+    {
+        return this._httpClient
+            .get<User>(`${environment.backend.routes.users}/${userId}`);
+    }
+
+    private _bearer: Bearer;
+    getToken() : Observable<Bearer>
+    {
+        if (this._bearer) return of(this._bearer);
+
+        return this._storageMap.get(
+            bearerKey,
+            bearerSchema
+        ).pipe<Bearer>(map((bearer: Bearer) => {
+            return this._bearer = bearer;
+        }));
+    }
+
+    getHttpOptions() : Observable<any> {
+        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+        return this.getToken()
+                .pipe(map((bearer: Bearer) => 
                 {
-                    if (!auth)
-                        return of(null);
-
-                    return this.getUserByGuid(auth.guid)
-                                .pipe<UserModel>(
-                                    map((userConnected: UserModel) => 
-                                    {
-                                        this.authenticationStatusChangeSubject.next(true);
-                                        return this._userConnected = userConnected;
-                                    }));
+                    if (bearer)
+                        headers.set('Authorization', `Bearer ${bearer.token}`);
+                    
+                    return {
+                        headers: headers
+                    };
                 }));
-    }
-
-    getUserByGuid(guid: string): Observable<UserModel>
-    {
-        if (guid === botGuid)
-        {
-            return of(botUserModel);
-        }
-
-        return this._usersObs
-            .pipe<UserModel>(
-                map((users :UserModel[]) => {
-                    return users?.find(user => user.guid === guid);
-                })
-            );
-    }
-
-    getAuthenticatedUser(): Observable<AuthenticationModel>
-    {
-        return this.storageMap
-            .get<AuthenticationModel>(
-                authenticationKey,
-                authenticationSchema
-            );
     }
 }

@@ -3,19 +3,19 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@a
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { BaseService } from '../services/base.service';
 import { IBaseEntity } from '../models/base-entity.model';
+import { BaseServerService } from '../services/base-server.service';
 
-export class BaseResolverService<TBaseEntity extends IBaseEntity> 
+export class BaseServerResolverService<TBaseEntity extends IBaseEntity> 
             implements Resolve<TBaseEntity> 
 {
 
     private _router: Router;
-    private _baseService: BaseService<TBaseEntity>;
+    private _baseService: BaseServerService<TBaseEntity>;
     private _defaultRoute: string;
 
     constructor(router: Router,
-        baseService: BaseService<TBaseEntity>,
+        baseService: BaseServerService<TBaseEntity>,
         defaultRoute: string) 
         { 
             this._router = router;

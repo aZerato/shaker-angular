@@ -1,14 +1,14 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
-import { MessageService } from '../../services/message.service';
+import { ChannelService } from '../../services/channel.service';
 
 import { Message } from '../../models/message.model';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
 import { Channel } from '../../models/channel.model';
 import { ActivatedRoute, Data } from '@angular/router';
-import { UserModel } from 'src/app/shared/models/user.model';
+import { User } from 'src/app/shared/models/user.model';
 
 @Component({
   selector: 'app-messages',
@@ -17,19 +17,19 @@ import { UserModel } from 'src/app/shared/models/user.model';
 })
 export class MessagesComponent implements OnInit, OnDestroy
 {
-  currentUserGuid: string;
+  currentUserId: number;
   
   messages: Message[] = [];
 
   private _channel: Channel;
   private _dataSub: Subscription;
   private _getUserConnectedSub: Subscription;
-  private _getStorageMessagesChannelsObsSub: Subscription;
+  private _getMessagesSub: Subscription;
   private _getMessageAddedSub: Subscription;
 
   constructor(
     private authenticationService: AuthenticationService,
-    private messageService: MessageService,
+    private channelService: ChannelService,
     private route: ActivatedRoute) 
     { }
 
@@ -44,25 +44,15 @@ export class MessagesComponent implements OnInit, OnDestroy
           this._getUserConnectedSub = 
             this.authenticationService
               .getUserConnected()
-              .subscribe((user: UserModel) => {
-                this.currentUserGuid = user.guid;
+              .subscribe((user: User) => {
+                this.currentUserId = user.id;
               });
 
-          this._getStorageMessagesChannelsObsSub = 
-            this.messageService
-            .getStorageMessagesChannelsObs(this._channel.guid)
-            .subscribe((msgs: Message[]) => {
-              this.messages = msgs;
-
-              this._getMessageAddedSub =
-                this.messageService.getMessageAddedSub(this._channel.guid)
-                .subscribe((message: Message) => 
-                {
-                  if (this.messages.find(msg => msg.guid === message.guid)) 
-                    return;
-                  
-                  this.messages.push(message);
-                });
+          this._getMessagesSub = 
+            this.channelService
+            .getMessages(this._channel.id)
+            .subscribe((ch: Channel) => {
+              this.messages = ch.messages;
             });
 
         });
@@ -72,7 +62,7 @@ export class MessagesComponent implements OnInit, OnDestroy
   {
     this._dataSub.unsubscribe();
     this._getUserConnectedSub?.unsubscribe();
-    this._getStorageMessagesChannelsObsSub?.unsubscribe();
+    this._getMessagesSub?.unsubscribe();
     this._getMessageAddedSub?.unsubscribe();
   }
 }

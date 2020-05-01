@@ -5,16 +5,16 @@ import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 export const metricSchema:JSONSchema = {
     type: 'object',
     properties: {
-        guid: { type: 'string' },
-        typeGuid: { type: 'string' },
+        id: { type: 'integer' },
+        typeId: { type: 'string' },
         value: { type: 'string' },
-        calendarGuid: { type: 'string' }
+        calendarId: { type: 'string' }
     },
     required: [
-        'guid',
-        'typeGuid',
+        'id',
+        'typeId',
         'value',
-        'calendarGuid'
+        'calendarId'
     ]
 };
 
@@ -26,23 +26,23 @@ export const metricsSchemaArr:JSONSchemaArray = {
 
 export class Metric extends BaseEntity implements IBaseEntity 
 {
-    typeGuid: string;
+    typeId: number;
     description: string;
     value: string;
-    calendarGuid: string;
+    calendarId: number;
 
     constructor(
-        typeGuid: string,
+        typeId: number,
         description: string,
         value: string,
-        calendarGuid: string
+        calendarId: number
     ) 
     {
         super();
 
-        this.typeGuid = typeGuid;
+        this.typeId = typeId;
         this.description = description;
         this.value = value;
-        this.calendarGuid = calendarGuid;
+        this.calendarId = calendarId;
     }
 }

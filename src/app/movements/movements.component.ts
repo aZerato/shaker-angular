@@ -43,12 +43,12 @@ export class MovementsComponent implements OnInit
         .entityAddedSub
         .subscribe((movement: Movement) => 
         {
-          if (!(this.movements.length === 1 && this.movements[0].guid === movement.guid))
+          if (!(this.movements.length === 1 && this.movements[0].id === movement.id))
           {
             this.movements.push(movement);
           }
           
-          this._router.navigate(['/movement', movement.guid]);
+          this._router.navigate(['/movement', movement.id]);
         });
   }
 

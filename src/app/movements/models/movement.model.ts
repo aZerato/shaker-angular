@@ -5,12 +5,12 @@ import { BaseEntity, IBaseEntity } from 'src/app/shared/models/base-entity.model
 export const movementSchema:JSONSchema = {
     type: 'object',
     properties: {
-        guid: { type: 'string' },
+        id: { type: 'integer' },
         name: { type: 'string' },
         imgPath: { type: 'string' }
     },
     required: [
-        'guid',
+        'id',
         'name',
         'imgPath'
     ]

@@ -7,11 +7,11 @@
 
                 <div class="card">
                     <a class="text-white"
-                        [routerLink]="['/channel', channel.guid]">
+                        [routerLink]="['/channel', channel.id]">
 
                         <fa-icon [icon]="faRocket" class="rocket"></fa-icon>
 
-                        <img class="card-img" src="{{ channel.imgPath }}" alt="Card image cap">
+                        <img class="card-img" src="{{ channel.imgPath == null ? './assets/img/bot-avatar.png' : channel.imgPath }}" alt="Card image cap">
 
                         <div class="card-img-overlay">
                             <div class="card-body">

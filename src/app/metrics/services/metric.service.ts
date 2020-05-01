@@ -24,7 +24,7 @@ export class MetricService extends BaseService<Metric>
     }
 
     createBaseObject() {
-        return new Metric('', 'Description', 'Value', '');
+        return new Metric(0, 'Description', 'Value', 0);
     }
 
     private onMetricAdded(): void 

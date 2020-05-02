@@ -55,7 +55,9 @@ export class MessagesComponent implements OnInit, OnDestroy
           this._getMessagesSub = 
             this._channelService
             .getMessages(this._channel.id)
-            .subscribe((ch: Channel) => {
+            .subscribe((ch: Channel) => 
+            {
+              // get previous messages.
               this.messages = ch.messages;
 
               this.initWSConnection();
@@ -65,15 +67,16 @@ export class MessagesComponent implements OnInit, OnDestroy
 
   initWSConnection() 
   {
-    this._signalrService.createConnection(`wss://localhost:5001/hub/channel`, 1);
+    this._signalrService.createConnection(`wss://localhost:5001/hub/channel`, 1, true);
     this._signalrService.startConnection();
+
     this._signalrService.connectionEstablished
     .subscribe((state: boolean) =>
     {
       if (!state) return;
-
+      
       this._signalrService.hubConnection
-      .on('BroadcastMessage', (msgString: string) => {
+      .on('broadcastMessage', (msgString: string) => {
         const msg = JSON.parse(msgString);
         this.messages.push(msg);
       });
@@ -82,12 +85,9 @@ export class MessagesComponent implements OnInit, OnDestroy
       this._messageService.entityAddedSub
       .subscribe((msg: Message) => {
         this._signalrService
-          .run('BroadcastMessage', JSON.stringify(msg));
+          .run('broadcastMessage', JSON.stringify(msg));
       });
     });
-    
-
-    
   }
 
   ngOnDestroy(): void 

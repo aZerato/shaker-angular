@@ -2,8 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { 
   HubConnection, 
   HubConnectionBuilder, 
-  HubConnectionState, 
-  IHubProtocol, 
+  HubConnectionState,
   LogLevel, 
   HttpTransportType } from '@microsoft/signalr';
 import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
@@ -16,7 +15,6 @@ export class SignalRService implements OnDestroy
 {
   public connectionEstablished = new Subject<boolean>();
   public startConnectionTimeoutDelay: number = 3000;
-  public protocol: IHubProtocol = new MessagePackHubProtocol();
   public autoReconnect: boolean = true;
 
   private _userId: number = 0;
@@ -29,28 +27,30 @@ export class SignalRService implements OnDestroy
   {
   }
 
-  createConnection(huburl: string, userId: number)
+  createConnection(huburl: string, userId: number, autoReconnect: boolean = false)
   {
     this._userId = userId;
 
     if (!this._hubConnection && this._userId > 0)
     {
       let hubConnectionBuilder: HubConnectionBuilder = new HubConnectionBuilder();
-
       hubConnectionBuilder.withUrl(huburl,{
         skipNegotiation: true,
         transport: HttpTransportType.WebSockets
       });
-      hubConnectionBuilder.withHubProtocol(this.protocol);
+      hubConnectionBuilder.withHubProtocol(new MessagePackHubProtocol());
       hubConnectionBuilder.configureLogging(LogLevel.Information);
 
+      this.autoReconnect = autoReconnect;
       if (this.autoReconnect)
       {
         hubConnectionBuilder.withAutomaticReconnect([0, 1000, 1000, 1000, 1000, 1000, 2000, 5000, 10000, 20000, 30000, null]);
       }
 
       this._hubConnection = hubConnectionBuilder.build();
-
+      
+      this._hubConnection.keepAliveIntervalInMilliseconds = 10000;
+      
       this.hubConnection.onclose((msg) =>
       {
         console.log(msg.message);

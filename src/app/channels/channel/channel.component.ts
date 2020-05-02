@@ -67,6 +67,7 @@ export class ChannelComponent implements OnInit, OnDestroy
     if (this.messageForm.valid) 
     {
       const msg = new Message();
+      msg.userId = 2;
       msg.channelId = this.channel.id;
       msg.content = this.messageForm.value.content;
       

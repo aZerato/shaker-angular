@@ -21,13 +21,7 @@ export class ChannelService extends BaseServerService<Channel>
 
     getMessages(id: number): Observable<Channel> {
         return this._httpClient
-                .get<Channel>(this._apiUrl, 
-                {
-                        params: { 
-                            id: id.toString(),
-                            msgs: "true"
-                        }
-                });
+                .get<Channel>(`${this._apiUrl}/${id}?msgs=${true}`);
     }
     
     createBaseObject() {

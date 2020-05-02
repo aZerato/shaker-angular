@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Data } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
 import { ChannelService } from '../../services/channel.service';
-
-import { Message } from '../../models/message.model';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
+import { MessageService } from '../../services/message.service';
+import { WebSocketService } from 'src/app/shared/services/websocket.service';
+
 import { Channel } from '../../models/channel.model';
-import { ActivatedRoute, Data } from '@angular/router';
+import { Message } from '../../models/message.model';
 import { User } from 'src/app/shared/models/user.model';
 
 @Component({
@@ -26,36 +28,54 @@ export class MessagesComponent implements OnInit, OnDestroy
   private _getUserConnectedSub: Subscription;
   private _getMessagesSub: Subscription;
   private _getMessageAddedSub: Subscription;
+  private _wsSocketMsg: WebSocketService<Message>;
 
   constructor(
-    private authenticationService: AuthenticationService,
-    private channelService: ChannelService,
-    private route: ActivatedRoute) 
+    private _authenticationService: AuthenticationService,
+    private _channelService: ChannelService,
+    private _messageService: MessageService,
+    private _route: ActivatedRoute) 
     { }
 
   ngOnInit(): void 
   {
     this._dataSub =
-      this.route.data
+      this._route.data
         .subscribe((data: Data) => 
         {
           this._channel = data['channel'];
 
           this._getUserConnectedSub = 
-            this.authenticationService
+            this._authenticationService
               .getUserConnected()
               .subscribe((user: User) => {
                 this.currentUserId = user.id;
               });
 
           this._getMessagesSub = 
-            this.channelService
+            this._channelService
             .getMessages(this._channel.id)
             .subscribe((ch: Channel) => {
               this.messages = ch.messages;
-            });
 
+              this.initWSConnection();
+            });
         });
+  }
+
+  initWSConnection() 
+  {
+    this._wsSocketMsg = new WebSocketService<Message>(`wss://localhost:5001/ws/channel/${this._channel.id}`);
+
+    this._wsSocketMsg.subscribe((msg: Message) => {
+      this.messages.push(msg);
+    });
+
+    this._getMessageAddedSub = 
+      this._messageService.entityAddedSub
+      .subscribe((msg: Message) => {
+        this._wsSocketMsg.send(msg);
+      });
   }
 
   ngOnDestroy(): void 
@@ -64,5 +84,6 @@ export class MessagesComponent implements OnInit, OnDestroy
     this._getUserConnectedSub?.unsubscribe();
     this._getMessagesSub?.unsubscribe();
     this._getMessageAddedSub?.unsubscribe();
+    this._wsSocketMsg?.unsubscribe();
   }
 }

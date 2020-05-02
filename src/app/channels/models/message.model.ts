@@ -8,4 +8,6 @@ export class Message extends BaseEntity implements IBaseEntity
     
     content: string;
     date: string;
+
+    type: string = "Message";
 }

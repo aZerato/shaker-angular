@@ -1,92 +1,35 @@
-import { Observable, Subject, Observer, interval } from 'rxjs';
-import { WebSocketSubject } from 'rxjs/webSocket';
-import { takeWhile, share, distinctUntilChanged } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import * as signalR from '@microsoft/signalr';
+import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
 
-export class WebSocketService<T> extends Subject<T> 
+@Injectable({
+  providedIn: 'root'
+})
+export class SignalRService 
 {
-  private reconnectionObservable: Observable<number>;
-  private wsSubjectConfig;
-  private socket: WebSocketSubject<any>;
-  private connectionObserver: Observer<boolean>;
-  public connectionStatus: Observable<boolean>;
+  private _hubConnection: signalR.HubConnection;
 
-  constructor(
-    private url: string,
-    private reconnectInterval: number = 5000,
-    private reconnectAttempts: number = 10,
-  ) {
-    super();
+  public connect(url: string): signalR.HubConnection
+  {
+    this._hubConnection = new signalR.HubConnectionBuilder()
+                            .withUrl(url, {
+                              skipNegotiation: true,
+                              transport: signalR.HttpTransportType.WebSockets
+                            })
+                            .withHubProtocol(new MessagePackHubProtocol())
+                            .withAutomaticReconnect()
+                            .configureLogging(signalR.LogLevel.Debug)
+                            .build();
 
-    this.connectionStatus = new Observable((observer: Observer<boolean>) => {
-      this.connectionObserver = observer;
-    }).pipe(
-      share(),
-      distinctUntilChanged()
-    );
-
-    this.wsSubjectConfig = {
-      url: this.url,
-      closeObserver: {
-        next: (_e: CloseEvent) => {
-          this.socket = null;
-          this.connectionObserver.next(false);
-        }
-      },
-      openObserver: {
-        next: (_e: Event) => {
-          this.connectionObserver.next(true);
-        }
-      },
-      resultSelector: (e: MessageEvent) => {
-        return e.data;
-      }
-    };
-
-    this.connect();
-
-    this.connectionStatus.subscribe((isConnected) => {
-      if (!this.reconnectionObservable && typeof(isConnected) === 'boolean' && !isConnected) {
-        this.reconnect();
-      }
-    });
-  }
-
-  connect(): void {
-    this.socket = new WebSocketSubject(this.wsSubjectConfig);
-    this.socket.subscribe(
-      (m) => {
-        this.next(m);
-      },
-      (_error: Event) => {
-        if (!this.socket) {
-          this.reconnect();
-        }
+    this._hubConnection
+      .start()
+      .then(() => { 
+        console.log('Hub connection started');
+      })
+      .catch(err => {
+        console.log('Error while starting connection: ' + err);
       });
-  }
 
-  reconnect(): void {
-    this.reconnectionObservable = interval(this.reconnectInterval)
-      .pipe(
-        takeWhile((_v, index) => {
-          return index < this.reconnectAttempts && !this.socket;
-        })
-      );
-    this.reconnectionObservable.subscribe(
-      () => {
-        if(this.isStopped) return;
-        this.connect();
-      },
-      null,
-      () => {
-        this.reconnectionObservable = null;
-        if (!this.socket) {
-          this.complete();
-          this.connectionObserver.complete();
-        }
-      });
-  }
-
-  send(data: any): void {
-    this.socket.next(data);
+    return this._hubConnection;
   }
 }

@@ -6,11 +6,12 @@ import { Subscription } from 'rxjs';
 import { ChannelService } from '../../services/channel.service';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
 import { MessageService } from '../../services/message.service';
-import { WebSocketService } from 'src/app/shared/services/websocket.service';
+import { SignalRService } from 'src/app/shared/services/websocket.service';
 
 import { Channel } from '../../models/channel.model';
 import { Message } from '../../models/message.model';
 import { User } from 'src/app/shared/models/user.model';
+import { HubConnection } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-messages',
@@ -28,7 +29,7 @@ export class MessagesComponent implements OnInit, OnDestroy
   private _getUserConnectedSub: Subscription;
   private _getMessagesSub: Subscription;
   private _getMessageAddedSub: Subscription;
-  private _wsSocketMsg: WebSocketService<Message>;
+  private _msgsHub: HubConnection;
 
   constructor(
     private _authenticationService: AuthenticationService,
@@ -65,16 +66,19 @@ export class MessagesComponent implements OnInit, OnDestroy
 
   initWSConnection() 
   {
-    this._wsSocketMsg = new WebSocketService<Message>(`wss://localhost:5001/ws/channel/${this._channel.id}`);
+    this._msgsHub = new SignalRService().connect(`wss://localhost:5001/hub/channel`);
 
-    this._wsSocketMsg.subscribe((msg: Message) => {
+    this._msgsHub.on('broadcastMessage', (content: string) => {
+      const msg = new Message();
+      msg.content = content;
       this.messages.push(msg);
     });
 
     this._getMessageAddedSub = 
       this._messageService.entityAddedSub
       .subscribe((msg: Message) => {
-        this._wsSocketMsg.send(msg);
+        this._msgsHub.invoke('broadcastMessage', msg.content).catch(err => console.error(err));
+        //this._msgsHub.invoke('broadcastMessage', msg).catch(err => console.error(err));
       });
   }
 
@@ -84,6 +88,5 @@ export class MessagesComponent implements OnInit, OnDestroy
     this._getUserConnectedSub?.unsubscribe();
     this._getMessagesSub?.unsubscribe();
     this._getMessageAddedSub?.unsubscribe();
-    this._wsSocketMsg?.unsubscribe();
   }
 }

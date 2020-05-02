@@ -6,12 +6,11 @@ import { Subscription } from 'rxjs';
 import { ChannelService } from '../../services/channel.service';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
 import { MessageService } from '../../services/message.service';
-import { SignalRService } from 'src/app/shared/services/websocket.service';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 
 import { Channel } from '../../models/channel.model';
 import { Message } from '../../models/message.model';
 import { User } from 'src/app/shared/models/user.model';
-import { HubConnection } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-messages',
@@ -29,12 +28,12 @@ export class MessagesComponent implements OnInit, OnDestroy
   private _getUserConnectedSub: Subscription;
   private _getMessagesSub: Subscription;
   private _getMessageAddedSub: Subscription;
-  private _msgsHub: HubConnection;
 
   constructor(
     private _authenticationService: AuthenticationService,
     private _channelService: ChannelService,
     private _messageService: MessageService,
+    private _signalrService: SignalRService,
     private _route: ActivatedRoute) 
     { }
 
@@ -66,20 +65,29 @@ export class MessagesComponent implements OnInit, OnDestroy
 
   initWSConnection() 
   {
-    this._msgsHub = new SignalRService().connect(`wss://localhost:5001/hub/channel`);
+    this._signalrService.createConnection(`wss://localhost:5001/hub/channel`, 1);
+    this._signalrService.startConnection();
+    this._signalrService.connectionEstablished
+    .subscribe((state: boolean) =>
+    {
+      if (!state) return;
 
-    this._msgsHub.on('broadcastMessage', (content: string) => {
-      const msg = new Message();
-      msg.content = content;
-      this.messages.push(msg);
-    });
+      this._signalrService.hubConnection
+      .on('BroadcastMessage', (msgString: string) => {
+        const msg = JSON.parse(msgString);
+        this.messages.push(msg);
+      });
 
-    this._getMessageAddedSub = 
+      this._getMessageAddedSub = 
       this._messageService.entityAddedSub
       .subscribe((msg: Message) => {
-        this._msgsHub.invoke('broadcastMessage', msg.content).catch(err => console.error(err));
-        //this._msgsHub.invoke('broadcastMessage', msg).catch(err => console.error(err));
+        this._signalrService
+          .run('BroadcastMessage', JSON.stringify(msg));
       });
+    });
+    
+
+    
   }
 
   ngOnDestroy(): void 

@@ -137,8 +137,13 @@ export class AuthenticationService
                 );
     }
 
-    getUserById(userId: number): Observable<User>
+    getUserById(userId: string): Observable<User>
     {
+        if (userId == this._userConnected?.id)
+        {
+            return of(this._userConnected);
+        }
+
         return this._httpClient
             .get<User>(`${environment.backend.routes.users}/${userId}`);
     }
@@ -160,7 +165,7 @@ export class AuthenticationService
         return this.getToken()
                 .pipe(map((bearer: Bearer) => 
                 {
-                    return bearer.token;
+                    return bearer?.token;
                 }));
     }
 }

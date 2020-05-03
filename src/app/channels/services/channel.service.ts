@@ -19,7 +19,7 @@ export class ChannelService extends BaseServerService<Channel>
         super(httpClient, environment.backend.routes.channels);
     }
 
-    getMessages(id: number): Observable<Channel> {
+    getMessages(id: string): Observable<Channel> {
         return this._httpClient
                 .get<Channel>(`${this._apiUrl}/${id}?msgs=${true}`);
     }

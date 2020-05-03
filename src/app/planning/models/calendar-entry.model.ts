@@ -5,12 +5,12 @@ import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
 export const calendarEntrySchema:JSONSchema = {
     type: 'object',
     properties: {
-        id: { type: 'integer' },
+        id: { type: 'string' },
         start: { type: 'string' },
         end: { type: 'string' },
         title: { type: 'string' },
         type: { type: 'string' },
-        typeLinkId: { type: 'integer' },
+        typeLinkId: { type: 'string' },
         hexColor: { type: 'string' },
         allDay: { type: 'boolean' }
     },
@@ -41,7 +41,7 @@ export class CalendarEntry extends BaseEntity implements IBaseEntity
     end?: Date;
     title: string;
     type: CalendarEntryTypes;
-    typeLinkId: number;
+    typeLinkId: string;
     hexColor: string;
     allDay?: boolean;
     
@@ -49,7 +49,7 @@ export class CalendarEntry extends BaseEntity implements IBaseEntity
         start: Date,
         title: string,
         type: CalendarEntryTypes,
-        typeLinkId?: number,
+        typeLinkId?: string,
         end?: Date,
         hexColor?: string,
         allDay?: boolean

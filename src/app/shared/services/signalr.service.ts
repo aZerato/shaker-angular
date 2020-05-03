@@ -7,6 +7,8 @@ import {
   HttpTransportType } from '@microsoft/signalr';
 import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
 import { Subscription, Subject } from 'rxjs';
+import { AuthenticationService } from 'src/app/users/services/authentication.service';
+import { Bearer } from 'src/app/users/models/bearer.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,50 +18,61 @@ export class SignalRService implements OnDestroy
   public connectionEstablished = new Subject<boolean>();
   public startConnectionTimeoutDelay: number = 3000;
   public autoReconnect: boolean = true;
-
-  private _userId: number = 0;
+  public maxAttempts: number = 10; 
   private _connectionIsEstablished: boolean = false;
   private _hubConnection: HubConnection;
 
   private connectedSubscription: Subscription;
 
-  constructor()
+  constructor(private _authService: AuthenticationService)
   {
   }
 
-  createConnection(huburl: string, userId: number, autoReconnect: boolean = false)
+  createConnection(huburl: string, autoReconnect: boolean = false)
   {
-    this._userId = userId;
-
-    if (!this._hubConnection && this._userId > 0)
+    if (!this._hubConnection)
     {
-      let hubConnectionBuilder: HubConnectionBuilder = new HubConnectionBuilder();
-      hubConnectionBuilder.withUrl(huburl,{
-        skipNegotiation: true,
-        transport: HttpTransportType.WebSockets
-      });
-      hubConnectionBuilder.withHubProtocol(new MessagePackHubProtocol());
-      hubConnectionBuilder.configureLogging(LogLevel.Information);
 
-      this.autoReconnect = autoReconnect;
-      if (this.autoReconnect)
+      this._authService.getToken().subscribe((bearer: Bearer) => 
       {
-        hubConnectionBuilder.withAutomaticReconnect([0, 1000, 1000, 1000, 1000, 1000, 2000, 5000, 10000, 20000, 30000, null]);
-      }
+        let hubConnectionBuilder: HubConnectionBuilder = new HubConnectionBuilder();
+        hubConnectionBuilder.withUrl(huburl,{
+          skipNegotiation: true,
+          transport: HttpTransportType.WebSockets,
+          accessTokenFactory: () => bearer.token
+        });
+        hubConnectionBuilder.withHubProtocol(new MessagePackHubProtocol());
+        hubConnectionBuilder.configureLogging(LogLevel.Information);
+        
+        this.autoReconnect = autoReconnect;
+        if (this.autoReconnect)
+        {
+          hubConnectionBuilder.withAutomaticReconnect([0, 1000, 1000, 1000, 1000, 1000, 2000, 5000, 10000, 20000, 30000, null]);
+        }
 
-      this._hubConnection = hubConnectionBuilder.build();
-      
-      this._hubConnection.keepAliveIntervalInMilliseconds = 10000;
-      
-      this.hubConnection.onclose((msg) =>
-      {
-        console.log(msg.message);
-        this.startConnection();
-      });
+        this._hubConnection = hubConnectionBuilder.build();
+        
+        this._hubConnection.keepAliveIntervalInMilliseconds = 10000;
+        
+        this.hubConnection.onclose((msg) =>
+        {
+          console.log(msg.message);
+          this.startConnection();
+        });
 
-      this.hubConnection.onreconnected((connectionId: string) =>
-      {
-        this.hubConnection.invoke("RegisterConnection", this._userId)
+        this.hubConnection.onreconnected((connectionId: string) =>
+        {
+          if (this.maxAttempts-- == 0)
+          { 
+            this.hubConnection.stop();
+            return;
+          }
+          
+          this.hubConnection.on("RegisterConnection", (userId: string) => {
+            console.log(`It's ok the connection registered for user ${userId} a new time !`);
+          });
+        });
+
       });
     }
   }
@@ -76,7 +89,9 @@ export class SignalRService implements OnDestroy
           console.log('Hub connection started');
           this.connectionEstablished.next(true);
 
-          this.hubConnection.invoke("RegisterConnection", this._userId);
+          this.hubConnection.on("RegisterConnection", (userId: string) => {
+            console.log(`Connection Registered for user ${userId}`);
+          });
         })
         .catch(err =>
         {
@@ -112,8 +127,6 @@ export class SignalRService implements OnDestroy
           .then(() =>
           {
             this.hubConnection.invoke(method, args)
-
-            this.hubConnection.invoke("RegisterConnection", this._userId);
           })
           .catch(err => console.error(err.toString()));
         break;
@@ -133,5 +146,6 @@ export class SignalRService implements OnDestroy
   ngOnDestroy()
   {   
     this.connectedSubscription?.unsubscribe();
+    this._hubConnection.stop();
   }
 }  

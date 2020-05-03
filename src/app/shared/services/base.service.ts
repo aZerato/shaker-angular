@@ -39,7 +39,7 @@ export abstract class BaseService<TBaseEntity extends IBaseEntity>
         return this._entitiesStorageMap;
     }
 
-    getEntityById(id: number): Observable<TBaseEntity> {
+    getEntityById(id: string): Observable<TBaseEntity> {
         return this._entitiesStorageMap
             .pipe<TBaseEntity>(
                 map((entities: TBaseEntity[]) => {

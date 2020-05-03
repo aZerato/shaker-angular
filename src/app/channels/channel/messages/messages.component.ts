@@ -19,7 +19,7 @@ import { User } from 'src/app/shared/models/user.model';
 })
 export class MessagesComponent implements OnInit, OnDestroy
 {
-  currentUserId: number;
+  currentUserId: string;
   
   messages: Message[] = [];
 
@@ -67,7 +67,7 @@ export class MessagesComponent implements OnInit, OnDestroy
 
   initWSConnection() 
   {
-    this._signalrService.createConnection(`wss://localhost:5001/hub/channel`, 1, true);
+    this._signalrService.createConnection(`wss://localhost:5001/hub/channel`, true);
     this._signalrService.startConnection();
 
     this._signalrService.connectionEstablished

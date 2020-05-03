@@ -13,7 +13,7 @@ import { User } from 'src/app/shared/models/user.model';
 export class UserMessageComponent implements OnInit, OnDestroy
 {
   @Input()
-  userId: number;
+  userId: string;
 
   user: User;
 

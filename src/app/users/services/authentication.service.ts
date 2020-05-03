@@ -29,6 +29,9 @@ export class AuthenticationService
         if (error)
             console.error(error);
 
+        if (!message)
+            message = error?.error.message;
+
         if (message)
         {
             console.trace(message);

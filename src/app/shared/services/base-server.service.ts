@@ -3,8 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
 import { IBaseEntity } from '../models/base-entity.model';
-import { AuthenticationService } from 'src/app/users/services/authentication.service';
-import { flatMap } from 'rxjs/operators';
 
 /// BaseService for use rest api.
 export abstract class BaseServerService<TBaseEntity extends IBaseEntity>
@@ -15,7 +13,6 @@ export abstract class BaseServerService<TBaseEntity extends IBaseEntity>
     
     constructor(
         protected _httpClient: HttpClient,
-        protected _authService: AuthenticationService,
         protected _apiUrl:string) 
     { }
 
@@ -24,7 +21,7 @@ export abstract class BaseServerService<TBaseEntity extends IBaseEntity>
                 .get<TBaseEntity[]>(this._apiUrl);
     }
 
-    getEntityById(id: number): Observable<TBaseEntity> {
+    getEntityById(id: string): Observable<TBaseEntity> {
         return this._httpClient
                 .get<TBaseEntity>(`${this._apiUrl}/${id}`);
     }

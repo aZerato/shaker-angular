@@ -27,6 +27,7 @@ export class ChannelComponent implements OnInit, OnDestroy
   faCogs: IconDefinition = faCogs;
 
   channel: Channel;
+  messages: Message[];
   messageForm: FormGroup;
 
   private _dataSub: Subscription;
@@ -61,14 +62,15 @@ export class ChannelComponent implements OnInit, OnDestroy
     });
   }
 
-  onSubmitMessage(): void {
+  onSubmitMessage(): void 
+  {
     if (this.messageForm.valid) 
     {
       const msg = new Message();
       msg.channelId = this.channel.id;
       msg.content = this.messageForm.value.content;
       
-      this._messageService.addEntity(msg);
+      this._messageService.entityAddedSub.next(msg);
         
       this.messageForm.reset();
     }

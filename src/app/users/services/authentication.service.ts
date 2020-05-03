@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable, Subject, of } from 'rxjs';
 
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 import { AuthenticationModel } from '../models/authentication.model';
@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 import { flatMap, map } from 'rxjs/operators';
 
 @Injectable({
- providedIn: 'root'
+    providedIn: 'root'
 })
 export class AuthenticationService
 {
@@ -58,6 +58,7 @@ export class AuthenticationService
                 bearer,
                 bearerSchema
             ).subscribe(() => {
+                this._bearer = bearer;
                 this._userConnected = user;
                 this.authenticationStatusChangeSubject.next(true);
             },
@@ -87,6 +88,7 @@ export class AuthenticationService
                 bearer,
                 bearerSchema
             ).subscribe(() => {
+                this._bearer = bearer;
                 this._userConnected = user;
                 this.authenticationStatusChangeSubject.next(true);
             },
@@ -135,8 +137,13 @@ export class AuthenticationService
                 );
     }
 
-    getUserById(userId: number): Observable<User>
+    getUserById(userId: string): Observable<User>
     {
+        if (userId == this._userConnected?.id)
+        {
+            return of(this._userConnected);
+        }
+
         return this._httpClient
             .get<User>(`${environment.backend.routes.users}/${userId}`);
     }
@@ -154,18 +161,11 @@ export class AuthenticationService
         }));
     }
 
-    getHttpOptions() : Observable<any> {
-        const headers = new HttpHeaders().set('Content-Type', 'application/json');
-
+    getHeaderAutorizationValue() : Observable<string> {
         return this.getToken()
                 .pipe(map((bearer: Bearer) => 
                 {
-                    if (bearer)
-                        headers.set('Authorization', `Bearer ${bearer.token}`);
-                    
-                    return {
-                        headers: headers
-                    };
+                    return bearer?.token;
                 }));
     }
 }

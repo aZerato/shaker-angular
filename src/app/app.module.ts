@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // start externals modules
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -57,6 +57,8 @@ import { CalendarComponent } from './planning/calendar/calendar.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
 import { MetricsChartComponent } from './metrics/chart/metrics-chart.component';
+import { AuthenticationService } from './users/services/authentication.service';
+import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -111,7 +113,13 @@ import { MetricsChartComponent } from './metrics/chart/metrics-chart.component';
     FlatpickrModule.forRoot(),
     NgxChartsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

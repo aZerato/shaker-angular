@@ -6,7 +6,7 @@ export const bearerSchema:JSONSchema = {
     type: 'object',
     properties: {
         token: { type: 'string' },
-        userId: { type: 'integer' },
+        userId: { type: 'string' },
     },
     required: [
         'token',
@@ -18,7 +18,7 @@ export const bearerKey:string = 'Bearer';
 
 export class Bearer
 {
-    userId: number;
+    userId: string;
     token:string;
     
     constructor(user: User)

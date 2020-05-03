@@ -1,12 +1,12 @@
 export class BaseEntity implements IBaseEntity
 {   
-    id: number;
+    id: string;
     creation: string;
     error: string;
 }
 
 export interface IBaseEntity {
-    id: number;
+    id: string;
     creation: string;
     error: string;
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { BaseServerService } from 'src/app/shared/services/base-server.service';
-import { AuthenticationService } from 'src/app/users/services/authentication.service';
 import { environment } from 'src/environments/environment';
 
 import { Message } from '../models/message.model';
@@ -13,10 +12,9 @@ import { Message } from '../models/message.model';
 export class MessageService extends BaseServerService<Message> 
 {
     constructor(
-        httpClient: HttpClient,
-        authService: AuthenticationService) 
+        httpClient: HttpClient) 
     {
-        super(httpClient, authService, environment.backend.routes.messages);
+        super(httpClient, environment.backend.routes.messages);
     }
     
     createBaseObject() {

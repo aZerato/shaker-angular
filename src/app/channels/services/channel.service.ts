@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { BaseServerService } from 'src/app/shared/services/base-server.service';
-import { AuthenticationService } from 'src/app/users/services/authentication.service';
 
 import { Channel } from '../models/channel.model';
 
@@ -15,21 +14,14 @@ import { Channel } from '../models/channel.model';
 export class ChannelService extends BaseServerService<Channel> 
 {
     constructor(
-        httpClient: HttpClient,
-        authService: AuthenticationService) 
+        httpClient: HttpClient) 
     {
-        super(httpClient, authService, environment.backend.routes.channels);
+        super(httpClient, environment.backend.routes.channels);
     }
 
-    getMessages(id: number): Observable<Channel> {
+    getMessages(id: string): Observable<Channel> {
         return this._httpClient
-                .get<Channel>(this._apiUrl, 
-                {
-                        params: { 
-                            id: id.toString(),
-                            msgs: "true"
-                        }
-                });
+                .get<Channel>(`${this._apiUrl}/${id}?msgs=${true}`);
     }
     
     createBaseObject() {

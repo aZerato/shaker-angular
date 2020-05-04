@@ -5,7 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { AuthenticationService } from '../services/authentication.service';
-import { AuthenticationModel } from '../models/authentication.model';
+import { SignInModel } from '../models/signin.model';
 
 @Component({
   selector: 'app-user-new',
@@ -17,7 +17,7 @@ export class UserNewComponent implements OnInit, OnDestroy
   errorMessage: string;
   creationFormGroup: FormGroup;
   
-  private _authenticationModel: AuthenticationModel;
+  private _signInModel: SignInModel;
   private isAuthenticatedSub: Subscription;
   private creationErrorSub: Subscription;
 
@@ -55,23 +55,27 @@ export class UserNewComponent implements OnInit, OnDestroy
     this.errorMessage = undefined;
     if (this.creationFormGroup.valid)
     {
-      this._authenticationModel = new AuthenticationModel(
+      this._signInModel = new SignInModel(
         this.creationFormGroup.value.userName, 
+        this.creationFormGroup.value.email, 
         this.creationFormGroup.value.password);
 
-      this.authenticationService.create(this.creationFormGroup.value);
+      this.authenticationService.create(this._signInModel);
     }
   }
 
   private initForm(): void 
   {
-    this._authenticationModel = new AuthenticationModel('', '');
+    this._signInModel = new SignInModel('', '', '');
 
     this.creationFormGroup = new FormGroup({
-      userName: new FormControl(this._authenticationModel.userName, [
+      userName: new FormControl(this._signInModel.userName, [
         Validators.required
       ]),
-      password: new FormControl(this._authenticationModel.password, [
+      email: new FormControl(this._signInModel.email, [
+        Validators.required
+      ]),
+      password: new FormControl(this._signInModel.password, [
         Validators.required
       ])
     });

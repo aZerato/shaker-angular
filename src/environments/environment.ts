@@ -10,6 +10,7 @@ export const environment = {
       
       creation: 'https://localhost:5001/auth/create',
       login: 'https://localhost:5001/auth/authenticate',
+      logout: 'https://localhost:5001/auth/logout',
       
       users: 'https://localhost:5001/api/users',
 

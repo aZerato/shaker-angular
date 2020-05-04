@@ -107,11 +107,21 @@ export class AuthenticationService
 
     logoff(): void
     {
-        this._storageMap.delete(
-            bearerKey
-        ).subscribe(() => {
-            this._userConnected = undefined;
-            this.authenticationStatusChangeSubject.next(false);
+        this._httpClient
+        .get(environment.backend.routes.logout)
+        .subscribe(() => {
+            this._storageMap.delete(
+                bearerKey
+            ).subscribe(() => {
+                this._userConnected = undefined;
+                this.authenticationStatusChangeSubject.next(false);
+            },
+            (error: any) => {
+                this.onError(error);
+            });
+        },
+        (error: any) => {
+            this.onError(error);
         });
     }
 

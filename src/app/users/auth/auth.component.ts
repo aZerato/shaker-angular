@@ -56,8 +56,9 @@ export class AuthComponent implements OnInit, OnDestroy
     if (this.authenticationFormGroup.valid)
     {
       this._authenticationModel = new AuthenticationModel(
-        this.authenticationFormGroup.value.userName, 
-        this.authenticationFormGroup.value.password);
+        this.authenticationFormGroup.value.userName,
+        this.authenticationFormGroup.value.password,
+        this.authenticationFormGroup.value.rememberMe);
 
       this.authenticationService.login(this._authenticationModel);
     }
@@ -65,7 +66,7 @@ export class AuthComponent implements OnInit, OnDestroy
 
   private initForm(): void 
   {
-    this._authenticationModel = new AuthenticationModel('', '');
+    this._authenticationModel = new AuthenticationModel('', '', false);
 
     this.authenticationFormGroup = new FormGroup({
       userName: new FormControl(this._authenticationModel.userName, [
@@ -73,7 +74,8 @@ export class AuthComponent implements OnInit, OnDestroy
       ]),
       password: new FormControl(this._authenticationModel.password, [
         Validators.required
-      ])
+      ]),
+      rememberMe: new FormControl(this._authenticationModel.rememberMe)
     });
   }
 }

@@ -1,16 +1,16 @@
-export class AuthenticationModel
+export class SignInModel
 {
     userName: string;
+    email: string;
     password: string;
-    rememberMe: boolean;
 
     constructor(
         userName: string,
-        password: string,
-        rememberMe: boolean)
+        email: string,
+        password: string)
     {
         this.userName = userName;
+        this.email = email;
         this.password = password;
-        this.rememberMe = rememberMe;
     }
 }

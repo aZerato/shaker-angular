@@ -10,6 +10,7 @@ import { User } from '../../shared/models/user.model';
 import { Bearer, bearerKey, bearerSchema } from '../models/bearer.model';
 import { environment } from 'src/environments/environment';
 import { flatMap, map } from 'rxjs/operators';
+import { SignInModel } from '../models/signin.model';
 
 @Injectable({
     providedIn: 'root'
@@ -43,10 +44,10 @@ export class AuthenticationService
         }
     }
 
-    create(auth: AuthenticationModel): void
+    create(signIn: SignInModel): void
     {
         this._httpClient
-        .post(environment.backend.routes.creation, auth)
+        .post(environment.backend.routes.creation, signIn)
         .subscribe((user: User) => {
             
             if(user.error)

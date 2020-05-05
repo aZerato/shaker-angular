@@ -96,5 +96,6 @@ export class MessagesComponent implements OnInit, OnDestroy
     this._getUserConnectedSub?.unsubscribe();
     this._getMessagesSub?.unsubscribe();
     this._getMessageAddedSub?.unsubscribe();
+    this._signalrService?.ngOnDestroy();
   }
 }

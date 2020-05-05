@@ -30,10 +30,9 @@ export abstract class BaseServerService<TBaseEntity extends IBaseEntity>
     {
         this._httpClient
                 .post<TBaseEntity>(this._apiUrl, entity)
-                .subscribe((entityUpdated: TBaseEntity) => {
-                    this.entityAddedSub.next(entityUpdated);
-                });
-        
+                .subscribe((entityadded: TBaseEntity) => {
+                    this.entityAddedSub.next(entityadded);
+                });   
     }
 
     updateEntity(entity: TBaseEntity): void
@@ -43,7 +42,6 @@ export abstract class BaseServerService<TBaseEntity extends IBaseEntity>
                 .subscribe((entityUpdated: TBaseEntity) => {
                     this.entityUpdatedSub.next(entityUpdated);
                 });
-        
     }
 
     deleteEntity(entity: TBaseEntity): void
@@ -52,7 +50,6 @@ export abstract class BaseServerService<TBaseEntity extends IBaseEntity>
                 .delete<boolean>(`${this._apiUrl}/${entity.id}`)
                 .subscribe((result: boolean) => {
                     this.entityDeletedSub.next(result);
-                });
-        
+                }); 
     }
 }

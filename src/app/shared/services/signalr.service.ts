@@ -56,7 +56,7 @@ export class SignalRService implements OnDestroy
         
         this.hubConnection.onclose((msg) =>
         {
-          console.log(msg.message);
+          console.log(msg);
           this.startConnection();
         });
 

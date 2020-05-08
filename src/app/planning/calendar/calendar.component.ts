@@ -56,7 +56,7 @@ const colors: any = {
 
 @Component({
   selector: 'app-calendar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   templateUrl: './calendar.component.html'
 })
 export class CalendarComponent implements OnInit
@@ -97,7 +97,7 @@ export class CalendarComponent implements OnInit
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEventModelMerge[];
+  events: CalendarEventModelMerge[] = [];
 
   activeDayIsOpen: boolean = true;
 
@@ -111,6 +111,7 @@ export class CalendarComponent implements OnInit
       .getAllEntitiesObs()
       .subscribe((events: CalendarEventModel[]) => {
         this.events = PlanningFactory.convertCalendarEventServersToLib(events);
+        this.refresh.next();
       });
     }
 
@@ -168,8 +169,13 @@ export class CalendarComponent implements OnInit
     ];
   }
 
-  deleteEvent(eventToDelete: CalendarEventModelMerge) {
-    this.events = this.events.filter((event) => event !== eventToDelete);
+  deleteEvent(eventToDelete: CalendarEventModelMerge) 
+  {
+    this._planningService.deleteEntity(eventToDelete.meta);
+
+    this._planningService.entityDeletedSub.subscribe(() => {
+      this.events = this.events.filter((event) => event !== eventToDelete);
+    });
   }
 
   setView(view: CalendarView) {

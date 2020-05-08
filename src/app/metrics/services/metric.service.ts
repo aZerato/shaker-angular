@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 import { BaseService } from 'src/app/shared/services/base.service';
-import { CalendarService } from 'src/app/planning/services/calendar.service';
+import { PlanningService } from 'src/app/planning/services/planning.service';
 
 import { Metric, metricsKeyArr, metricsSchemaArr } from '../models/metric.model';
 import { MetricTypeService } from './metric-type.service';

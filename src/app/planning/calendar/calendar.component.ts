@@ -26,12 +26,6 @@ import {
   CalendarView,
 } from 'angular-calendar';
 
-import { 
-  faCalendar,
-  faDumbbell, 
-  IconDefinition
-} from '@fortawesome/free-solid-svg-icons';
-
 import {
   CalendarEventModelMerge,
   PlanningFactory
@@ -56,14 +50,11 @@ const colors: any = {
 
 @Component({
   selector: 'app-calendar',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html'
 })
 export class CalendarComponent implements OnInit
 {
-  faCalendar: IconDefinition = faCalendar;
-  faDumbbell: IconDefinition = faDumbbell;
-
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   view: CalendarView = CalendarView.Month;
@@ -76,24 +67,6 @@ export class CalendarComponent implements OnInit
     action: string;
     event: CalendarEventModelMerge;
   };
-
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fa fa-fw fa-pencil"></i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEventModelMerge }): void => {
-        this.handleEvent('Edited', event);
-      },
-    },
-    {
-      label: '<i class="fa fa-fw fa-times"></i>',
-      a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEventModelMerge }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      },
-    },
-  ];
 
   refresh: Subject<any> = new Subject();
 
@@ -110,12 +83,13 @@ export class CalendarComponent implements OnInit
       this._planningService
       .getAllEntitiesObs()
       .subscribe((events: CalendarEventModel[]) => {
-        this.events = PlanningFactory.convertCalendarEventServersToLib(events);
+        this.events = PlanningFactory.convertCalendarEventServersToLib(events, this);
         this.refresh.next();
       });
     }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEventModelMerge[] }): void {
+  dayClicked({ date, events }: { date: Date; events: CalendarEventModelMerge[] }): void 
+  {
     if (isSameMonth(date, this.viewDate)) {
       if (
         (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||

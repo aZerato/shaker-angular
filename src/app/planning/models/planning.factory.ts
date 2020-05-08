@@ -1,25 +1,26 @@
 import { CalendarEventModel, CalendarEventTypeModel } from './calendar-event.model';
 
 import {
-    CalendarEvent
+    CalendarEvent, CalendarEventAction
   } from 'angular-calendar';
 
 import { EventColor, EventAction } from 'calendar-utils';
+import { CalendarComponent } from '../calendar/calendar.component';
 
 export class PlanningFactory 
 {
-    static convertCalendarEventServersToLib(servers: CalendarEventModel[]) : CalendarEventModelMerge[]
+    static convertCalendarEventServersToLib(servers: CalendarEventModel[], calendarComponentContext: CalendarComponent) : CalendarEventModelMerge[]
     {
         const merges = [];
         
         servers.forEach(server => {
-            merges.push(PlanningFactory.convertCalendarEventServerToLib(server));
+            merges.push(PlanningFactory.convertCalendarEventServerToLib(server, calendarComponentContext));
         });
 
         return  merges;
     }
 
-    static convertCalendarEventServerToLib(server: CalendarEventModel) : CalendarEventModelMerge
+    static convertCalendarEventServerToLib(server: CalendarEventModel, calendarComponentContext: CalendarComponent) : CalendarEventModelMerge
     {
         const merge = new CalendarEventModelMerge();
 
@@ -32,9 +33,32 @@ export class PlanningFactory
         merge.color = new EventColorMerge();
         merge.color.primary = server.hexColor;
         
+        merge.actions = PlanningFactory.eventActions(calendarComponentContext);
+
         merge.meta = server;
 
         return  merge;
+    }
+
+    static eventActions(calendarComponentContext): CalendarEventAction[] 
+    {
+        return [
+        {
+          label: ' Edit ',
+          a11yLabel: ' Edit ',
+          onClick: ({ event }: { event: CalendarEventModelMerge }): void => {
+            calendarComponentContext.handleEvent('Edited', event);
+          },
+        },
+        {
+          label: ' Delete ',
+          a11yLabel: ' Delete ',
+          onClick: ({ event }: { event: CalendarEventModelMerge }): void => {
+            calendarComponentContext.events = calendarComponentContext.events.filter((iEvent) => iEvent !== event);
+            calendarComponentContext.handleEvent('Deleted', event);
+          },
+        },
+      ];
     }
 }
 

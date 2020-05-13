@@ -9,7 +9,7 @@ import {
   IconDefinition 
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Movement } from '../models/movement.model';
+import { MovementModel } from '../models/movement.model';
 import { MovementService } from '../services/movement.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class MovementComponent implements OnInit, OnDestroy
   faDumbbell: IconDefinition = faDumbbell;
   faCogs: IconDefinition = faCogs;
 
-  movement: Movement;
+  movement: MovementModel;
 
   private _dataSub: Subscription;
 

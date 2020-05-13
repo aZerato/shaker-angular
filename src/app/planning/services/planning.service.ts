@@ -6,8 +6,7 @@ import { Observable } from 'rxjs';
 import { BaseServerService } from 'src/app/shared/services/base-server.service';
 
 import { 
-    CalendarEventModel,
-    CalendarEventTypeModel
+    CalendarEventModel
 } from '../models/calendar-event.model';
 import { environment } from 'src/environments/environment';
 

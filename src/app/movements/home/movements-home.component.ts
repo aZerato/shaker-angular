@@ -6,7 +6,7 @@ import { first } from 'rxjs/operators';
 import { faDumbbell, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { MovementService } from '../services/movement.service';
-import { Movement } from '../models/movement.model';
+import { MovementModel } from '../models/movement.model';
 
 @Component({
   selector: 'app-movements-home',
@@ -16,7 +16,7 @@ export class MovementsHomeComponent implements OnInit
 {
   faDumbell: IconDefinition = faDumbbell;
 
-  movements: Movement[];
+  movements: MovementModel[];
 
   private _movementServiceSub: Subscription;
 
@@ -29,7 +29,7 @@ export class MovementsHomeComponent implements OnInit
       this._movementService
         .getAllEntitiesObs()
         .pipe(first())
-        .subscribe((movements: Movement[]) => {
+        .subscribe((movements: MovementModel[]) => {
           this.movements = movements;
         });
   }

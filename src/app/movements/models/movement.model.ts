@@ -1,30 +1,11 @@
-import { JSONSchema, JSONSchemaArray } from '@ngx-pwa/local-storage';
-
 import { BaseEntity, IBaseEntity } from 'src/app/shared/models/base-entity.model';
 
-export const movementSchema:JSONSchema = {
-    type: 'object',
-    properties: {
-        id: { type: 'integer' },
-        name: { type: 'string' },
-        imgPath: { type: 'string' }
-    },
-    required: [
-        'id',
-        'name',
-        'imgPath'
-    ]
-};
-
-export const movementsKeyArr:string = "Movements";
-export const movementsSchemaArr:JSONSchemaArray = {
-    type: 'array',
-    items: movementSchema
-};
-
-export class Movement extends BaseEntity implements IBaseEntity
+export class MovementModel extends BaseEntity implements IBaseEntity
 {
+    id: string;
     name: string;
+    description: string;
+    movementTypeId: string;
     imgPath: string;
 
     constructor(name: string) 

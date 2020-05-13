@@ -23,6 +23,7 @@ export class MovementsComponent implements OnInit
 
   private _getAllMovementsSub: Subscription;
   private _movementAddedSub: Subscription;
+  private _movementUpdatedSub: Subscription;
 
   constructor(
     private _router: Router,
@@ -50,11 +51,21 @@ export class MovementsComponent implements OnInit
           
           this._router.navigate(['/movement', movement.id]);
         });
+    
+    this._movementUpdatedSub = 
+      this._movementService
+        .entityUpdatedSub
+        .subscribe((movement: MovementModel) => 
+        {
+          const index = this.movements.findIndex(m => m.id == movement.id);
+          this.movements[index] = movement;
+        });
   }
 
   ngOnDestroy(): void {
     this._getAllMovementsSub.unsubscribe();
     this._movementAddedSub?.unsubscribe();
+    this._movementUpdatedSub?.unsubscribe();
   }
 
   onCreateMovement(): void 

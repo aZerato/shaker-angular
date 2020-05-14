@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 import { faPlusSquare, faDumbbell, IconDefinition, faList } from '@fortawesome/free-solid-svg-icons';
 
 import { MovementService } from './services/movement.service';
-import { Movement } from './models/movement.model';
+import { MovementModel } from './models/movement.model';
 
 @Component({
   selector: 'app-movements',
@@ -19,10 +19,11 @@ export class MovementsComponent implements OnInit
   faDumbbell: IconDefinition = faDumbbell;
   faList: IconDefinition = faList;
 
-  movements: Movement[];
+  movements: MovementModel[];
 
   private _getAllMovementsSub: Subscription;
   private _movementAddedSub: Subscription;
+  private _movementUpdatedSub: Subscription;
 
   constructor(
     private _router: Router,
@@ -34,14 +35,14 @@ export class MovementsComponent implements OnInit
       this._movementService
         .getAllEntitiesObs()
         .pipe(first())
-        .subscribe((movements: Movement[]) => {
+        .subscribe((movements: MovementModel[]) => {
           this.movements = movements;
         });
 
     this._movementAddedSub = 
       this._movementService
         .entityAddedSub
-        .subscribe((movement: Movement) => 
+        .subscribe((movement: MovementModel) => 
         {
           if (!(this.movements.length === 1 && this.movements[0].id === movement.id))
           {
@@ -50,14 +51,25 @@ export class MovementsComponent implements OnInit
           
           this._router.navigate(['/movement', movement.id]);
         });
+    
+    this._movementUpdatedSub = 
+      this._movementService
+        .entityUpdatedSub
+        .subscribe((movement: MovementModel) => 
+        {
+          const index = this.movements.findIndex(m => m.id == movement.id);
+          this.movements[index] = movement;
+        });
   }
 
   ngOnDestroy(): void {
     this._getAllMovementsSub.unsubscribe();
     this._movementAddedSub?.unsubscribe();
+    this._movementUpdatedSub?.unsubscribe();
   }
 
-  onCreateMovement(): void {
-    this._movementService.addEntity();
+  onCreateMovement(): void 
+  {
+    this._movementService.addEntity(this._movementService.createBaseObject());
   }
 }

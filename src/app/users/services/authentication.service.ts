@@ -146,6 +146,8 @@ export class AuthenticationService
 
                                 this._userConnected = user;
                                 this.authenticationStatusChangeSubject.next(true);
+
+                                return of(this._userConnected);
                             }));
                     })
                 );

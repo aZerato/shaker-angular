@@ -5,7 +5,7 @@ import { ActivatedRoute, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { MovementService } from '../../services/movement.service';
-import { Movement } from '../../models/movement.model';
+import { MovementModel } from '../../models/movement.model';
 
 @Component({
   selector: 'app-movement-settings',
@@ -14,7 +14,7 @@ import { Movement } from '../../models/movement.model';
 export class MovementSettingsComponent implements OnInit, OnDestroy
 {
   movementSettingsFormGroup: FormGroup;
-  movementUpdated: Movement;
+  movementUpdated: MovementModel;
   private _dataSub: Subscription;
 
   constructor(
@@ -39,16 +39,26 @@ export class MovementSettingsComponent implements OnInit, OnDestroy
   {
     if (this.movementSettingsFormGroup.valid)
     {
-      alert();
+      this.movementUpdated.name = this.movementSettingsFormGroup.value.name;
+      this.movementUpdated.description = this.movementSettingsFormGroup.value.description;
+      this.movementUpdated.imgPath = this.movementSettingsFormGroup.value.imgPath;
+
+      this._movementService.updateEntity(this.movementUpdated);
     }
+  }
+
+  onDelete(): void 
+  {
+    this._movementService.deleteEntity(this.movementUpdated);
   }
 
   private initForm(): void 
   {
-    this.movementUpdated = this._movementService.createBaseObject();
-    
     this.movementSettingsFormGroup = new FormGroup({
       name: new FormControl(this.movementUpdated.name, [
+        Validators.required
+      ]),
+      description: new FormControl(this.movementUpdated.description, [
         Validators.required
       ]),
       imgPath: new FormControl(this.movementUpdated.imgPath, [

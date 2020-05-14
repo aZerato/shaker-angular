@@ -57,7 +57,6 @@ import { CalendarComponent } from './planning/calendar/calendar.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
 import { MetricsChartComponent } from './metrics/chart/metrics-chart.component';
-import { AuthenticationService } from './users/services/authentication.service';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 
 @NgModule({

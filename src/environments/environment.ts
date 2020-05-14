@@ -15,7 +15,11 @@ export const environment = {
       users: 'https://localhost:5001/api/users',
 
       channels: 'https://localhost:5001/api/channels',
-      messages: 'https://localhost:5001/api/messages'
+      messages: 'https://localhost:5001/api/messages',
+      
+      planning: 'https://localhost:5001/api/planning',
+
+      movements: 'https://localhost:5001/api/movements'
     }
   }
 };

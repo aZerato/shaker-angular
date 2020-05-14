@@ -29,6 +29,4 @@ export class ChannelService extends BaseServerService<Channel>
         ch.name = "Channel " + Date.now().toString();
         return ch;
     }
-
-
 }

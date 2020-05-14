@@ -11,9 +11,8 @@ import {
   IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { Channel } from '../models/channel.model';
-import { MessageService } from '../services/message.service';
-import { ChannelService } from '../services/channel.service';
 import { Message } from '../models/message.model';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 
 @Component({
   selector: 'app-channel',
@@ -31,16 +30,14 @@ export class ChannelComponent implements OnInit, OnDestroy
   messageForm: FormGroup;
 
   private _dataSub: Subscription;
+  private _getMessageAddedSub: Subscription;
 
   constructor(
     private _route: ActivatedRoute,
-    private _channelService: ChannelService,
-    private _messageService: MessageService) { }
+    private _signalrService: SignalRService) { }
 
   ngOnInit(): void 
   {
-    this.channel = this._channelService.createBaseObject();
-
     this._dataSub =
       this._route.data
         .subscribe((data: Data) => 
@@ -49,10 +46,6 @@ export class ChannelComponent implements OnInit, OnDestroy
         });
 
     this.initMessageForm();
-  }
-
-  ngOnDestroy(): void {
-    this._dataSub.unsubscribe();
   }
 
   initMessageForm(): void 
@@ -70,9 +63,15 @@ export class ChannelComponent implements OnInit, OnDestroy
       msg.channelId = this.channel.id;
       msg.content = this.messageForm.value.content;
       
-      this._messageService.entityAddedSub.next(msg);
-        
+      this._signalrService.run('BroadcastMessage', JSON.stringify(msg));
+      
       this.messageForm.reset();
     }
+  }
+
+  ngOnDestroy(): void {
+    this._dataSub.unsubscribe();
+    this._getMessageAddedSub?.unsubscribe();
+    this._signalrService?.ngOnDestroy();
   }
 }

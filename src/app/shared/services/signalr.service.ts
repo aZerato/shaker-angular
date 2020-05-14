@@ -19,10 +19,11 @@ export class SignalRService implements OnDestroy
   public startConnectionTimeoutDelay: number = 3000;
   public autoReconnect: boolean = true;
   public maxAttempts: number = 10; 
+  
   private _connectionIsEstablished: boolean = false;
   private _hubConnection: HubConnection;
-
-  private connectedSubscription: Subscription;
+  private _connectedSubscription: Subscription;
+  private _connectionId: string;
 
   constructor(private _authService: AuthenticationService)
   {
@@ -43,7 +44,6 @@ export class SignalRService implements OnDestroy
         });
         hubConnectionBuilder.withHubProtocol(new MessagePackHubProtocol());
         hubConnectionBuilder.configureLogging(LogLevel.Information);
-        
         this.autoReconnect = autoReconnect;
         if (this.autoReconnect)
         {
@@ -62,17 +62,18 @@ export class SignalRService implements OnDestroy
 
         this.hubConnection.onreconnected((connectionId: string) =>
         {
+          this._connectionId = connectionId;
+
           if (this.maxAttempts-- == 0)
           { 
             this.hubConnection.stop();
             return;
           }
-          
-          this.hubConnection.on("RegisterConnection", (userId: string) => {
-            console.log(`It's ok the connection registered for user ${userId} a new time !`);
-          });
         });
 
+        this.hubConnection.on("ConnectionRegistered", (connectionId: string) => {
+          console.log(`Connection ${connectionId} established !`);
+        });
       });
     }
   }
@@ -115,11 +116,11 @@ export class SignalRService implements OnDestroy
         this.hubConnection.invoke(method, ...args);
         break;
       case HubConnectionState.Connecting:
-        this.connectedSubscription = this.connectionEstablished.subscribe((data: any) =>
+        this._connectedSubscription = this.connectionEstablished.subscribe((data: any) =>
         {
           this.hubConnection.invoke(method, ...args);
 
-          this.connectedSubscription.unsubscribe();
+          this._connectedSubscription.unsubscribe();
         });
         break;
       default:
@@ -145,7 +146,7 @@ export class SignalRService implements OnDestroy
 
   ngOnDestroy()
   {   
-    this.connectedSubscription?.unsubscribe();
+    this._connectedSubscription?.unsubscribe();
     this._hubConnection.stop();
   }
 }  

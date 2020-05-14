@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
@@ -8,6 +8,7 @@ import { faPlusSquare, faRocket, IconDefinition, faSatellite } from '@fortawesom
 
 import { ChannelService } from './services/channel.service';
 import { Channel } from './models/channel.model';
+import { SignalRService } from '../shared/services/signalr.service';
 
 @Component({
   selector: 'app-channels',
@@ -23,10 +24,12 @@ export class ChannelsComponent implements OnInit
 
   private _channelServiceSub: Subscription;
   private _channelAddedSub: Subscription;
+  private _channelUpdatedSub: Subscription;
 
   constructor(
     private _router: Router,
-    private _channelService: ChannelService) { }
+    private _channelService: ChannelService,
+    private _signalrService: SignalRService) { }
 
   ngOnInit(): void 
   {  
@@ -36,6 +39,8 @@ export class ChannelsComponent implements OnInit
         .pipe(first())
         .subscribe((channels: Channel[]) => {
           this.channels = channels;
+
+          this.initWSConnection();
         });
 
     this._channelAddedSub = 
@@ -50,11 +55,27 @@ export class ChannelsComponent implements OnInit
           
           this._router.navigate(['/channel', channel.id]);
         });
+    
+    this._channelUpdatedSub = 
+        this._channelService
+          .entityUpdatedSub
+          .subscribe((channel: Channel) => 
+          {
+            const index = this.channels.findIndex(c => c.id == channel.id);
+            this.channels[index] = channel;
+          });
   }
 
-  ngOnDestroy(): void {
-    this._channelServiceSub.unsubscribe();
-    this._channelAddedSub?.unsubscribe();
+  initWSConnection() 
+  {
+    this._signalrService.createConnection(`wss://localhost:5001/hub/channel`, true);
+    this._signalrService.startConnection();
+
+    this._signalrService.connectionEstablished
+    .subscribe((state: boolean) =>
+    {
+      if (!state) return;
+    });
   }
 
   onCreateChannel(): void {
@@ -62,5 +83,17 @@ export class ChannelsComponent implements OnInit
     ch.name = "New channel " + Date.now();
 
     this._channelService.addEntity(ch);
+  }
+
+  ngOnDestroy(): void {
+    this._channelServiceSub.unsubscribe();
+    this._channelAddedSub?.unsubscribe();
+    this._channelUpdatedSub?.unsubscribe();
+    this._signalrService?.ngOnDestroy();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHander(event) {
+    this.ngOnDestroy();
   }
 }

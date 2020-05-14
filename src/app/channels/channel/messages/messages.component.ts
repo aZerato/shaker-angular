@@ -1,16 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
 import { ChannelService } from '../../services/channel.service';
 import { AuthenticationService } from 'src/app/users/services/authentication.service';
-import { MessageService } from '../../services/message.service';
-import { SignalRService } from 'src/app/shared/services/signalr.service';
 
 import { Channel } from '../../models/channel.model';
 import { Message } from '../../models/message.model';
 import { User } from 'src/app/shared/models/user.model';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-messages',
@@ -32,7 +32,6 @@ export class MessagesComponent implements OnInit, OnDestroy
   constructor(
     private _authenticationService: AuthenticationService,
     private _channelService: ChannelService,
-    private _messageService: MessageService,
     private _signalrService: SignalRService,
     private _route: ActivatedRoute) 
     { }
@@ -43,6 +42,11 @@ export class MessagesComponent implements OnInit, OnDestroy
       this._route.data
         .subscribe((data: Data) => 
         {
+          if(this._channel)
+          {
+            this.destroyForNewChannel();
+          }
+
           this._channel = data['channel'];
 
           this._getUserConnectedSub = 
@@ -55,47 +59,44 @@ export class MessagesComponent implements OnInit, OnDestroy
           this._getMessagesSub = 
             this._channelService
             .getMessages(this._channel.id)
+            .pipe(first())
             .subscribe((ch: Channel) => 
             {
               // get previous messages.
               this.messages = ch.messages;
 
-              this.initWSConnection();
+              this._signalrService.hubConnection
+                .on('BroadcastMessage', (msgString: string) => {
+                  const msg = JSON.parse(msgString);
+                  this.messages.push(msg);
+                });
+
+                this._signalrService
+                .run('JoinChannel', this._channel.id);
             });
         });
   }
 
-  initWSConnection() 
-  {
-    this._signalrService.createConnection(`wss://localhost:5001/hub/channel`, true);
-    this._signalrService.startConnection();
-
-    this._signalrService.connectionEstablished
-    .subscribe((state: boolean) =>
-    {
-      if (!state) return;
-      
-      this._signalrService.hubConnection
-      .on('broadcastMessage', (msgString: string) => {
-        const msg = JSON.parse(msgString);
-        this.messages.push(msg);
-      });
-
-      this._getMessageAddedSub = 
-      this._messageService.entityAddedSub
-      .subscribe((msg: Message) => {
-        this._signalrService
-          .run('broadcastMessage', JSON.stringify(msg));
-      });
-    });
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHander(event) {
+    this.ngOnDestroy();
   }
 
   ngOnDestroy(): void 
   {
-    this._dataSub.unsubscribe();
+    this._dataSub?.unsubscribe();
     this._getUserConnectedSub?.unsubscribe();
     this._getMessagesSub?.unsubscribe();
     this._getMessageAddedSub?.unsubscribe();
-    this._signalrService?.ngOnDestroy();
+    this._signalrService?.hubConnection?.off('BroadcastMessage');
+    this._signalrService?.run('LeaveChannel', this._channel.id);
+  }
+
+  destroyForNewChannel(): void
+  {
+    this._getMessageAddedSub?.unsubscribe();
+    this._getMessagesSub?.unsubscribe();
+    this._signalrService?.hubConnection?.off('BroadcastMessage');
+    this._signalrService?.run('LeaveChannel', this._channel.id);
   }
 }
